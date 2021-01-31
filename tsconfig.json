@@ -1,9 +1,14 @@
 {
     "compilerOptions": {
-        "target": "es5",
-        "moduleResolution": "node"
+        "target": "ES2016",
+        "moduleResolution": "node",
+        "allowJs": true,
+        "checkJs": false,
+      "sourceMap": true,
+      "noImplicitAny": false,
+      "esModuleInterop": true
     },
     "include": [
-        "./src/**/*"
+         "./src/*","./node_modules/easystarjs/*"
     ]
 }
