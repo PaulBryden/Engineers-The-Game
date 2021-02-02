@@ -2,6 +2,9 @@
 
 import  EasyStar from 'easystarjs'
 import 'phaser';
+import UIPlugin from 'phaser3-rex-plugins/templates/ui/ui-plugin.js';
+import { GridTable } from 'phaser3-rex-plugins/templates/ui/ui-components.js';
+
 export default class Demo extends Phaser.Scene
 {
     controls:any;
@@ -23,12 +26,23 @@ export default class Demo extends Phaser.Scene
     this.load.spritesheet('player', 'assets/spritesheet.png', { frameWidth: 64, frameHeight: 64 });
     this.load.spritesheet('player-rock', 'assets/spritesheet_rock.png', { frameWidth: 64, frameHeight: 64 });
     this.load.image('ui_overlay', 'assets/ui_overlay.png');
+    this.load.image('ui_button', 'assets/ui_button.png');
+    this.load.image('ui_button_Attack', 'assets/ui_button_Attack.png');
+    this.load.image('ui_button_Build', 'assets/ui_button_Build.png');
+    this.load.image('ui_button_Cancel', 'assets/ui_button_Cancel.png');
+    this.load.image('ui_button_Gather', 'assets/ui_button_Gather.png');
+    this.load.image('Portrait_Engineer', 'assets/Portrait_Engineer.png');
     this.load.audio('background_music', 'assets/background_music.mp3');  // urls: an array of file url
-
+    this.load.scenePlugin({
+        key: 'rexuiplugin',
+        url: 'https://raw.githubusercontent.com/rexrainbow/phaser3-rex-notes/master/dist/rexuiplugin.min.js',
+        sceneKey: 'rexUI'
+    });     
     }
 
     create ()
     {
+
     this.input.on('pointerup',this.handleClick,this);
 
     this.map = this.add.tilemap('map');
@@ -87,6 +101,53 @@ export default class Demo extends Phaser.Scene
       var sprite3 = this.add.sprite(  -185, 500, 'player-rock');
       sprite3.anims.play('player-walk3', true);
       this.add.image(800,450, 'ui_overlay').setScrollFactor(0).setScale(2).setDepth(1000);
+      
+      var buttonImageAttack = this.add.image(0,0,"ui_button_Attack");
+      var buttonImageGather = this.add.image(0,0,"ui_button_Gather");
+      var buttonImageCancel = this.add.image(0,0,"ui_button_Cancel");
+      var buttonImageBuild = this.add.image(0,0,"ui_button_Build");
+      var portaitEngineer = this.add.image(90,400,"Portrait_Engineer").setScrollFactor(1002);
+      
+      var scrollMode = 0; // 0:vertical, 1:horizontal
+      var rexUI =this.plugins.get("rexUI");
+      var gridSizer = this["rexUI"].add.gridSizer(180, 600, 0, 0, 3, 5)
+      .add(portaitEngineer,
+          0, 0
+      )
+      .add(this["rexUI"].add.roundRectangle(0, 0, 100, 100, 1, 0x000000),
+          1, 0,
+      )
+      .add(this["rexUI"].add.roundRectangle(0, 0, 50, 100, 1, 0x000000),
+          1, 1,
+      )
+          .add(buttonImageAttack,
+              0, 2
+          )
+          .add(buttonImageGather,
+              0, 4,
+          )
+          .add(buttonImageBuild,
+              2, 2,
+          )
+          .add(buttonImageCancel,
+              2, 4,
+          )
+          .add(this["rexUI"].add.roundRectangle(0, 0, 50, 100, 1, 0x000000),
+              1, 2,
+          )
+          .add(this["rexUI"].add.roundRectangle(0, 0, 50, 50, 1, 0x000000),
+              1, 3,
+          )
+          .add(this["rexUI"].add.roundRectangle(0, 0, 50, 100, 1, 0x000000),
+              1, 4,
+          )
+          .add(this["rexUI"].add.roundRectangle(0, 0, 100, 50, 1, 0x000000),
+              0, 3,
+          )
+          .add(this["rexUI"].add.roundRectangle(0, 0, 100, 50, 1, 0x000000),
+              2, 3,
+          )
+          .layout().setScrollFactor(0).setDepth(1001);
       
       this.finder = new EasyStar.js(); //new EasyStarWrapper();
       var grid = [];
@@ -243,7 +304,15 @@ const config = {
     width: 1600,
     height: 900,
     scene: Demo,
-    antialias: true
+    antialias: true,
+    plugins: {
+        scene: [{
+            key: 'rexUI',
+            plugin: UIPlugin,
+            mapping: 'rexUI'
+        }
+        ]
+    }
 };
 
 const game = new Phaser.Game(config);

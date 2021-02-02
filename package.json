@@ -20,6 +20,7 @@
     "homepage": "https://github.com/photonstorm/phaser3-typescript-project-template#readme",
     "dependencies": {
         "easystarts": "^0.4.5",
+        "phaser3-rex-plugins": "^1.1.39",
         "webpack": "^5.17.0"
     },
     "devDependencies": {

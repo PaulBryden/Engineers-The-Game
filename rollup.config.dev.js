@@ -49,7 +49,8 @@ export default {
                 'node_modules/eventemitter3/**',
                 'node_modules/phaser/**',
                 'node_modules/easystarjs/**',
-                'node_modules/heap/**'
+                'node_modules/heap/**',
+                'node_modules/phaser3-rex-plugins/**'
                 
             ],
             exclude: [ 
