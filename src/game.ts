@@ -4,13 +4,17 @@ import  EasyStar from 'easystarjs'
 import 'phaser';
 import UIPlugin from 'phaser3-rex-plugins/templates/ui/ui-plugin.js';
 import { GridTable } from 'phaser3-rex-plugins/templates/ui/ui-components.js';
-
+import { AttackButton, GatherButton, BuildButton, CancelButton  } from './image_button';
+import {UIButtonLayout, EngineerUIButtonLayout} from './ui_button_layout';
+import {Entity} from './entity'
+import {UIPortraitLayout} from './ui_portrait_layout';
+import {UIParentLayout} from './ui_parent_layout';
 export default class Demo extends Phaser.Scene
 {
     controls:any;
     finder:any;
     map:any;
-    player:Phaser.GameObjects.Sprite;
+    player:Entity;
     layer1:any;
     constructor ()
     {
@@ -32,6 +36,11 @@ export default class Demo extends Phaser.Scene
     this.load.image('ui_button_Cancel', 'assets/ui_button_Cancel.png');
     this.load.image('ui_button_Gather', 'assets/ui_button_Gather.png');
     this.load.image('Portrait_Engineer', 'assets/Portrait_Engineer.png');
+    this.load.image('ui_button_not_pressed','assets/ui_button_not_pressed.png');
+    this.load.image('ui_button_Attack_No_Background','assets/ui_button_Attack_No_Background.png');
+    this.load.image('ui_button_Build_No_Background','assets/ui_button_Build_No_Background.png');
+    this.load.image('ui_button_Gather_No_Background','assets/ui_button_Gather_No_Background.png');
+    this.load.image('ui_button_Cancel_No_Background','assets/ui_button_Cancel_No_Background.png');
     this.load.audio('background_music', 'assets/background_music.mp3');  // urls: an array of file url
     this.load.scenePlugin({
         key: 'rexuiplugin',
@@ -91,7 +100,10 @@ export default class Demo extends Phaser.Scene
           repeat: -1,
           yoyo: true
         });
-    this.player = this.add.sprite(  -190, 250, 'player');
+    this.player = new Entity("Portrait_Engineer", "Engineer", this,  -190, 250, 'player');
+    let portraitLayout:UIPortraitLayout =  new UIPortraitLayout(this, this.player, 0, 0);
+    let uiLayout:UIButtonLayout = new EngineerUIButtonLayout(this,0,200);
+    let uiPortraitParentLayout:UIParentLayout = new UIParentLayout(this,portraitLayout,uiLayout,110,400)
      this.player.anims.play('player-walk1', true);
 
       
@@ -102,52 +114,35 @@ export default class Demo extends Phaser.Scene
       sprite3.anims.play('player-walk3', true);
       this.add.image(800,450, 'ui_overlay').setScrollFactor(0).setScale(2).setDepth(1000);
       
-      var buttonImageAttack = this.add.image(0,0,"ui_button_Attack");
-      var buttonImageGather = this.add.image(0,0,"ui_button_Gather");
-      var buttonImageCancel = this.add.image(0,0,"ui_button_Cancel");
-      var buttonImageBuild = this.add.image(0,0,"ui_button_Build");
-      var portaitEngineer = this.add.image(90,400,"Portrait_Engineer").setScrollFactor(1002);
+
       
       var scrollMode = 0; // 0:vertical, 1:horizontal
       var rexUI =this.plugins.get("rexUI");
-      var gridSizer = this["rexUI"].add.gridSizer(180, 600, 0, 0, 3, 5)
-      .add(portaitEngineer,
-          0, 0
-      )
-      .add(this["rexUI"].add.roundRectangle(0, 0, 100, 100, 1, 0x000000),
-          1, 0,
-      )
-      .add(this["rexUI"].add.roundRectangle(0, 0, 50, 100, 1, 0x000000),
-          1, 1,
-      )
-          .add(buttonImageAttack,
-              0, 2
+   /*   var gridSizer = this["rexUI"].add.gridSizer(180, 600, 0, 0, 2, 4,{
+         space: {
+             left: 30, right: 30, top: 30, bottom:30,
+             column:30,row:30
+         },
+    
+        // name: '',
+        // draggable: false
+    })
+            .add(portaitEngineer,
+                0, 0
+            )
+          .add(buttonTest,
+              0, 3
           )
-          .add(buttonImageGather,
-              0, 4,
+          .add(buttonTest1,
+              0, 2,
           )
-          .add(buttonImageBuild,
-              2, 2,
-          )
-          .add(buttonImageCancel,
-              2, 4,
-          )
-          .add(this["rexUI"].add.roundRectangle(0, 0, 50, 100, 1, 0x000000),
+          .add(buttonTest2,
               1, 2,
           )
-          .add(this["rexUI"].add.roundRectangle(0, 0, 50, 50, 1, 0x000000),
+          .add(buttonTest3,
               1, 3,
           )
-          .add(this["rexUI"].add.roundRectangle(0, 0, 50, 100, 1, 0x000000),
-              1, 4,
-          )
-          .add(this["rexUI"].add.roundRectangle(0, 0, 100, 50, 1, 0x000000),
-              0, 3,
-          )
-          .add(this["rexUI"].add.roundRectangle(0, 0, 100, 50, 1, 0x000000),
-              2, 3,
-          )
-          .layout().setScrollFactor(0).setDepth(1001);
+          .layout().setScrollFactor(0).setDepth(1001).setScale(1.5);*/
       
       this.finder = new EasyStar.js(); //new EasyStarWrapper();
       var grid = [];
