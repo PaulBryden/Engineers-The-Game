@@ -1,5 +1,9 @@
 import 'phaser';
-import {ImageButton, AttackButton, GatherButton, BuildButton, CancelButton } from './image_button'
+import {ImageButton, AttackButton, GatherButton, BuildButton, CancelButton, BuildEngineerButton } from './image_button'
+import {BaseEntity} from './base_entity'
+import {EngineerEntity} from './engineer_entity'
+import {Entity} from './entity'
+
 class UIButtonLayout extends Phaser.GameObjects.Container
 {
     constructor(scene:Phaser.Scene, buttons:ImageButton[], x:number, y:number)
@@ -25,4 +29,34 @@ class EngineerUIButtonLayout extends UIButtonLayout
         super(scene,[new AttackButton(scene),new BuildButton(scene), new GatherButton(scene), new CancelButton(scene)],x,y);
     }
 }
-export {UIButtonLayout,EngineerUIButtonLayout};
+class BaseUIButtonLayout extends UIButtonLayout
+{
+    constructor(scene:Phaser.Scene, x:number, y:number)
+    {
+        super(scene,[new BuildEngineerButton(scene), new CancelButton(scene)],x,y);
+    }
+}
+
+class UIButtonLayoutFactory
+{
+    x:number;
+    y:number;
+    constructor()
+    {
+        this.x=0;
+        this.y=200;
+    };
+    public CreateUI(entity:Entity): UIButtonLayout
+    {
+        if(entity instanceof BaseEntity)
+        {
+            return new BaseUIButtonLayout(entity.scene,this.x,this.y);
+        }
+        else if(entity instanceof EngineerEntity)
+        {
+            return new EngineerUIButtonLayout(entity.scene,this.x,this.y);
+        }
+    }
+
+}
+export {UIButtonLayout,EngineerUIButtonLayout,UIButtonLayoutFactory};

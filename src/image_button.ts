@@ -55,4 +55,11 @@ class CancelButton extends ImageButton
         super(scene,"ui_button_not_pressed","ui_button","ui_button_Cancel_No_Background");
     }
 }
-export { ImageButton, AttackButton, GatherButton, BuildButton, CancelButton };
+class BuildEngineerButton extends ImageButton
+{
+    constructor(scene:Phaser.Scene)
+    {
+        super(scene,"ui_button_not_pressed","ui_button","ui_button_Build_Engineer_No_Background");
+    }
+}
+export { ImageButton, AttackButton, GatherButton, BuildButton, CancelButton, BuildEngineerButton };

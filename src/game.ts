@@ -8,14 +8,22 @@ import { AttackButton, GatherButton, BuildButton, CancelButton  } from './image_
 import {UIButtonLayout, EngineerUIButtonLayout} from './ui_button_layout';
 import {Entity} from './entity'
 import {UIPortraitLayout} from './ui_portrait_layout';
-import {UIParentLayout} from './ui_parent_layout';
+import {UIParentLayout, UIFactory} from './ui_parent_layout';
+import {EngineerEntity} from './engineer_entity'
+import {BaseEntity} from './base_entity'
+import {EventEmitterSingleton} from './EventEmitterSingleton'
 export default class Demo extends Phaser.Scene
 {
     controls:any;
     finder:any;
     map:any;
-    player:Entity;
+    player:EngineerEntity;
+    base:BaseEntity;
     layer1:any;
+    ui:UIParentLayout;
+    selected:  Phaser.GameObjects.Rectangle;
+    
+    eventEmitter:EventEmitterSingleton;
     constructor ()
     {
         super('demo');
@@ -25,7 +33,8 @@ export default class Demo extends Phaser.Scene
     {
     this.load.image('tileset', 'assets/tileset.png');
     this.load.spritesheet('tileset_spritesheet', 'assets/tileset.png', { frameWidth: 64, frameHeight: 64 });
-    this.load.image('home_base70001', 'assets/home_base70001.png');
+    this.load.image('home_base', 'assets/home_base70001.png');
+    this.load.image('portrait_base', 'assets/Portrait_Base.png');
     this.load.tilemapTiledJSON('map', 'assets/tiledmap.json');
     this.load.spritesheet('player', 'assets/spritesheet.png', { frameWidth: 64, frameHeight: 64 });
     this.load.spritesheet('player-rock', 'assets/spritesheet_rock.png', { frameWidth: 64, frameHeight: 64 });
@@ -41,6 +50,7 @@ export default class Demo extends Phaser.Scene
     this.load.image('ui_button_Build_No_Background','assets/ui_button_Build_No_Background.png');
     this.load.image('ui_button_Gather_No_Background','assets/ui_button_Gather_No_Background.png');
     this.load.image('ui_button_Cancel_No_Background','assets/ui_button_Cancel_No_Background.png');
+    this.load.image('ui_button_Build_Engineer_No_Background','assets/ui_button_Engineer_Build_No_Background.png');
     this.load.audio('background_music', 'assets/background_music.mp3');  // urls: an array of file url
     this.load.scenePlugin({
         key: 'rexuiplugin',
@@ -70,7 +80,7 @@ export default class Demo extends Phaser.Scene
 
 
     var tileset = this.map.addTilesetImage('tileset', 'tileset');
-    var tileset2 =this. map.addTilesetImage('home_base70001', 'home_base70001');
+    var tileset2 =this. map.addTilesetImage('home_base70001', 'home_base');
     this.layer1 = this.map.createLayer('Tile Layer 1', [ tileset, tileset2 ]);
     var layer2 = this.map.createLayer('Tile Layer 2', [ tileset, tileset2 ]);
 
@@ -100,10 +110,12 @@ export default class Demo extends Phaser.Scene
           repeat: -1,
           yoyo: true
         });
-    this.player = new Entity("Portrait_Engineer", "Engineer", this,  -190, 250, 'player');
-    let portraitLayout:UIPortraitLayout =  new UIPortraitLayout(this, this.player, 0, 0);
-    let uiLayout:UIButtonLayout = new EngineerUIButtonLayout(this,0,200);
-    let uiPortraitParentLayout:UIParentLayout = new UIParentLayout(this,portraitLayout,uiLayout,110,400)
+    this.player = new EngineerEntity(this.map,this,  3, 4);
+    this.base = new BaseEntity(this.map,this,5,5);
+    this.updateUI(this.player);
+    this.eventEmitter = EventEmitterSingleton.getInstance();
+    this.eventEmitter.on("SELECTED",this.updateUI, this );
+    //let uiPortraitParentLayout:UIParentLayout = new UIParentLayout(this,portraitLayout,uiLayout,110,400)
      this.player.anims.play('player-walk1', true);
 
       
@@ -117,33 +129,7 @@ export default class Demo extends Phaser.Scene
 
       
       var scrollMode = 0; // 0:vertical, 1:horizontal
-      var rexUI =this.plugins.get("rexUI");
-   /*   var gridSizer = this["rexUI"].add.gridSizer(180, 600, 0, 0, 2, 4,{
-         space: {
-             left: 30, right: 30, top: 30, bottom:30,
-             column:30,row:30
-         },
-    
-        // name: '',
-        // draggable: false
-    })
-            .add(portaitEngineer,
-                0, 0
-            )
-          .add(buttonTest,
-              0, 3
-          )
-          .add(buttonTest1,
-              0, 2,
-          )
-          .add(buttonTest2,
-              1, 2,
-          )
-          .add(buttonTest3,
-              1, 3,
-          )
-          .layout().setScrollFactor(0).setDepth(1001).setScale(1.5);*/
-      
+
       this.finder = new EasyStar.js(); //new EasyStarWrapper();
       var grid = [];
     for(var y = 0; y < this.map.height; y++){
@@ -227,6 +213,23 @@ SetupLargeTiles(tileID)
 {
     var sprites = this.layer1.createFromTiles(tileID,18,{key:"tileset_spritesheet",frame:tileID-1},this,this.cameras.main);
     this.addDepthsToTiles(sprites);
+}
+
+updateUI(entity:Entity)
+{
+    
+    let uiFactory:UIFactory = new UIFactory();
+    if(this.ui!=null)
+    {
+        this.ui.destroy();
+    }
+    if(this.selected!=null)
+    {
+        this.selected.destroy();
+    }
+    this.selected = this.add.rectangle(  entity.x, entity.y, entity.width,entity.height,0x6666ff).setStrokeStyle(2, 0x1a65ac);
+    this.ui = uiFactory.GetUI(entity);
+
 }
 
 handleClick(pointer){

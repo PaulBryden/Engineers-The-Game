@@ -1,5 +1,7 @@
 import 'phaser';
 import {UIButtonLayout } from './ui_button_layout'
+import {BaseEntity} from './base_entity'
+import {EngineerEntity} from './engineer_entity'
 import {Entity} from './entity'
 class UIPortraitLayout extends Phaser.GameObjects.Container
 {
