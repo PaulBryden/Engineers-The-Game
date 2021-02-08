@@ -1,6 +1,5 @@
 
 
-import  EasyStar from 'easystarjs'
 import 'phaser';
 import UIPlugin from 'phaser3-rex-plugins/templates/ui/ui-plugin.js';
 import { GridTable } from 'phaser3-rex-plugins/templates/ui/ui-components.js';
@@ -12,18 +11,20 @@ import {UIParentLayout, UIFactory} from './ui_parent_layout';
 import {EngineerEntity} from './engineer_entity'
 import {BaseEntity} from './base_entity'
 import {EventEmitterSingleton} from './EventEmitterSingleton'
+import {UIManager} from './UIManager';
+import { EasyStarSingleton } from './EasyStarSingleton';
+import {EntityManager} from './EntityManager'
 export default class Demo extends Phaser.Scene
 {
     controls:any;
-    finder:any;
+    finder:EasyStarSingleton;
     map:any;
     player:EngineerEntity;
     base:BaseEntity;
     layer1:any;
-    ui:UIParentLayout;
-    selected:  Phaser.GameObjects.Rectangle;
-    
-    eventEmitter:EventEmitterSingleton;
+    uiManager: UIManager;
+    entityManager: EntityManager;
+
     constructor ()
     {
         super('demo');
@@ -33,7 +34,7 @@ export default class Demo extends Phaser.Scene
     {
     this.load.image('tileset', 'assets/tileset.png');
     this.load.spritesheet('tileset_spritesheet', 'assets/tileset.png', { frameWidth: 64, frameHeight: 64 });
-    this.load.image('home_base', 'assets/home_base70001.png');
+    this.load.image('home_base', 'assets/home_base.png');
     this.load.image('portrait_base', 'assets/Portrait_Base.png');
     this.load.tilemapTiledJSON('map', 'assets/tiledmap.json');
     this.load.spritesheet('player', 'assets/spritesheet.png', { frameWidth: 64, frameHeight: 64 });
@@ -80,9 +81,7 @@ export default class Demo extends Phaser.Scene
 
 
     var tileset = this.map.addTilesetImage('tileset', 'tileset');
-    var tileset2 =this. map.addTilesetImage('home_base70001', 'home_base');
-    this.layer1 = this.map.createLayer('Tile Layer 1', [ tileset, tileset2 ]);
-    var layer2 = this.map.createLayer('Tile Layer 2', [ tileset, tileset2 ]);
+    this.layer1 = this.map.createLayer('Tile Layer 1', [ tileset ]);
 
     var cursors = this.input.keyboard.createCursorKeys();
 
@@ -110,11 +109,12 @@ export default class Demo extends Phaser.Scene
           repeat: -1,
           yoyo: true
         });
-    this.player = new EngineerEntity(this.map,this,  3, 4);
+    this.uiManager = new UIManager(this.base);
+    this.entityManager = new EntityManager(this,this.map);
+    
+    this.player = this.entityManager.createEngineerEntity(3,4);
+    new EngineerEntity(this.map,this,  3, 4);
     this.base = new BaseEntity(this.map,this,5,5);
-    this.updateUI(this.player);
-    this.eventEmitter = EventEmitterSingleton.getInstance();
-    this.eventEmitter.on("SELECTED",this.updateUI, this );
     //let uiPortraitParentLayout:UIParentLayout = new UIParentLayout(this,portraitLayout,uiLayout,110,400)
      this.player.anims.play('player-walk1', true);
 
@@ -130,7 +130,7 @@ export default class Demo extends Phaser.Scene
       
       var scrollMode = 0; // 0:vertical, 1:horizontal
 
-      this.finder = new EasyStar.js(); //new EasyStarWrapper();
+      this.finder = EasyStarSingleton.getInstance(); //new EasyStarWrapper();
       var grid = [];
     for(var y = 0; y < this.map.height; y++){
         var col = [];
@@ -197,10 +197,7 @@ for(var i=0;i<=16;i++)
     {
         this.controls.update(delta);
         let worldPoint: any = this.input.activePointer.positionToCamera(this.cameras.main);
-        var tilePos = this.layer1.worldToTileXY(this.player.x,this.player.y);
-        this.player.setDepth(tilePos.x+tilePos.y-2)
-
- 
+        this.entityManager.update();
     }
     
         
@@ -215,22 +212,7 @@ SetupLargeTiles(tileID)
     this.addDepthsToTiles(sprites);
 }
 
-updateUI(entity:Entity)
-{
-    
-    let uiFactory:UIFactory = new UIFactory();
-    if(this.ui!=null)
-    {
-        this.ui.destroy();
-    }
-    if(this.selected!=null)
-    {
-        this.selected.destroy();
-    }
-    this.selected = this.add.rectangle(  entity.x, entity.y, entity.width,entity.height,0x6666ff).setStrokeStyle(2, 0x1a65ac);
-    this.ui = uiFactory.GetUI(entity);
 
-}
 
 handleClick(pointer){
     var x = this.cameras.main.scrollX + pointer.x;
@@ -249,7 +231,8 @@ handleClick(pointer){
     var PlayerPos = Phaser.Tilemaps.Components.IsometricWorldToTileXY(this.player.x,this.player.y,true,testCoords,this.cameras.main,this.layer1.layer);
 
     console.log('going from ('+PlayerPos.x+','+PlayerPos.y+') to ('+TargetPos.x+','+TargetPos.y+')');
-
+    this.player.requestMove(new Phaser.Math.Vector2(TargetPos.x,TargetPos.y));
+/*
     this.finder.findPath(PlayerPos.x-1, PlayerPos.y-1, TargetPos.x-1, TargetPos.y-1, (path) => {
         if (path === null) {
             console.warn("Path was not found.");
@@ -258,7 +241,7 @@ handleClick(pointer){
             this.moveCharacter(path);
         }
     });
-    this.finder.calculate(); // don't forget, otherwise nothing happens
+    this.finder.calculate(); // don't forget, otherwise nothing happens*/
 
 };
 
@@ -272,7 +255,7 @@ addDepthsToTiles(sprites: Phaser.GameObjects.Sprite[])
         
       } 
 }
-
+/*
 moveCharacter(path){
     // Sets up a list of tweens, one for each tile to walk, that will be chained by the timeline
     var tweens = [];
@@ -292,7 +275,7 @@ moveCharacter(path){
     this.tweens.timeline({
         tweens: tweens
     });
-};
+};*/
 
 }
 
