@@ -14,7 +14,7 @@ class UIPortraitLayout extends Phaser.GameObjects.Container
         super(scene,x,y,[portrait,EntityName,EntityStatus,EntityHealth]);
         scene.add.existing(this);
         this.setScale(1.5);
-        this.setDepth(1003);
+        this.setDepth(251);
         this.setScrollFactor(0);
     }
 }

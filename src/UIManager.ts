@@ -1,6 +1,7 @@
 import 'phaser'
 import {UIParentLayout,UIFactory} from './ui_parent_layout'
 import {Entity} from './entity'
+import {EngineerEntity} from './engineer_entity'
 import {EventEmitterSingleton} from './EventEmitterSingleton'
 class UIManager
 {
@@ -21,6 +22,15 @@ class UIManager
 
         }
     }
+
+    moveSelected(coords:Phaser.Math.Vector2)
+    {
+        if(this.selectedEntity instanceof EngineerEntity)
+        {
+            this.selectedEntity.requestMove(coords);
+        }
+    }
+
     updateSelected(selectedEntity?: Entity)
     {
         if(selectedEntity!=null)

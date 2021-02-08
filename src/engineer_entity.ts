@@ -5,8 +5,8 @@ import EasyStar from 'easystarjs'
 import { typestate } from 'typestate';
 import { EasyStarSingleton, Path } from './EasyStarSingleton';
 enum State {
-    Idle,
-    Moving
+    Idle = "Idle",
+    Moving = "Moving"
 }
 class EngineerEntity extends Entity {
     engineerFSM: typestate.FiniteStateMachine<State>;

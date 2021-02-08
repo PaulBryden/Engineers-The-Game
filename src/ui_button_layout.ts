@@ -16,7 +16,7 @@ class UIButtonLayout extends Phaser.GameObjects.Container
             i++;
         }
         super(scene,x,y,buttons);
-        this.setScrollFactor(0).setDepth(1001).setScale(1.5);
+        this.setScrollFactor(0).setDepth(251).setScale(1.5);
         scene.add.existing(this);
 
     }

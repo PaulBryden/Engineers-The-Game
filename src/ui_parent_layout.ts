@@ -11,7 +11,7 @@ class UIParentLayout extends Phaser.GameObjects.Container
     constructor(scene:Phaser.Scene, uiButtonLayout:UIButtonLayout, uiPortraitLayout:UIPortraitLayout, x:number, y:number)
     {
         super(scene,x,y,[uiButtonLayout,uiPortraitLayout]);
-        this.setDepth(1003);
+        this.setDepth(250);
         scene.add.existing(this);
     }
 }

@@ -2,17 +2,21 @@ import 'phaser'
 import {EngineerEntity} from './engineer_entity'
 import {BaseEntity} from './base_entity'
 import {Entity} from './entity'
+import {EventEmitterSingleton} from './EventEmitterSingleton'
 class EntityManager
 {
     scene:Phaser.Scene;
     entityList:Entity[]
     map:Phaser.Tilemaps.Tilemap
+    eventEmitter:EventEmitterSingleton;
 
     constructor(scene:Phaser.Scene, map:Phaser.Tilemaps.Tilemap)
     {
         this.scene = scene;
         this.map = map;
         this.entityList = new Array();
+        this.eventEmitter = EventEmitterSingleton.getInstance();
+        this.eventEmitter.on("BUILD",(vector)=>{this.createEngineerEntity(vector.x,vector.y)});
     }
 
     createEngineerEntity(x:number,y:number) : EngineerEntity//tile coordinates 

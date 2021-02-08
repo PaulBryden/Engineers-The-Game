@@ -1,5 +1,5 @@
 import 'phaser';
-
+import {EventEmitterSingleton} from './EventEmitterSingleton'
 class ImageButton extends Phaser.GameObjects.Container
 {
     backgroundUnpressed:Phaser.GameObjects.Image;
@@ -7,8 +7,8 @@ class ImageButton extends Phaser.GameObjects.Container
     icon:Phaser.GameObjects.Image;
     constructor(scene:Phaser.Scene, background_unpressed: string, background_pressed: string, icon: string)
     {
-        super(scene,0,0,[scene.add.image(2,2,background_unpressed).setDepth(2003), scene.add.image(0,0,background_pressed).setDepth(2003), scene.add.image(0,0,icon).setDepth(2003)]);
-        this.setDepth(2003);
+        super(scene,0,0,[scene.add.image(2,2,background_unpressed), scene.add.image(0,0,background_pressed), scene.add.image(0,0,icon)]);
+        this.setDepth(251);
         this.setScrollFactor(0,0,true);
         scene.add.existing(this);
         this.setSize(72,72);
@@ -46,6 +46,7 @@ class BuildButton extends ImageButton
     constructor(scene:Phaser.Scene)
     {
         super(scene,"ui_button_not_pressed","ui_button","ui_button_Build_No_Background");
+       
     }
 }
 class CancelButton extends ImageButton
@@ -60,6 +61,10 @@ class BuildEngineerButton extends ImageButton
     constructor(scene:Phaser.Scene)
     {
         super(scene,"ui_button_not_pressed","ui_button","ui_button_Build_Engineer_No_Background");
+        this.setInteractive().on('pointerdown', function(pointer, localX, localY, event){
+            let emitter:EventEmitterSingleton = EventEmitterSingleton.getInstance();
+            emitter.emit("Buildbutton");
+        });
     }
 }
 export { ImageButton, AttackButton, GatherButton, BuildButton, CancelButton, BuildEngineerButton };
