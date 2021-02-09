@@ -3,6 +3,7 @@ import {UIParentLayout,UIFactory} from './ui_parent_layout'
 import {Entity} from './entity'
 import {EngineerEntity} from './engineer_entity'
 import {EventEmitterSingleton} from './EventEmitterSingleton'
+import {AudioEffectsSingleton} from './AudioEffectsSingleton'
 class UIManager
 {
     uiLayout:UIParentLayout;
@@ -38,6 +39,8 @@ class UIManager
             this.selectedEntity!=null?this.selectedEntity.updateSelected(false):{};
             this.selectedEntity = selectedEntity;
             this.selectedEntity.updateSelected(true);
+            Math.random()>0.5?AudioEffectsSingleton.getInstance(this.selectedEntity.scene).IdleEngineerSelected1.play():AudioEffectsSingleton.getInstance(this.selectedEntity.scene).IdleEngineerSelected2.play();
+
             if(this.uiLayout!=null)
             {
                 this.uiLayout.destroy();

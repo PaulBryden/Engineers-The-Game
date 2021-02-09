@@ -50,6 +50,12 @@ export default class Demo extends Phaser.Scene {
         this.load.image('ui_button_Cancel_No_Background', 'assets/ui_button_Cancel_No_Background.png');
         this.load.image('ui_button_Build_Engineer_No_Background', 'assets/ui_button_Engineer_Build_No_Background.png');
         this.load.audio('background_music', 'assets/background_music.mp3');  // urls: an array of file url
+        this.load.audio('Engineer_Attacking', 'assets/Engineer_Attacking.mp3');  // urls: an array of file url
+        this.load.audio('Engineer_Idle_Selected_1', 'assets/Engineer_Idle_Selected_1.mp3');  // urls: an array of file url
+        this.load.audio('Engineer_Idle_Selected_2', 'assets/Engineer_Idle_Selected_2.mp3');  // urls: an array of file url
+        this.load.audio('Engineer_Mining', 'assets/Engineer_Mining.mp3');  // urls: an array of file url
+        this.load.audio('Engineer_Moving_1', 'assets/Engineer_Moving_1.mp3');  // urls: an array of file url
+        this.load.audio('Engineer_Moving_2', 'assets/Engineer_Moving_2.mp3');  // urls: an array of file url
         this.load.scenePlugin({
             key: 'rexuiplugin',
             url: 'https://raw.githubusercontent.com/rexrainbow/phaser3-rex-notes/master/dist/rexuiplugin.min.js',
@@ -67,7 +73,7 @@ export default class Demo extends Phaser.Scene {
         console.log(this.map);
         var music = this.sound.add('background_music', {
             mute: false,
-            volume: 1,
+            volume: 0.5,
             rate: 1,
             detune: 0,
             seek: 0,
@@ -86,10 +92,59 @@ export default class Demo extends Phaser.Scene {
         var cursors = this.input.keyboard.createCursorKeys();
 
         this.cameras.main.setZoom(1.0);
-
+        //N,NE,E,SE,S,SW,W,NW,N
         this.anims.create({
-            key: 'player-walk1',
+            key: 'engineer-N',
+            frames: this.anims.generateFrameNumbers('player', { start: 0, end: 4 }),
+            frameRate: 15,
+            repeat: -1,
+            yoyo: true
+        });
+        this.anims.create({
+            key: 'engineer-NW',
+            frames: this.anims.generateFrameNumbers('player', { start: 5, end: 9 }),
+            frameRate: 15,
+            repeat: -1,
+            yoyo: true
+        });
+        this.anims.create({
+            key: 'engineer-W',
+            frames: this.anims.generateFrameNumbers('player', { start: 10, end: 14 }),
+            frameRate: 15,
+            repeat: -1,
+            yoyo: true
+        });
+        this.anims.create({
+            key: 'engineer-SW',
             frames: this.anims.generateFrameNumbers('player', { start: 15, end: 19 }),
+            frameRate: 15,
+            repeat: -1,
+            yoyo: true
+        });
+        this.anims.create({
+            key: 'engineer-S',
+            frames: this.anims.generateFrameNumbers('player', { start: 20, end: 24 }),
+            frameRate: 15,
+            repeat: -1,
+            yoyo: true
+        });
+        this.anims.create({
+            key: 'engineer-SE',
+            frames: this.anims.generateFrameNumbers('player', { start: 25, end: 29 }),
+            frameRate: 15,
+            repeat: -1,
+            yoyo: true
+        });
+        this.anims.create({
+            key: 'engineer-E',
+            frames: this.anims.generateFrameNumbers('player', { start: 30, end: 34 }),
+            frameRate: 15,
+            repeat: -1,
+            yoyo: true
+        });
+        this.anims.create({
+            key: 'engineer-NE',
+            frames: this.anims.generateFrameNumbers('player', { start: 35, end: 39 }),
             frameRate: 15,
             repeat: -1,
             yoyo: true
@@ -115,14 +170,12 @@ export default class Demo extends Phaser.Scene {
         this.player = this.entityManager.createEngineerEntity(3, 4);
         this.base = new BaseEntity(this.map, this, 5, 5);
         //let uiPortraitParentLayout:UIParentLayout = new UIParentLayout(this,portraitLayout,uiLayout,110,400)
-        this.player.anims.play('player-walk1', true);
 
 
         var sprite2 = this.add.sprite(-185, 200, 'player-rock');
         sprite2.anims.play('player-walk2', true);
 
         var sprite3 = this.add.sprite(-185, 500, 'player-rock');
-        sprite3.anims.play('player-walk3', true);
         this.add.image(800, 450, 'ui_overlay').setScrollFactor(0).setScale(2).setDepth(250);
 
 
