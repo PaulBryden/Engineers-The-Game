@@ -1,5 +1,6 @@
 import 'phaser';
 import {EventEmitterSingleton} from './EventEmitterSingleton'
+import {EventConstants} from './GameConstants'
 class ImageButton extends Phaser.GameObjects.Container
 {
     backgroundUnpressed:Phaser.GameObjects.Image;
@@ -62,8 +63,7 @@ class BuildEngineerButton extends ImageButton
     {
         super(scene,"ui_button_not_pressed","ui_button","ui_button_Build_Engineer_No_Background");
         this.setInteractive().on('pointerdown', function(pointer, localX, localY, event){
-            let emitter:EventEmitterSingleton = EventEmitterSingleton.getInstance();
-            emitter.emit("Buildbutton");
+            EventEmitterSingleton.getInstance().emit(EventConstants.Input.BuildEngineer);
         });
     }
 }

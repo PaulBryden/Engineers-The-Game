@@ -3,6 +3,7 @@ import {EngineerEntity} from './engineer_entity'
 import {BaseEntity} from './base_entity'
 import {Entity} from './entity'
 import {EventEmitterSingleton} from './EventEmitterSingleton'
+import {SoundConstants, EventConstants, CompassDirections, EntityConstants} from './GameConstants'
 class EntityManager
 {
     scene:Phaser.Scene;
@@ -16,7 +17,7 @@ class EntityManager
         this.map = map;
         this.entityList = new Array();
         this.eventEmitter = EventEmitterSingleton.getInstance();
-        this.eventEmitter.on("BUILD",(vector)=>{this.createEngineerEntity(vector.x,vector.y)});
+        this.eventEmitter.on(EventConstants.EntityBuild.CreateEngineer,(vector)=>{this.createEngineerEntity(vector.x,vector.y)});
     }
 
     createEngineerEntity(x:number,y:number) : EngineerEntity//tile coordinates 

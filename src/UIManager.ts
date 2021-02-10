@@ -4,6 +4,7 @@ import {Entity} from './entity'
 import {EngineerEntity} from './engineer_entity'
 import {EventEmitterSingleton} from './EventEmitterSingleton'
 import {AudioEffectsSingleton} from './AudioEffectsSingleton'
+import {EventConstants} from './GameConstants'
 class UIManager
 {
     uiLayout:UIParentLayout;
@@ -15,7 +16,7 @@ class UIManager
         this.uiFactory = new UIFactory();
         
         this.eventEmitter = EventEmitterSingleton.getInstance();
-        this.eventEmitter.on("SELECTED",this.updateSelected, this );
+        this.eventEmitter.on(EventConstants.EntityActions.Selected,this.updateSelected, this );
         if(initialEntity!=null)
         {
             this.selectedEntity = initialEntity;

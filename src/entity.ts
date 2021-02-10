@@ -1,4 +1,5 @@
 import {EventEmitterSingleton} from './EventEmitterSingleton'
+import {EventConstants} from './GameConstants'
 class Entity extends Phaser.GameObjects.Sprite
 {
     icon:string;
@@ -33,7 +34,7 @@ class Entity extends Phaser.GameObjects.Sprite
 
     emitSelected()
     {
-        this.eventEmitter.emit("SELECTED",this);
+        this.eventEmitter.emit(EventConstants.EntityActions.Selected,this);
     }
 
     getIconString()

@@ -1,5 +1,6 @@
 import {Entity} from './entity'
 import { typestate } from 'typestate';
+import {EventConstants} from './GameConstants'
 enum State {
     Idle = "Idle",
     Building = "Building"
@@ -11,7 +12,7 @@ class BaseEntity extends Entity
     constructor(map: Phaser.Tilemaps.Tilemap, scene: Phaser.Scene, x: number, y: number)
     {
         super(map,"portrait_base","Base",scene,x,y,"home_base");
-        this.eventEmitter.on("Buildbutton",()=>{this.requestBuild()});
+        this.eventEmitter.on(EventConstants.Input.BuildEngineer,()=>{this.selected?this.requestBuild():{};});
         this.engineerFSM=this.createFSM();
         this.buildCounter=0;
     }
@@ -51,7 +52,7 @@ class BaseEntity extends Entity
         else
         {
             this.buildCounter=0;
-            this.eventEmitter.emit("BUILD",Phaser.Tilemaps.Components.IsometricWorldToTileXY(this.x-32, this.y-32, true, new Phaser.Math.Vector2(), this.scene.cameras.main, this.mapReference.layer));
+            this.eventEmitter.emit(EventConstants.EntityBuild.CreateEngineer,Phaser.Tilemaps.Components.IsometricWorldToTileXY(this.x-32, this.y-32, true, new Phaser.Math.Vector2(), this.scene.cameras.main, this.mapReference.layer));
             this.engineerFSM.go(State.Idle);
 
         }
