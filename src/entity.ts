@@ -19,7 +19,7 @@ class Entity extends Phaser.GameObjects.Sprite
         this.selectedRectangle.setVisible(false);
 
         this.eventEmitter = EventEmitterSingleton.getInstance();
-        this.setInteractive();
+        this.setInteractive(new Phaser.Geom.Circle(this.width/2, this.height/2, this.width/3),this.handler);
         this.on('pointerup',this.emitSelected,this);
         this.setDepth(x+y);
         this.mapReference=map;
@@ -30,6 +30,20 @@ class Entity extends Phaser.GameObjects.Sprite
         this.name = name;
         this.selected=false;
         
+    }
+    handler (shape, x, y, gameObject)
+    {
+        if (shape.radius > 0 && x >= shape.left && x <= shape.right && y >= shape.top && y <= shape.bottom)
+        {
+            var dx = (shape.x - x) * (shape.x - x);
+            var dy = (shape.y - y) * (shape.y - y);
+
+            return (dx + dy) <= (shape.radius * shape.radius);
+        }
+        else
+        {
+            return false;
+        }
     }
 
     emitSelected()
@@ -58,12 +72,12 @@ class Entity extends Phaser.GameObjects.Sprite
     }
 
     updateRenderDepth()
-    {        
-        var tilePos = this.mapReference.worldToTileXY(this.x,this.y);
+    {   
+        var tilePos = Phaser.Tilemaps.Components.IsometricWorldToTileXY(this.x-16, this.y-16, true, new Phaser.Math.Vector2, this.scene.cameras.main, this.mapReference.layer);
         this.selectedRectangle.setX(this.x);
         this.selectedRectangle.setY(this.y);
-        this.selectedRectangle.setDepth(tilePos.x+tilePos.y-1);
-        this.setDepth(tilePos.x+tilePos.y-2);
+        this.selectedRectangle.setDepth(tilePos.x+tilePos.y);
+        this.setDepth(tilePos.x+tilePos.y);
 
     }
 

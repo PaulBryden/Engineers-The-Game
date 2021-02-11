@@ -14,11 +14,13 @@ import { EventEmitterSingleton } from './EventEmitterSingleton'
 import { UIManager } from './UIManager';
 import { EasyStarSingleton } from './EasyStarSingleton';
 import { EntityManager } from './EntityManager'
+import { MineEntity } from './mine_entity';
 export default class Demo extends Phaser.Scene {
     controls: any;
     finder: EasyStarSingleton;
     map: Phaser.Tilemaps.Tilemap;
     player: EngineerEntity;
+    mine: MineEntity;
     base: BaseEntity;
     layer1: Phaser.Tilemaps.TilemapLayer;
     uiManager: UIManager;
@@ -33,6 +35,7 @@ export default class Demo extends Phaser.Scene {
         this.load.spritesheet('tileset_spritesheet', 'assets/tileset.png', { frameWidth: 64, frameHeight: 64 });
         this.load.image('home_base', 'assets/home_base.png');
         this.load.image('portrait_base', 'assets/Portrait_Base.png');
+        this.load.image('mine', 'assets/mine.png');
         this.load.tilemapTiledJSON('map', 'assets/tiledmap.json');
         this.load.spritesheet('player', 'assets/spritesheet.png', { frameWidth: 64, frameHeight: 64 });
         this.load.spritesheet('player-rock', 'assets/spritesheet_rock.png', { frameWidth: 64, frameHeight: 64 });
@@ -168,7 +171,8 @@ export default class Demo extends Phaser.Scene {
         this.entityManager = new EntityManager(this, this.map);
 
         this.player = this.entityManager.createEngineerEntity(3, 4);
-        this.base = new BaseEntity(this.map, this, 5, 5);
+        this.mine = this.entityManager.createMineEntity(17, 7);
+        this.base = this.entityManager.createBaseEntity(5, 5);
         //let uiPortraitParentLayout:UIParentLayout = new UIParentLayout(this,portraitLayout,uiLayout,110,400)
 
 
@@ -269,7 +273,7 @@ export default class Demo extends Phaser.Scene {
             var y = this.cameras.main.scrollY + pointer.y;
 
             var testCoords;
-            var TargetPos = Phaser.Tilemaps.Components.IsometricWorldToTileXY(x, y, true, testCoords, this.cameras.main, this.layer1.layer);
+            var TargetPos = Phaser.Tilemaps.Components.IsometricWorldToTileXY(x-16, y-16, true, testCoords, this.cameras.main, this.layer1.layer);
             this.uiManager.moveSelected(TargetPos);
         
         /*

@@ -3,6 +3,7 @@ import {ImageButton, AttackButton, GatherButton, BuildButton, CancelButton, Buil
 import {BaseEntity} from './base_entity'
 import {EngineerEntity} from './engineer_entity'
 import {Entity} from './entity'
+import { MineEntity } from './mine_entity';
 
 class UIButtonLayout extends Phaser.GameObjects.Container
 {
@@ -55,6 +56,10 @@ class UIButtonLayoutFactory
         else if(entity instanceof EngineerEntity)
         {
             return new EngineerUIButtonLayout(entity.scene,this.x,this.y);
+        }
+        else if(entity instanceof MineEntity)
+        {
+            return new UIButtonLayout(entity.scene,[],this.x,this.y);
         }
     }
 

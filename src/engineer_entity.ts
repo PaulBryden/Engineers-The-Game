@@ -35,8 +35,8 @@ class EngineerEntity extends Entity {
     requestMove(coordinates: Phaser.Math.Vector2) {
         this.targetDestination = coordinates;
         var PlayerPos = Phaser.Tilemaps.Components.IsometricWorldToTileXY(this.x, this.y, true, PlayerPos, this.scene.cameras.main, this.mapReference.layer);
-
-        this.pathFinder.findPath(PlayerPos.x - 1, PlayerPos.y - 1, coordinates.x - 1, coordinates.y - 1, (path) => {
+        console.log("COORDS:"+coordinates.x+" - " + coordinates.y);
+        this.pathFinder.findPath(PlayerPos.x - 1, PlayerPos.y, coordinates.x - 1, coordinates.y, (path) => {
 
             if (path != null && path.length>0) {
                 this.path = path;
@@ -97,15 +97,15 @@ class EngineerEntity extends Entity {
             var ex = this.path[0].x;
             var ey = this.path[0].y;
             var testCoords;
-            var xyPos = Phaser.Tilemaps.Components.IsometricTileToWorldXY(ex + 1, ey + 1, testCoords, this.scene.cameras.main, this.mapReference.layer);
+            var xyPos = Phaser.Tilemaps.Components.IsometricTileToWorldXY(ex, ey, testCoords, this.scene.cameras.main, this.mapReference.layer);
             console.log(xyPos.x);
             tweens.push({
                 targets: this,
-                x: { value: xyPos.x + 30, duration: 500 },
-                y: { value: xyPos.y + 5, duration: 500 }
+                x: { value: xyPos.x+32, duration: 500 },
+                y: { value: xyPos.y+32, duration: 500 }
             });
             
-            this.updateAngle(Phaser.Math.Angle.Between(this.x,this.y,xyPos.x+30,xyPos.y+5));
+            this.updateAngle(Phaser.Math.Angle.Between(this.x,this.y,xyPos.x+32,xyPos.y+32));
             
             this.scene.tweens.timeline({
                 tweens: tweens

@@ -61,6 +61,8 @@ class BaseEntity extends Entity
     delay(ms: number) {
         return new Promise( resolve => setTimeout(resolve, ms) );
     }
+    
+
 }
 
 export {BaseEntity};

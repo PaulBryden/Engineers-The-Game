@@ -8,7 +8,7 @@ export default {
 
     //  Our games entry point (edit as required)
     input: [
-        './src/game.ts',
+        './src/game.ts'
     ],
 
     //  Where the build file is to be generated.
@@ -50,7 +50,8 @@ export default {
                 'node_modules/phaser/**',
                 'node_modules/easystarjs/**',
                 'node_modules/heap/**',
-                'node_modules/phaser3-rex-plugins/**'
+                'node_modules/phaser3-rex-plugins/**',
+                'node_modules/typestate/**'
                 
             ],
             exclude: [ 

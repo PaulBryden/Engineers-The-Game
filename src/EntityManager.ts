@@ -2,6 +2,8 @@ import 'phaser'
 import {EngineerEntity} from './engineer_entity'
 import {BaseEntity} from './base_entity'
 import {Entity} from './entity'
+import {MineEntity} from './mine_entity'
+
 import {EventEmitterSingleton} from './EventEmitterSingleton'
 import {SoundConstants, EventConstants, CompassDirections, EntityConstants} from './GameConstants'
 class EntityManager
@@ -31,6 +33,13 @@ class EntityManager
     createBaseEntity(x:number,y:number) : BaseEntity//tile coordinates 
     {
         let base:BaseEntity = new BaseEntity(this.map,this.scene,x,y);
+        this.entityList.push(base);
+        return base;
+
+    }
+    createMineEntity(x:number,y:number) : MineEntity//tile coordinates 
+    {
+        let base:MineEntity = new MineEntity(this.map,this.scene,x,y);
         this.entityList.push(base);
         return base;
 
