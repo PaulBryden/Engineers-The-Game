@@ -273,7 +273,7 @@ export default class Demo extends Phaser.Scene {
             var y = this.cameras.main.scrollY + pointer.y;
 
             var testCoords;
-            var TargetPos = Phaser.Tilemaps.Components.IsometricWorldToTileXY(x-16, y-16, true, testCoords, this.cameras.main, this.layer1.layer);
+            var TargetPos = Phaser.Tilemaps.Components.IsometricWorldToTileXY(x, y-16, true, testCoords, this.cameras.main, this.layer1.layer);
             this.uiManager.moveSelected(TargetPos);
         
         /*

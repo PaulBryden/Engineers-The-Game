@@ -35,7 +35,6 @@ class EngineerEntity extends Entity {
     requestMove(coordinates: Phaser.Math.Vector2) {
         this.targetDestination = coordinates;
         var PlayerPos = Phaser.Tilemaps.Components.IsometricWorldToTileXY(this.x, this.y, true, PlayerPos, this.scene.cameras.main, this.mapReference.layer);
-        console.log("COORDS:"+coordinates.x+" - " + coordinates.y);
         this.pathFinder.findPath(PlayerPos.x - 1, PlayerPos.y, coordinates.x - 1, coordinates.y, (path) => {
 
             if (path != null && path.length>0) {
@@ -93,19 +92,23 @@ class EngineerEntity extends Entity {
     async Move() {
 
         var tweens = [];
+        let awaitTime:number = 500;
         if (this.engineerFSM.is(State.Moving) && this.path != null && this.path.length > 0) {
             var ex = this.path[0].x;
             var ey = this.path[0].y;
             var testCoords;
             var xyPos = Phaser.Tilemaps.Components.IsometricTileToWorldXY(ex, ey, testCoords, this.scene.cameras.main, this.mapReference.layer);
-            console.log(xyPos.x);
+            if(( this.y-(xyPos.y+this.mapReference.layer.tileWidth/2)>-2)&&( this.y-(xyPos.y+this.mapReference.layer.tileWidth/2)<2)) //Horizontal moves are a greater distance. As such, ensure we treat it that way.
+            {
+                awaitTime+=awaitTime*0.3
+            }            
             tweens.push({
                 targets: this,
-                x: { value: xyPos.x+32, duration: 500 },
-                y: { value: xyPos.y+32, duration: 500 }
+                x: { value: xyPos.x+this.mapReference.layer.tileWidth/2, duration: awaitTime },
+                y: { value: xyPos.y+this.mapReference.layer.tileWidth/2, duration: awaitTime }
             });
             
-            this.updateAngle(Phaser.Math.Angle.Between(this.x,this.y,xyPos.x+32,xyPos.y+32));
+            this.updateAngle(Phaser.Math.Angle.Between(this.x,this.y,xyPos.x+this.mapReference.layer.tileWidth/2,xyPos.y+this.mapReference.layer.tileWidth/2));
             
             this.scene.tweens.timeline({
                 tweens: tweens
@@ -114,7 +117,7 @@ class EngineerEntity extends Entity {
         }
         if(this.engineerFSM.is(State.Moving)&& this.path.length > 0)
         {
-            await this.delay(500);
+            await this.delay(awaitTime);
             await this.Move();
         }
         else
