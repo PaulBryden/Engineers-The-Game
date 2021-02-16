@@ -6,11 +6,14 @@ class ImageButton extends Phaser.GameObjects.Container
     backgroundUnpressed:Phaser.GameObjects.Image;
     backgroundPressed:Phaser.GameObjects.Image;
     icon:Phaser.GameObjects.Image;
-    constructor(scene:Phaser.Scene, background_unpressed: string, background_pressed: string, icon: string)
+    constructor(scene:Phaser.Scene, background_unpressed: string, background_pressed: string, icon: string, cost?:string)
     {
         super(scene,0,0,[scene.add.image(2,2,background_unpressed), scene.add.image(0,0,background_pressed), scene.add.image(0,0,icon)]);
         this.setDepth(251);
         this.setScrollFactor(0,0,true);
+        if(cost){
+            this.add(scene.add.image(0,23,"resource").setScale(0.3));
+            this.add(new Phaser.GameObjects.Text(scene, 5, 18, cost,{ fontFamily: 'Courier', fontSize: '14px', color: '#ffffff' } ))};
         scene.add.existing(this);
         this.setSize(72,72);
           this.setInteractive().on('pointerdown', function(pointer, localX, localY, event){
@@ -61,9 +64,9 @@ class BuildEngineerButton extends ImageButton
 {
     constructor(scene:Phaser.Scene)
     {
-        super(scene,"ui_button_not_pressed","ui_button","ui_button_Build_Engineer_No_Background");
+        super(scene,"ui_button_not_pressed","ui_button","ui_button_Build_Engineer_No_Background","100");
         this.setInteractive().on('pointerdown', function(pointer, localX, localY, event){
-            EventEmitterSingleton.getInstance().emit(EventConstants.Input.BuildEngineer);
+            EventEmitterSingleton.getInstance().emit(EventConstants.Input.RequestBuildEngineer);
         });
     }
 }

@@ -1,12 +1,15 @@
 import {Entity} from './entity'
 import { typestate } from 'typestate';
 import {EventConstants} from './GameConstants'
+import { EasyStarSingleton, Path } from './EasyStarSingleton';
+import { BuildingEntity } from './building_entity';
 
-class MineEntity extends Entity
+class MineEntity extends BuildingEntity
 {
     constructor(map: Phaser.Tilemaps.Tilemap, scene: Phaser.Scene, x: number, y: number)
     {
-        super(map,"portrait_base","Mine",scene,x,y,"mine");
+        super(map,"mine","Mine",scene,x,y,"mine");
+        this.status="Operating";
     }
 
 }

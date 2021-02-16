@@ -36,7 +36,7 @@ export default class Demo extends Phaser.Scene {
         this.load.image('home_base', 'assets/home_base.png');
         this.load.image('portrait_base', 'assets/Portrait_Base.png');
         this.load.image('mine', 'assets/mine.png');
-        this.load.tilemapTiledJSON('map', 'assets/tiledmap.json');
+        this.load.tilemapTiledJSON('map', 'assets/tiledmap2.json');
         this.load.spritesheet('player', 'assets/spritesheet.png', { frameWidth: 64, frameHeight: 64 });
         this.load.spritesheet('player-rock', 'assets/spritesheet_rock.png', { frameWidth: 64, frameHeight: 64 });
         this.load.image('ui_overlay', 'assets/ui_overlay.png');
@@ -45,9 +45,10 @@ export default class Demo extends Phaser.Scene {
         this.load.image('ui_button_Build', 'assets/ui_button_Build.png');
         this.load.image('ui_button_Cancel', 'assets/ui_button_Cancel.png');
         this.load.image('ui_button_Gather', 'assets/ui_button_Gather.png');
-        this.load.image('Portrait_Engineer', 'assets/Portrait_Engineer.png');
+        this.load.image('Portrait_Engineer', 'assets/engineer_portrait.png');
         this.load.image('ui_button_not_pressed', 'assets/ui_button_not_pressed.png');
         this.load.image('ui_button_Attack_No_Background', 'assets/ui_button_Attack_No_Background.png');
+        this.load.image('resource', 'assets/resource.png');
         this.load.image('ui_button_Build_No_Background', 'assets/ui_button_Build_No_Background.png');
         this.load.image('ui_button_Gather_No_Background', 'assets/ui_button_Gather_No_Background.png');
         this.load.image('ui_button_Cancel_No_Background', 'assets/ui_button_Cancel_No_Background.png');
@@ -59,6 +60,7 @@ export default class Demo extends Phaser.Scene {
         this.load.audio('Engineer_Mining', 'assets/Engineer_Mining.mp3');  // urls: an array of file url
         this.load.audio('Engineer_Moving_1', 'assets/Engineer_Moving_1.mp3');  // urls: an array of file url
         this.load.audio('Engineer_Moving_2', 'assets/Engineer_Moving_2.mp3');  // urls: an array of file url
+        this.load.image('Portrait', 'assets/portrait.png');  // urls: an array of file url
         this.load.scenePlugin({
             key: 'rexuiplugin',
             url: 'https://raw.githubusercontent.com/rexrainbow/phaser3-rex-notes/master/dist/rexuiplugin.min.js',
@@ -152,7 +154,62 @@ export default class Demo extends Phaser.Scene {
             repeat: -1,
             yoyo: true
         });
-
+        this.anims.create({
+            key: 'Miningengineer-N',
+            frames: this.anims.generateFrameNumbers('player-rock', { start: 0, end: 4 }),
+            frameRate: 15,
+            repeat: -1,
+            yoyo: true
+        });
+        this.anims.create({
+            key: 'Miningengineer-NW',
+            frames: this.anims.generateFrameNumbers('player-rock', { start: 5, end: 9 }),
+            frameRate: 15,
+            repeat: -1,
+            yoyo: true
+        });
+        this.anims.create({
+            key: 'Miningengineer-W',
+            frames: this.anims.generateFrameNumbers('player-rock', { start: 10, end: 14 }),
+            frameRate: 15,
+            repeat: -1,
+            yoyo: true
+        });
+        this.anims.create({
+            key: 'Miningengineer-SW',
+            frames: this.anims.generateFrameNumbers('player-rock', { start: 15, end: 19 }),
+            frameRate: 15,
+            repeat: -1,
+            yoyo: true
+        });
+        this.anims.create({
+            key: 'Miningengineer-S',
+            frames: this.anims.generateFrameNumbers('player-rock', { start: 20, end: 24 }),
+            frameRate: 15,
+            repeat: -1,
+            yoyo: true
+        });
+        this.anims.create({
+            key: 'Miningengineer-SE',
+            frames: this.anims.generateFrameNumbers('player-rock', { start: 25, end: 29 }),
+            frameRate: 15,
+            repeat: -1,
+            yoyo: true
+        });
+        this.anims.create({
+            key: 'Miningengineer-E',
+            frames: this.anims.generateFrameNumbers('player-rock', { start: 30, end: 34 }),
+            frameRate: 15,
+            repeat: -1,
+            yoyo: true
+        });
+        this.anims.create({
+            key: 'Miningengineer-NE',
+            frames: this.anims.generateFrameNumbers('player-rock', { start: 35, end: 39 }),
+            frameRate: 15,
+            repeat: -1,
+            yoyo: true
+        });
         this.anims.create({
             key: 'player-walk2',
             frames: this.anims.generateFrameNumbers('player-rock', { start: 15, end: 19 }),
@@ -167,19 +224,16 @@ export default class Demo extends Phaser.Scene {
             repeat: -1,
             yoyo: true
         });
-        this.uiManager = new UIManager(this.base);
+        this.uiManager = new UIManager(this,this.base);
         this.entityManager = new EntityManager(this, this.map);
 
+        this.mine = this.entityManager.createMineEntity(6, 6);
+        this.base = this.entityManager.createBaseEntity(14, 5);
+        this.base = this.entityManager.createBaseEntity(16, 16);
+        this.mine = this.entityManager.createMineEntity(6, 14);
         this.player = this.entityManager.createEngineerEntity(3, 4);
-        this.mine = this.entityManager.createMineEntity(17, 7);
-        this.base = this.entityManager.createBaseEntity(5, 5);
         //let uiPortraitParentLayout:UIParentLayout = new UIParentLayout(this,portraitLayout,uiLayout,110,400)
 
-
-        var sprite2 = this.add.sprite(-185, 200, 'player-rock');
-        sprite2.anims.play('player-walk2', true);
-
-        var sprite3 = this.add.sprite(-185, 500, 'player-rock');
         this.add.image(800, 450, 'ui_overlay').setScrollFactor(0).setScale(2).setDepth(250);
 
 
@@ -216,7 +270,7 @@ export default class Demo extends Phaser.Scene {
         }
         this.finder.setAcceptableTiles(acceptableTiles);
         this.finder.enableDiagonals();
-        this.finder.setIterationsPerCalculation(50);
+        this.finder.setIterationsPerCalculation(1000);
         for (var i = 0; i <= 16; i++) {
             this.SetupLargeTiles(i);
         }
@@ -235,17 +289,7 @@ export default class Demo extends Phaser.Scene {
         };
 
         this.controls = new Phaser.Cameras.Controls.SmoothedKeyControl(controlConfig);
-        var tween = this.tweens.add({
-            targets: sprite3,
-            x: { from: sprite3.x, to: sprite3.x + 400 },
-            // alpha: { start: 0, to: 1 },
-            // alpha: 1,
-            // alpha: '+=1',
-            ease: 'Linear',       // 'Cubic', 'Elastic', 'Bounce', 'Back'
-            duration: 5000,
-            repeat: 0,            // -1: infinity
-            yoyo: false
-        });
+
     }
 
     update(time, delta) {

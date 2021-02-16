@@ -1,17 +1,20 @@
 import {Entity} from './entity'
 import { typestate } from 'typestate';
 import {EventConstants} from './GameConstants'
+import { EasyStarSingleton, Path } from './EasyStarSingleton';
+import {BuildingEntity} from './building_entity'
 enum State {
     Idle = "Idle",
     Building = "Building"
 }
-class BaseEntity extends Entity
+class BaseEntity extends BuildingEntity
 {
     engineerFSM: typestate.FiniteStateMachine<State>;
     buildCounter:number;
     constructor(map: Phaser.Tilemaps.Tilemap, scene: Phaser.Scene, x: number, y: number)
     {
-        super(map,"portrait_base","Base",scene,x,y,"home_base");
+        super(map,"home_base","Base",scene,x,y,"home_base");
+        
         this.eventEmitter.on(EventConstants.Input.BuildEngineer,()=>{this.selected?this.requestBuild():{};});
         this.engineerFSM=this.createFSM();
         this.buildCounter=0;

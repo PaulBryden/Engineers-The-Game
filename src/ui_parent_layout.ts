@@ -6,6 +6,7 @@ import {Entity} from './entity'
 import {BaseEntity} from './base_entity'
 import {EngineerEntity} from './engineer_entity'
 import {EventEmitterSingleton} from './EventEmitterSingleton'
+import {UIResources} from './ui_resources'
 class UIParentLayout extends Phaser.GameObjects.Container
 {
     constructor(scene:Phaser.Scene, uiButtonLayout:UIButtonLayout, uiPortraitLayout:UIPortraitLayout, x:number, y:number)
