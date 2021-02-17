@@ -39,6 +39,8 @@ export default class Demo extends Phaser.Scene {
         this.load.tilemapTiledJSON('map', 'assets/tiledmap2.json');
         this.load.spritesheet('player', 'assets/spritesheet.png', { frameWidth: 64, frameHeight: 64 });
         this.load.spritesheet('player-rock', 'assets/spritesheet_rock.png', { frameWidth: 64, frameHeight: 64 });
+        this.load.spritesheet('turret', 'assets/turret_spritesheet.png', { frameWidth: 64, frameHeight: 64 });
+        this.load.spritesheet('glider', 'assets/glider_spritesheet.png', { frameWidth: 64, frameHeight: 96 });
         this.load.image('ui_overlay', 'assets/ui_overlay.png');
         this.load.image('ui_button', 'assets/ui_button.png');
         this.load.image('ui_button_Attack', 'assets/ui_button_Attack.png');
@@ -97,7 +99,70 @@ export default class Demo extends Phaser.Scene {
         var cursors = this.input.keyboard.createCursorKeys();
 
         this.cameras.main.setZoom(1.0);
+        this.anims.create({
+            key: 'glider-test',
+            frames: this.anims.generateFrameNumbers('glider', { start: 0, end: 7 }),
+            frameRate: 15,
+            repeat: -1,
+            yoyo: true
+        });
         //N,NE,E,SE,S,SW,W,NW,N
+        this.anims.create({
+            key: 'glider-N',
+            frames: this.anims.generateFrameNumbers('glider', { start: 0, end: 7  }),
+            frameRate: 15,
+            repeat: -1,
+            yoyo: true
+        });
+        this.anims.create({
+            key: 'glider-NW',
+            frames: this.anims.generateFrameNumbers('glider', { start: 8, end: 15 }),
+            frameRate: 15,
+            repeat: -1,
+            yoyo: true
+        });
+        this.anims.create({
+            key: 'glider-W',
+            frames: this.anims.generateFrameNumbers('glider', { start: 16, end: 23 }),
+            frameRate: 15,
+            repeat: -1,
+            yoyo: true
+        });
+        this.anims.create({
+            key: 'glider-SW',
+            frames: this.anims.generateFrameNumbers('glider', { start: 24, end: 31 }),
+            frameRate: 15,
+            repeat: -1,
+            yoyo: true
+        });
+        this.anims.create({
+            key: 'glider-S',
+            frames: this.anims.generateFrameNumbers('glider', { start: 32, end: 39 }),
+            frameRate: 15,
+            repeat: -1,
+            yoyo: true
+        });
+        this.anims.create({
+            key: 'glider-SE',
+            frames: this.anims.generateFrameNumbers('glider', { start: 40, end: 47 }),
+            frameRate: 15,
+            repeat: -1,
+            yoyo: true
+        });
+        this.anims.create({
+            key: 'glider-E',
+            frames: this.anims.generateFrameNumbers('glider', { start: 48, end: 55 }),
+            frameRate: 15,
+            repeat: -1,
+            yoyo: true
+        });
+        this.anims.create({
+            key: 'glider-NE',
+            frames: this.anims.generateFrameNumbers('glider', { start: 56, end: 63 }),
+            frameRate: 15,
+            repeat: -1,
+            yoyo: true
+        });
         this.anims.create({
             key: 'engineer-N',
             frames: this.anims.generateFrameNumbers('player', { start: 0, end: 4 }),
@@ -231,6 +296,8 @@ export default class Demo extends Phaser.Scene {
         this.base = this.entityManager.createBaseEntity(14, 5);
         this.base = this.entityManager.createBaseEntity(16, 16);
         this.mine = this.entityManager.createMineEntity(6, 14);
+        var turret = this.entityManager.createTurretEntity(9, 9);
+        var turret = this.entityManager.createGliderEntity(15, 7);
         this.player = this.entityManager.createEngineerEntity(3, 4);
         //let uiPortraitParentLayout:UIParentLayout = new UIParentLayout(this,portraitLayout,uiLayout,110,400)
 

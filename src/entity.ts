@@ -1,6 +1,5 @@
 import {EventEmitterSingleton} from './EventEmitterSingleton'
 import {EventConstants} from './GameConstants'
-import { EasyStarSingleton, Path } from './EasyStarSingleton';
 
 class Entity extends Phaser.GameObjects.Sprite
 {

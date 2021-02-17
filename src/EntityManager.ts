@@ -6,6 +6,8 @@ import { MineEntity } from './mine_entity'
 
 import { EventEmitterSingleton } from './EventEmitterSingleton'
 import { SoundConstants, EventConstants, CompassDirections, EntityConstants, StartOfGame } from './GameConstants'
+import { TurretEntity } from './turret_entity'
+import { GliderEntity } from './glider_entity'
 class EntityManager {
     scene: Phaser.Scene;
     entityList: Entity[]
@@ -67,6 +69,20 @@ class EntityManager {
     createMineEntity(x: number, y: number): MineEntity//tile coordinates 
     {
         let base: MineEntity = new MineEntity(this.map, this.scene, x, y);
+        this.entityList.push(base);
+        return base;
+
+    }
+    createTurretEntity(x: number, y: number): TurretEntity//tile coordinates 
+    {
+        let base: TurretEntity = new TurretEntity(this.map, this.scene, x, y);
+        this.entityList.push(base);
+        return base;
+
+    }
+    createGliderEntity(x: number, y: number): TurretEntity//tile coordinates 
+    {
+        let base: GliderEntity = new GliderEntity(this.map, this.scene, x, y);
         this.entityList.push(base);
         return base;
 

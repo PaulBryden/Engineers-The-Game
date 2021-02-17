@@ -61,6 +61,10 @@ class UIButtonLayoutFactory
         {
             return new UIButtonLayout(entity.scene,[],this.x,this.y);
         }
+        else
+        {
+            return new UIButtonLayout(entity.scene,[],this.x,this.y);
+        }
     }
 
 }
