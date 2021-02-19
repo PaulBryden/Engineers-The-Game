@@ -3,7 +3,7 @@ import { Entity } from './entity'
 import 'typestate';
 import EasyStar from 'easystarjs'
 import { typestate } from 'typestate';
-import { EasyStarSingleton, Path } from './EasyStarSingleton';
+import { EasyStarGroundLevelSingleton, Path } from './EasyStarSingleton';
 import {AudioEffectsSingleton} from './AudioEffectsSingleton';
 import { MineEntity } from './mine_entity';
 import { BaseEntity } from './base_entity';
@@ -30,7 +30,7 @@ enum AnimationState
 }
 class EngineerEntity extends Entity {
     engineerFSM: typestate.FiniteStateMachine<State>;
-    pathFinder: EasyStarSingleton;
+    pathFinder: EasyStar.js;
     targetDestination: Phaser.Math.Vector2;
     path: Path;
     targetMine: MineEntity;
@@ -41,7 +41,7 @@ class EngineerEntity extends Entity {
         super(map, "Portrait_Engineer", "Engineer", scene, x, y, "player");
         this.engineerFSM = this.createFSM();
         this.miningFSM = this.createMiningFSM();
-        this.pathFinder = EasyStarSingleton.getInstance();
+        this.pathFinder = EasyStarGroundLevelSingleton.getInstance();
         this.anims.play('engineer-SW', true);
         this.currentAnimation=AnimationState.Default;
 
@@ -70,6 +70,7 @@ class EngineerEntity extends Entity {
         });
         return fsm;
     }
+    
 
     updateNearestBase(base:BaseEntity)
     {

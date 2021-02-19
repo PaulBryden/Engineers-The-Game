@@ -1,7 +1,7 @@
 import {Entity} from './entity'
 import { typestate } from 'typestate';
 import {EventConstants} from './GameConstants'
-import { EasyStarSingleton, Path } from './EasyStarSingleton';
+import { EasyStarGroundLevelSingleton, Path } from './EasyStarSingleton';
 import { BuildingEntity } from './building_entity';
 
 class TurretEntity extends Entity
@@ -10,7 +10,7 @@ class TurretEntity extends Entity
     {
         super(map,"turret","Turret",scene,x,y,"turret");
         this.y+=this.mapReference.layer.tileWidth/4;
-        EasyStarSingleton.getInstance().avoidAdditionalPoint(x-1,y);
+        EasyStarGroundLevelSingleton.getInstance().avoidAdditionalPoint(x-1,y);
         this.status="Operating";
     }
 

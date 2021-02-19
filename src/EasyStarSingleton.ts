@@ -3,13 +3,13 @@ import  EasyStar from 'easystarjs'
 
 type Path = {x: number, y: number} [];
 
-class EasyStarSingleton extends EasyStar.js {
-    private static instance: EasyStarSingleton;
+class EasyStarGroundLevelSingleton extends EasyStar.js {
+    private static instance: EasyStarGroundLevelSingleton;
     private constructor()
     {
         super();
     }
-    static getInstance(): EasyStarSingleton {
+    static getInstance(): EasyStarGroundLevelSingleton {
         if (!this.instance) {
             this.instance = new this();
             }
@@ -17,4 +17,18 @@ class EasyStarSingleton extends EasyStar.js {
     }
 
 }
-export {EasyStarSingleton,Path};
+class EasyStarFlightLevelSingleton extends EasyStar.js {
+    private static instance: EasyStarGroundLevelSingleton;
+    private constructor()
+    {
+        super();
+    }
+    static getInstance(): EasyStarGroundLevelSingleton {
+        if (!this.instance) {
+            this.instance = new this();
+            }
+            return this.instance;
+    }
+
+}
+export {EasyStarGroundLevelSingleton,EasyStarFlightLevelSingleton,Path};

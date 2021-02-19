@@ -47,7 +47,7 @@ class UIButtonLayoutFactory
         this.x=0;
         this.y=200;
     };
-    public CreateUI(entity:Entity): UIButtonLayout
+    public CreateUI(entity:Entity,scene:Phaser.Scene): UIButtonLayout
     {
         if(entity instanceof BaseEntity)
         {

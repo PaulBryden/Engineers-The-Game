@@ -24,12 +24,12 @@ class UIFactory
 
     };
 
-    GetUI(entity:Entity) : UIParentLayout
+    GetUI(entity:Entity, scene:Phaser.Scene) : UIParentLayout
     {
        let uiButtonLayoutFactory:UIButtonLayoutFactory = new UIButtonLayoutFactory();
-       let uiButtonLayout:UIButtonLayout = uiButtonLayoutFactory.CreateUI(entity);
-       let uiPortraitLayout:UIPortraitLayout = new UIPortraitLayout(entity.scene,entity,0,0);
-       return new UIParentLayout(entity.scene,uiButtonLayout,uiPortraitLayout,110,400);
+       let uiButtonLayout:UIButtonLayout = uiButtonLayoutFactory.CreateUI(entity,scene);
+       let uiPortraitLayout:UIPortraitLayout = new UIPortraitLayout(scene,entity,0,0);
+       return new UIParentLayout(scene,uiButtonLayout,uiPortraitLayout,110,400);
     }
 
 }

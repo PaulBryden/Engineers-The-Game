@@ -1,7 +1,6 @@
 import {Entity} from './entity'
 import { typestate } from 'typestate';
 import {EventConstants} from './GameConstants'
-import { EasyStarSingleton, Path } from './EasyStarSingleton';
 import {BuildingEntity} from './building_entity'
 enum State {
     Idle = "Idle",

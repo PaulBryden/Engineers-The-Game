@@ -1,7 +1,7 @@
 import {Entity} from './entity'
 import { typestate } from 'typestate';
 import {EventConstants} from './GameConstants'
-import { EasyStarSingleton, Path } from './EasyStarSingleton';
+import { EasyStarFlightLevelSingleton, EasyStarGroundLevelSingleton, Path } from './EasyStarSingleton';
 import { BuildingEntity } from './building_entity';
 import { EngineerEntity } from './engineer_entity';
 
@@ -11,6 +11,8 @@ class GliderEntity extends EngineerEntity
     {
         super(map,scene,x,y);
         this.y+=this.mapReference.layer.tileWidth/4;
+        
+        this.pathFinder = EasyStarFlightLevelSingleton.getInstance();
     }
 
     updateAngle(angle:number)
@@ -54,7 +56,16 @@ class GliderEntity extends EngineerEntity
             this.anims.play('glider-NW', true);
         }
     }
-
+    
+    updateRenderDepth()
+    {   
+        super.updateRenderDepth();
+        var tilePos = Phaser.Tilemaps.Components.IsometricWorldToTileXY(this.x-16, this.y-16, true, new Phaser.Math.Vector2, this.scene.cameras.main, this.mapReference.layer);
+        this.selectedRectangle.setX(this.x);
+        this.selectedRectangle.setY(this.y);
+        this.selectedRectangle.setDepth(tilePos.x+tilePos.y+3);
+        this.setDepth(tilePos.x+tilePos.y+3);
+    }
 }
 
 export {GliderEntity};
