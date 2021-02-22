@@ -8,6 +8,7 @@ import { EventEmitterSingleton } from './EventEmitterSingleton'
 import { SoundConstants, EventConstants, CompassDirections, EntityConstants, StartOfGame } from './GameConstants'
 import { TurretEntity } from './turret_entity'
 import { GliderEntity } from './glider_entity'
+import { FactoryEntity } from './factory_entity'
 class EntityManager {
     scene: Phaser.Scene;
     entityList: Entity[]
@@ -21,6 +22,8 @@ class EntityManager {
         this.entityList = new Array();
         this.eventEmitter = EventEmitterSingleton.getInstance();
         this.eventEmitter.on(EventConstants.EntityBuild.CreateEngineer, (vector) => { this.createEngineerEntity(vector.x, vector.y) });
+        this.eventEmitter.on(EventConstants.EntityBuild.CreateGlider, (vector) => { this.createGliderEntity(vector.x, vector.y) });
+
         this.resources = StartOfGame.resourceCount;
 
         this.eventEmitter.on(EventConstants.Game.AddResources, (resources) => { this.resources += resources; this.eventEmitter.emit(EventConstants.Game.UpdateResourceCount, (this.resources)); });
@@ -31,7 +34,25 @@ class EntityManager {
                 this.eventEmitter.emit(EventConstants.Game.UpdateResourceCount, (this.resources));
                 this.eventEmitter.emit(EventConstants.Input.BuildEngineer, {});
             }
+        });        
+        this.eventEmitter.on(EventConstants.Input.RequestCancelEngineer, () => {
+            this.resources+=100;
+            this.eventEmitter.emit(EventConstants.Input.Cancel, {});
+            this.eventEmitter.emit(EventConstants.Game.UpdateResourceCount, (this.resources));
         });
+        this.eventEmitter.on(EventConstants.Input.RequestBuildGlider, () => {
+            if (this.resources >= 300) {
+                this.resources -= 300; 
+                this.eventEmitter.emit(EventConstants.Game.UpdateResourceCount, (this.resources));
+                this.eventEmitter.emit(EventConstants.Input.BuildGlider, {});
+            }
+        });        
+        this.eventEmitter.on(EventConstants.Input.RequestCancelGlider, () => {
+            this.resources+=300;
+            this.eventEmitter.emit(EventConstants.Input.Cancel, {});
+            this.eventEmitter.emit(EventConstants.Game.UpdateResourceCount, (this.resources));
+        });
+        
     }
 
     getNearestBaseToEntity(entity: Entity): BaseEntity {
@@ -83,6 +104,13 @@ class EntityManager {
     createGliderEntity(x: number, y: number): TurretEntity//tile coordinates 
     {
         let base: GliderEntity = new GliderEntity(this.map, this.scene, x, y);
+        this.entityList.push(base);
+        return base;
+
+    }
+    createFactoryEntity(x: number, y: number): FactoryEntity//tile coordinates 
+    {
+        let base: FactoryEntity = new FactoryEntity(this.map, this.scene, x, y);
         this.entityList.push(base);
         return base;
 

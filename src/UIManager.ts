@@ -8,6 +8,7 @@ import {EventConstants} from './GameConstants'
 import { MineEntity } from './mine_entity'
 import { UIResources } from './ui_resources'
 import GameScene from './gameScene'
+import { MovingEntity } from './MovingEntity'
 class UIManager
 {
     uiLayout:UIParentLayout;
@@ -54,7 +55,7 @@ class UIManager
 
     moveSelected(coords:Phaser.Math.Vector2)
     {
-        if(this.selectedEntity instanceof EngineerEntity)
+        if(this.selectedEntity instanceof MovingEntity)
         {
             this.selectedEntity.requestMove(coords);
         }

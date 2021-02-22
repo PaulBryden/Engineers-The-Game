@@ -18,7 +18,7 @@ class EntityNames {
 
 class StartOfGame
 {
-  public static readonly resourceCount: number = 150;
+  public static readonly resourceCount: number = 300;
 }
 
 class CompassDirections {
@@ -42,12 +42,21 @@ namespace EventConstants {
 
   export class EntityBuild {
     public static readonly CreateEngineer: string = "CreateEngineer";
+    public static readonly CreateGlider: string = "CreateGlider";
     public static readonly CreateBase: string = "CreateBase";
+  }
+  export enum BuildingStates {
+    Idle = "Idle",
+    Building = "Building"
   }
 
   export class Input {
     public static readonly BuildEngineer: string = "BuildEngineer";
+    public static readonly BuildGlider: string = "BuildGlider";
     public static readonly RequestBuildEngineer: string = "RequestBuildEngineer";
+    public static readonly RequestCancelEngineer: string = "RequestCancelEngineer";
+    public static readonly RequestBuildGlider: string = "RequestBuildGlider";
+    public static readonly RequestCancelGlider: string = "RequestCancelGlider";
     public static readonly BuildBase: string = "BuildBase";
     public static readonly Cancel: string = "Create";
   }

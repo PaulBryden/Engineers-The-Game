@@ -54,8 +54,8 @@ export default class UI extends Phaser.Scene {
     create() {
 
 
-        this.input.setGlobalTopOnly(false);
-        this.input.setTopOnly(false);
+        this.input.setGlobalTopOnly(true);
+        this.input.setTopOnly(true);
 
         this.gameScene = <GameScene>this.scene.get('GameScene');
 

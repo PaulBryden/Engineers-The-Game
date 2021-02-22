@@ -8,6 +8,7 @@ import {AudioEffectsSingleton} from './AudioEffectsSingleton';
 import { MineEntity } from './mine_entity';
 import { BaseEntity } from './base_entity';
 import {EventConstants} from './GameConstants'
+import { MovingEntity } from './MovingEntity';
 enum State {
     Idle = "Idle",
     Moving = "Moving",
@@ -28,7 +29,7 @@ enum AnimationState
     Mining="Mining",
     Attacking = "Attacking"
 }
-class EngineerEntity extends Entity {
+class EngineerEntity extends MovingEntity {
     engineerFSM: typestate.FiniteStateMachine<State>;
     pathFinder: EasyStar.js;
     targetDestination: Phaser.Math.Vector2;
@@ -56,10 +57,24 @@ class EngineerEntity extends Entity {
         fsm.from(State.Mining).to(State.Idle);
         fsm.from(State.Moving).to(State.Mining);
         fsm.from(State.Mining).to(State.Moving);
+        fsm.on(State.Idle, async (from: State) => {
+            for(let sub of this.subscribers)
+            {
+                sub.notify(State.Idle);
+            }
+        });
         fsm.on(State.Moving, async (from: State) => {
+            for(let sub of this.subscribers)
+            {
+                sub.notify(State.Moving);
+            }
             await this.Move();
         });
         fsm.on(State.Mining, async (from: State) => {
+            for(let sub of this.subscribers)
+            {
+                sub.notify(State.Mining);
+            }
             await this.Mine();
         });
         fsm.onExit(State.Mining,  (to: State) => {

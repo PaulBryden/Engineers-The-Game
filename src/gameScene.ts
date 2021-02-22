@@ -31,6 +31,7 @@ export default class GameScene extends Phaser.Scene {
         this.load.spritesheet('tileset_spritesheet', 'assets/tileset.png', { frameWidth: 64, frameHeight: 64 });
         this.load.image('home_base', 'assets/home_base.png');
         this.load.image('portrait_base', 'assets/Portrait_Base.png');
+        this.load.image('factory', 'assets/Factory.png');
         this.load.image('mine', 'assets/mine.png');
         this.load.tilemapTiledJSON('map', 'assets/tiledmap2.json');
         this.load.spritesheet('player', 'assets/spritesheet.png', { frameWidth: 64, frameHeight: 64 });
@@ -297,6 +298,7 @@ export default class GameScene extends Phaser.Scene {
         this.mine = this.entityManager.createMineEntity(6, 14);
         var turret = this.entityManager.createTurretEntity(9, 9);
         var turret = this.entityManager.createGliderEntity(15, 7);
+        var test = this.entityManager.createFactoryEntity(20, 20);
         this.player = this.entityManager.createEngineerEntity(3, 4);
         //let uiPortraitParentLayout:UIParentLayout = new UIParentLayout(this,portraitLayout,uiLayout,110,400)
 

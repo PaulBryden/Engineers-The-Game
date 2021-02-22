@@ -2,68 +2,14 @@ import {Entity} from './entity'
 import { typestate } from 'typestate';
 import {EventConstants} from './GameConstants'
 import {BuildingEntity} from './building_entity'
-enum State {
-    Idle = "Idle",
-    Building = "Building"
-}
-class BaseEntity extends BuildingEntity
+import { BuildUnitsEntity } from './build_units_entity';
+
+class BaseEntity extends BuildUnitsEntity
 {
-    engineerFSM: typestate.FiniteStateMachine<State>;
-    buildCounter:number;
     constructor(map: Phaser.Tilemaps.Tilemap, scene: Phaser.Scene, x: number, y: number)
     {
-        super(map,"home_base","Base",scene,x,y,"home_base");
-        
-        this.eventEmitter.on(EventConstants.Input.BuildEngineer,()=>{this.selected?this.requestBuild():{};});
-        this.engineerFSM=this.createFSM();
-        this.buildCounter=0;
+        super(map,"home_base","Base",scene,x,y,EventConstants.Input.BuildEngineer,EventConstants.EntityBuild.CreateEngineer,"home_base");
     }
-
-    createFSM(): typestate.FiniteStateMachine<State> {
-        let fsm: typestate.FiniteStateMachine<State> = new typestate.FiniteStateMachine<State>(State.Idle);
-        fsm.from(State.Idle).to(State.Building);
-        fsm.from(State.Building).to(State.Idle);
-        fsm.on(State.Building, async (from: State) => {
-            await this.Build();
-        });
-        return fsm;
-    }
-
-    requestBuild()
-    {
-        this.engineerFSM.go(State.Building);
-
-    }
-    
-    getStatus()
-    {
-        return this.engineerFSM.currentState.toString();
-    }
-
-    async Build() {
-
-        var tweens = [];
-        if (this.engineerFSM.is(State.Building)) {
-            this.buildCounter++;
-        }
-        await this.delay(500);
-        if(this.buildCounter!=10)
-        {
-            await this.Build();
-        }
-        else
-        {
-            this.buildCounter=0;
-            this.eventEmitter.emit(EventConstants.EntityBuild.CreateEngineer,Phaser.Tilemaps.Components.IsometricWorldToTileXY(this.x-32, this.y-32, true, new Phaser.Math.Vector2(), this.scene.cameras.main, this.mapReference.layer));
-            this.engineerFSM.go(State.Idle);
-
-        }
-
-    }
-    delay(ms: number) {
-        return new Promise( resolve => setTimeout(resolve, ms) );
-    }
-    
 
 }
 
