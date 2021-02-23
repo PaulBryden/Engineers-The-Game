@@ -9,6 +9,7 @@ import { SoundConstants, EventConstants, CompassDirections, EntityConstants, Sta
 import { TurretEntity } from './turret_entity'
 import { GliderEntity } from './glider_entity'
 import { FactoryEntity } from './factory_entity'
+import { ScaffoldEntity } from './scaffold'
 class EntityManager {
     scene: Phaser.Scene;
     entityList: Entity[]
@@ -97,6 +98,13 @@ class EntityManager {
     createTurretEntity(x: number, y: number): TurretEntity//tile coordinates 
     {
         let base: TurretEntity = new TurretEntity(this.map, this.scene, x, y);
+        this.entityList.push(base);
+        return base;
+
+    }
+    createScaffoldEntity(x: number, y: number): TurretEntity//tile coordinates 
+    {
+        let base: ScaffoldEntity = new ScaffoldEntity(this.map, this.scene, x, y);
         this.entityList.push(base);
         return base;
 
