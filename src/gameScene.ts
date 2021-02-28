@@ -7,7 +7,7 @@ import { EasyStarFlightLevelSingleton, EasyStarGroundLevelSingleton } from './Ea
 import { EntityManager } from './EntityManager'
 import { MineEntity } from './mine_entity';
 import  EasyStar from 'easystarjs'
-import { EventConstants } from './GameConstants';
+import { BuildingEntityID, EventConstants } from './GameConstants';
 import { EventEmitterSingleton } from './EventEmitterSingleton';
 export default class GameScene extends Phaser.Scene {
     finder: EasyStarGroundLevelSingleton;
@@ -37,6 +37,7 @@ export default class GameScene extends Phaser.Scene {
         this.load.tilemapTiledJSON('map', 'assets/tiledmap2.json');
         this.load.spritesheet('player', 'assets/spritesheet.png', { frameWidth: 64, frameHeight: 64 });
         this.load.spritesheet('player-rock', 'assets/spritesheet_rock.png', { frameWidth: 64, frameHeight: 64 });
+        this.load.spritesheet('player-action', 'assets/spritesheet_build.png', { frameWidth: 64, frameHeight: 64 });
         this.load.spritesheet('turret', 'assets/turret_spritesheet.png', { frameWidth: 64, frameHeight: 64 });
         this.load.spritesheet('glider', 'assets/glider_spritesheet.png', { frameWidth: 64, frameHeight: 96 });
         this.load.image('ui_button', 'assets/ui_button.png');
@@ -278,15 +279,57 @@ export default class GameScene extends Phaser.Scene {
             yoyo: true
         });
         this.anims.create({
-            key: 'player-walk2',
-            frames: this.anims.generateFrameNumbers('player-rock', { start: 15, end: 19 }),
+            key: 'Actionengineer-N',
+            frames: this.anims.generateFrameNumbers('player-action', { start: 0, end: 4 }),
             frameRate: 15,
             repeat: -1,
             yoyo: true
         });
         this.anims.create({
-            key: 'player-walk3',
-            frames: this.anims.generateFrameNumbers('player-rock', { start: 30, end: 34 }),
+            key: 'Actionengineer-NW',
+            frames: this.anims.generateFrameNumbers('player-action', { start: 5, end: 9 }),
+            frameRate: 15,
+            repeat: -1,
+            yoyo: true
+        });
+        this.anims.create({
+            key: 'Actionengineer-W',
+            frames: this.anims.generateFrameNumbers('player-action', { start: 10, end: 14 }),
+            frameRate: 15,
+            repeat: -1,
+            yoyo: true
+        });
+        this.anims.create({
+            key: 'Actionengineer-SW',
+            frames: this.anims.generateFrameNumbers('player-action', { start: 15, end: 19 }),
+            frameRate: 15,
+            repeat: -1,
+            yoyo: true
+        });
+        this.anims.create({
+            key: 'Actionengineer-S',
+            frames: this.anims.generateFrameNumbers('player-action', { start: 20, end: 24 }),
+            frameRate: 15,
+            repeat: -1,
+            yoyo: true
+        });
+        this.anims.create({
+            key: 'Actionengineer-SE',
+            frames: this.anims.generateFrameNumbers('player-action', { start: 25, end: 29 }),
+            frameRate: 15,
+            repeat: -1,
+            yoyo: true
+        });
+        this.anims.create({
+            key: 'Actionengineer-E',
+            frames: this.anims.generateFrameNumbers('player-action', { start: 30, end: 34 }),
+            frameRate: 15,
+            repeat: -1,
+            yoyo: true
+        });
+        this.anims.create({
+            key: 'Actionengineer-NE',
+            frames: this.anims.generateFrameNumbers('player-action', { start: 35, end: 39 }),
             frameRate: 15,
             repeat: -1,
             yoyo: true
@@ -300,7 +343,7 @@ export default class GameScene extends Phaser.Scene {
         var turret = this.entityManager.createTurretEntity(9, 9);
         var turret = this.entityManager.createGliderEntity(15, 7);
         var test = this.entityManager.createFactoryEntity(20, 20);
-        var testScaffold = this.entityManager.createScaffoldEntity(25, 20);
+        var testScaffold = this.entityManager.createScaffoldEntity(25, 20, BuildingEntityID.Base);
         this.player = this.entityManager.createEngineerEntity(3, 4);
         //let uiPortraitParentLayout:UIParentLayout = new UIParentLayout(this,portraitLayout,uiLayout,110,400)
 

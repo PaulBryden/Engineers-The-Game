@@ -32,6 +32,10 @@ class Entity extends Phaser.GameObjects.Sprite implements IStatePublisher {
         this.selected = false;
 
     }
+    GetTileLocation()
+    {
+        return Phaser.Tilemaps.Components.IsometricWorldToTileXY(this.x, this.y, true, new Phaser.Math.Vector2, this.scene.cameras.main, this.mapReference.layer);
+    }
     subscribe(sub: IStateSubscriber): void {
         this.subscribers.push(sub);
     }

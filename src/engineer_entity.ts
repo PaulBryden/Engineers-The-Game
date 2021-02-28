@@ -9,10 +9,13 @@ import { MineEntity } from './mine_entity';
 import { BaseEntity } from './base_entity';
 import {EventConstants} from './GameConstants'
 import { MovingEntity } from './MovingEntity';
+import { ScaffoldEntity } from './scaffold';
+
 enum State {
     Idle = "Idle",
     Moving = "Moving",
-    Mining = "Mining"
+    Mining = "Mining",
+    Building = "Building"
 }
 
 enum MiningState
@@ -23,12 +26,21 @@ enum MiningState
     GoingToBase = "GoingToBase",
     InBase = "InBase"
 }
+
+enum BuildingState
+{
+    Initial = "InitialBuilding",
+    GoingToBuilding = "GoingToBuilding",
+    Building = "Building",
+}
+
 enum AnimationState
 {
     Default="",
     Mining="Mining",
-    Attacking = "Attacking"
+    Action = "Action"
 }
+
 class EngineerEntity extends MovingEntity {
     engineerFSM: typestate.FiniteStateMachine<State>;
     pathFinder: EasyStar.js;
@@ -37,26 +49,65 @@ class EngineerEntity extends MovingEntity {
     targetMine: MineEntity;
     nearestBase: BaseEntity;
     miningFSM: typestate.FiniteStateMachine<MiningState>
+    buildingFSM: typestate.FiniteStateMachine<BuildingState>
     currentAnimation: AnimationState
+    targetBuilding: ScaffoldEntity;
     constructor(map: Phaser.Tilemaps.Tilemap, scene: Phaser.Scene, x: number, y: number) {
         super(map, "Portrait_Engineer", "Engineer", scene, x, y, "player");
         this.engineerFSM = this.createFSM();
         this.miningFSM = this.createMiningFSM();
+        this.buildingFSM=this.createBuildingFSM();
         this.pathFinder = EasyStarGroundLevelSingleton.getInstance();
         this.anims.play('engineer-SW', true);
         this.currentAnimation=AnimationState.Default;
 
     }
 
+    createBuildingFSM(): typestate.FiniteStateMachine<BuildingState> {
+        let fsm: typestate.FiniteStateMachine<BuildingState> = new typestate.FiniteStateMachine<BuildingState>(BuildingState.Initial);
+        fsm.from(BuildingState.Initial).to(BuildingState.GoingToBuilding);
+        fsm.from(BuildingState.GoingToBuilding).to(BuildingState.Building);
+        fsm.from(BuildingState.Building).to(BuildingState.Initial);
+        
+        fsm.on(BuildingState.Building, async (from: BuildingState) => {
+            this.currentAnimation=AnimationState.Action;
+            this.updateAngle(Math.PI/2);
+            await this.ProcessBuilding()
+        });
+        fsm.onExit(BuildingState.Building,  (to: BuildingState) => {
+            this.currentAnimation=AnimationState.Default;
+            this.updateAngle(Math.PI/2);
+            return true;
+        });
+
+
+        fsm.on(BuildingState.GoingToBuilding, async (from: BuildingState) => {
+            this.updatePathToBuilding();
+        await this.delay(20);
+        await this.MoveToBuilding();
+        });
+        return fsm;
+    }
+
     createFSM(): typestate.FiniteStateMachine<State> {
         let fsm: typestate.FiniteStateMachine<State> = new typestate.FiniteStateMachine<State>(State.Idle);
         fsm.from(State.Idle).to(State.Moving);
         fsm.from(State.Idle).to(State.Mining);
+        fsm.from(State.Idle).to(State.Building);
+        fsm.from(State.Moving).to(State.Building);
+        fsm.from(State.Building).to(State.Moving);
+        fsm.from(State.Building).to(State.Idle);
 
         fsm.from(State.Moving).to(State.Idle);
         fsm.from(State.Mining).to(State.Idle);
         fsm.from(State.Moving).to(State.Mining);
         fsm.from(State.Mining).to(State.Moving);
+        fsm.on(State.Building, async (from: State) => {
+            for(let sub of this.subscribers)
+            {
+                sub.notify(State.Building);
+            }
+        });
         fsm.on(State.Idle, async (from: State) => {
             for(let sub of this.subscribers)
             {
@@ -83,6 +134,11 @@ class EngineerEntity extends MovingEntity {
             this.alpha=1;
             return true;
         });
+        fsm.onExit(State.Building,  (to: State) => {
+            this.buildingFSM.reset();
+            this.currentAnimation=AnimationState.Default;
+            return true;
+        });
         return fsm;
     }
     
@@ -106,6 +162,24 @@ class EngineerEntity extends MovingEntity {
     });
     this.pathFinder.calculate();
     }
+
+
+    updatePathToBuilding()
+    {
+        this.path=[];
+        var PlayerPos = Phaser.Tilemaps.Components.IsometricWorldToTileXY(this.x, this.y, true, PlayerPos, this.scene.cameras.main, this.mapReference.layer);
+        var buildingEngineerPos = new Phaser.Math.Vector2(this.targetBuilding.desiredBuildingCoordinates.x-2, this.targetBuilding.desiredBuildingCoordinates.y-2);
+
+    this.pathFinder.findPath(PlayerPos.x - 1, PlayerPos.y, buildingEngineerPos.x - 1, buildingEngineerPos.y, (path) => {
+
+        if (path != null && path.length>0) {
+            this.path = path;
+            this.path.shift();
+        }
+    });
+    this.pathFinder.calculate();
+    }
+
 
     createMiningFSM(): typestate.FiniteStateMachine<MiningState> {
         let fsm: typestate.FiniteStateMachine<MiningState> = new typestate.FiniteStateMachine<MiningState>(MiningState.Initial);
@@ -163,6 +237,16 @@ class EngineerEntity extends MovingEntity {
             this.targetMine = mine;
             this.miningFSM.is(MiningState.GoingToMine)?this.updatePathToMine():this.miningFSM.canGo(MiningState.GoingToMine)?this.miningFSM.go(MiningState.GoingToMine):{};
             !this.engineerFSM.is(State.Mining)?this.engineerFSM.go(State.Mining):{};
+        }
+    }
+
+    requestBuild(building: ScaffoldEntity) {
+        
+        if(this.targetBuilding!=building || !this.engineerFSM.is(State.Building))
+        {
+            this.targetBuilding = building;
+            this.buildingFSM.is(BuildingState.GoingToBuilding)?this.updatePathToBuilding():this.buildingFSM.canGo(BuildingState.GoingToBuilding)?this.buildingFSM.go(BuildingState.GoingToBuilding):{};
+            !this.engineerFSM.is(State.Building)?this.engineerFSM.go(State.Building):{};
         }
     }
     
@@ -293,6 +377,60 @@ class EngineerEntity extends MovingEntity {
 
         }
         
+    }
+    
+    async ProcessBuilding()
+    { 
+        await this.delay(1000);
+        if(this.targetBuilding.increaseBuildingCompletionProgress())
+        {
+            this.buildingFSM.go(BuildingState.Initial);
+            this.engineerFSM.go(State.Idle);
+        }
+        else
+        {
+            await this.ProcessBuilding();
+        }
+        
+
+    }
+    async MoveToBuilding()
+    { 
+        var tweens = [];
+        let awaitTime:number = 500;
+        if (this.buildingFSM.is(BuildingState.GoingToBuilding) && this.path != null && this.path.length > 0) {
+            var ex = this.path[0].x;
+            var ey = this.path[0].y;
+            var testCoords;
+            var xyPos = Phaser.Tilemaps.Components.IsometricTileToWorldXY(ex, ey, testCoords, this.scene.cameras.main, this.mapReference.layer);
+            if(( this.y-(xyPos.y+this.mapReference.layer.tileWidth/2)>-2)&&( this.y-(xyPos.y+this.mapReference.layer.tileWidth/2)<2)) //Horizontal moves are a greater distance. As such, ensure we treat it that way.
+            {
+                awaitTime+=awaitTime*0.3
+            }            
+            tweens.push({
+                targets: this,
+                x: { value: xyPos.x+this.mapReference.layer.tileWidth/2, duration: awaitTime },
+                y: { value: xyPos.y+this.mapReference.layer.tileWidth/2, duration: awaitTime }
+            });
+            
+            this.updateAngle(Phaser.Math.Angle.Between(this.x,this.y,xyPos.x+this.mapReference.layer.tileWidth/2,xyPos.y+this.mapReference.layer.tileWidth/2));
+            
+            this.scene.tweens.timeline({
+                tweens: tweens
+            });
+            this.path.shift();
+        }
+        if(this.buildingFSM.is(BuildingState.GoingToBuilding)&& (this.path!=null && this.path.length > 0))
+        {
+            await this.delay(awaitTime);
+            await this.MoveToBuilding();
+        }
+        else if(this.buildingFSM.is(BuildingState.GoingToBuilding))
+        {
+            await this.delay(awaitTime);
+            this.buildingFSM.go(BuildingState.Building);
+
+        }
     }
     async MoveToBase()
     { 

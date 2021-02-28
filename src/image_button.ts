@@ -89,4 +89,24 @@ class BuildGliderButton extends ImageButton
         });
     }
 }
-export { ImageButton, AttackButton, GatherButton, BuildButton, CancelButton, BuildEngineerButton, BuildGliderButton };
+class BuildBaseButton extends ImageButton
+{
+    constructor(scene:Phaser.Scene)
+    {
+        super(scene,"ui_button_not_pressed","ui_button","home_base","500");
+        this.setInteractive().on('pointerup', function(pointer, localX, localY, event){
+            EventEmitterSingleton.getInstance().emit(EventConstants.Input.RequestBuildBase);
+        });
+    }
+}
+class BuildFactoryButton extends ImageButton
+{
+    constructor(scene:Phaser.Scene)
+    {
+        super(scene,"ui_button_not_pressed","ui_button","factory","300");
+        this.setInteractive().on('pointerup', function(pointer, localX, localY, event){
+            EventEmitterSingleton.getInstance().emit(EventConstants.Input.RequestBuildFactory);
+        });
+    }
+}
+export { ImageButton, AttackButton, GatherButton, BuildButton, CancelButton, BuildEngineerButton, BuildGliderButton, BuildBaseButton, BuildFactoryButton };

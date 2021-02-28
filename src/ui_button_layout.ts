@@ -1,5 +1,5 @@
 import 'phaser';
-import {ImageButton, AttackButton, GatherButton, BuildButton, CancelButton, BuildEngineerButton, BuildGliderButton } from './image_button'
+import {ImageButton, AttackButton, GatherButton, BuildButton, CancelButton, BuildEngineerButton, BuildGliderButton, BuildBaseButton, BuildFactoryButton } from './image_button'
 import {BaseEntity} from './base_entity'
 import {EngineerEntity} from './engineer_entity'
 import {Entity} from './entity'
@@ -38,13 +38,6 @@ class UIButtonLayout extends Phaser.GameObjects.Container implements IStateSubsc
     }
 }
 
-class EngineerUIButtonLayout extends UIButtonLayout
-{
-    constructor(publisher:IStatePublisher,scene:Phaser.Scene, x:number, y:number)
-    {
-        super(publisher,scene,[new AttackButton(scene),new BuildButton(scene), new GatherButton(scene)],x,y);
-    }
-}
 
 
 class BuildingButtonLayout extends UIButtonLayout
@@ -108,6 +101,14 @@ class FactoryUIButtonLayout extends BuildingButtonLayout
     constructor(initialState:EventConstants.BuildingStates,publisher:IStatePublisher,scene:Phaser.Scene, x:number, y:number)
     {
         super(initialState,publisher,scene,new BuildGliderButton(scene), new CancelButton(scene,EventConstants.Input.RequestCancelGlider),x,y);
+    }
+}
+
+class EngineerUIButtonLayout extends UIButtonLayout
+{
+    constructor(publisher:IStatePublisher,scene:Phaser.Scene, x:number, y:number)
+    {
+        super(publisher,scene,[new BuildBaseButton(scene), new BuildFactoryButton(scene)],x,y);
     }
 }
 

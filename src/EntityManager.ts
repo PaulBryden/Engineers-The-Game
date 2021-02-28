@@ -5,7 +5,7 @@ import { Entity } from './entity'
 import { MineEntity } from './mine_entity'
 
 import { EventEmitterSingleton } from './EventEmitterSingleton'
-import { SoundConstants, EventConstants, CompassDirections, EntityConstants, StartOfGame } from './GameConstants'
+import { SoundConstants, EventConstants, CompassDirections, EntityConstants, StartOfGame, EntityID, BuildingEntityID } from './GameConstants'
 import { TurretEntity } from './turret_entity'
 import { GliderEntity } from './glider_entity'
 import { FactoryEntity } from './factory_entity'
@@ -27,33 +27,67 @@ class EntityManager {
 
         this.resources = StartOfGame.resourceCount;
 
+        this.eventEmitter.emit(EventConstants.EntityBuild.DestroyScaffold);
+        this.eventEmitter.emit(EventConstants.EntityBuild.CreateBuilding);
+        this.eventEmitter.on(EventConstants.EntityBuild.DestroyScaffold, (scaffold) => { this.deleteEntity(scaffold); });
+        this.eventEmitter.on(EventConstants.EntityBuild.CreateBuilding, (x, y, entityName) => { this.createEntity(x, y, entityName) });
+        this.eventEmitter.on(EventConstants.Input.RequestBuildScaffold, (entity, buildingID) => { 
+            if(buildingID==BuildingEntityID.Base)
+            {
+                if (this.resources >= 500) {
+                    this.resources -= 500;
+                    this.eventEmitter.emit(EventConstants.Game.UpdateResourceCount, (this.resources));
+                }
+                else
+                {
+                    return;
+                }
+
+            }
+            else if(buildingID==BuildingEntityID.Factory)
+            {
+                if (this.resources >= 300) 
+                {
+                    this.resources -= 300;
+                    this.eventEmitter.emit(EventConstants.Game.UpdateResourceCount, (this.resources));
+                }
+                else
+                {
+                    return;
+                }
+                
+            }
+            let scaffold:ScaffoldEntity = this.createScaffoldEntity(entity.GetTileLocation().x, entity.GetTileLocation().y, buildingID);
+            entity.requestBuild(scaffold);
+        });
+
         this.eventEmitter.on(EventConstants.Game.AddResources, (resources) => { this.resources += resources; this.eventEmitter.emit(EventConstants.Game.UpdateResourceCount, (this.resources)); });
         this.eventEmitter.on(EventConstants.Game.RemoveResources, (resources) => { this.resources -= resources; this.eventEmitter.emit(EventConstants.Game.UpdateResourceCount, (this.resources)); });
         this.eventEmitter.on(EventConstants.Input.RequestBuildEngineer, () => {
             if (this.resources >= 100) {
-                this.resources -= 100; 
+                this.resources -= 100;
                 this.eventEmitter.emit(EventConstants.Game.UpdateResourceCount, (this.resources));
                 this.eventEmitter.emit(EventConstants.Input.BuildEngineer, {});
             }
-        });        
+        });
         this.eventEmitter.on(EventConstants.Input.RequestCancelEngineer, () => {
-            this.resources+=100;
+            this.resources += 100;
             this.eventEmitter.emit(EventConstants.Input.Cancel, {});
             this.eventEmitter.emit(EventConstants.Game.UpdateResourceCount, (this.resources));
         });
         this.eventEmitter.on(EventConstants.Input.RequestBuildGlider, () => {
             if (this.resources >= 300) {
-                this.resources -= 300; 
+                this.resources -= 300;
                 this.eventEmitter.emit(EventConstants.Game.UpdateResourceCount, (this.resources));
                 this.eventEmitter.emit(EventConstants.Input.BuildGlider, {});
             }
-        });        
+        });
         this.eventEmitter.on(EventConstants.Input.RequestCancelGlider, () => {
-            this.resources+=300;
+            this.resources += 300;
             this.eventEmitter.emit(EventConstants.Input.Cancel, {});
             this.eventEmitter.emit(EventConstants.Game.UpdateResourceCount, (this.resources));
         });
-        
+
     }
 
     getNearestBaseToEntity(entity: Entity): BaseEntity {
@@ -70,6 +104,17 @@ class EntityManager {
             }
         }
         return nearestBase;
+    }
+
+    createEntity(x: number, y: number, type: string) {
+        switch (type) {
+            case BuildingEntityID.Base:
+                this.createBaseEntity(x, y);
+                break;
+            case BuildingEntityID.Factory:
+                this.createFactoryEntity(x, y);
+                break;
+        }
     }
 
     createEngineerEntity(x: number, y: number): EngineerEntity//tile coordinates 
@@ -102,9 +147,9 @@ class EntityManager {
         return base;
 
     }
-    createScaffoldEntity(x: number, y: number): TurretEntity//tile coordinates 
+    createScaffoldEntity(x: number, y: number, targetBuilding: string): ScaffoldEntity//tile coordinates 
     {
-        let base: ScaffoldEntity = new ScaffoldEntity(this.map, this.scene, x, y);
+        let base: ScaffoldEntity = new ScaffoldEntity(this.map, this.scene, x, y, targetBuilding);
         this.entityList.push(base);
         return base;
 

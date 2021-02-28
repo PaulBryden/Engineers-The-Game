@@ -4,11 +4,12 @@ import {Entity} from './entity'
 import {EngineerEntity} from './engineer_entity'
 import {EventEmitterSingleton} from './EventEmitterSingleton'
 import {AudioEffectsSingleton} from './AudioEffectsSingleton'
-import {EventConstants} from './GameConstants'
+import {BuildingEntityID, EntityConstants, EventConstants} from './GameConstants'
 import { MineEntity } from './mine_entity'
 import { UIResources } from './ui_resources'
 import GameScene from './gameScene'
 import { MovingEntity } from './MovingEntity'
+import { ScaffoldEntity } from './scaffold'
 class UIManager
 {
     uiLayout:UIParentLayout;
@@ -25,6 +26,8 @@ class UIManager
         this.uiFactory = new UIFactory();
         this.eventEmitter = EventEmitterSingleton.getInstance();
         this.eventEmitter.on(EventConstants.EntityActions.Selected,this.updateSelected, this );
+        this.eventEmitter.on(EventConstants.Input.RequestBuildBase,()=>{this.eventEmitter.emit(EventConstants.Input.RequestBuildScaffold,this.selectedEntity,BuildingEntityID.Base)});
+        this.eventEmitter.on(EventConstants.Input.RequestBuildFactory,()=>{this.eventEmitter.emit(EventConstants.Input.RequestBuildScaffold,this.selectedEntity,BuildingEntityID.Factory)});
         this.entityScene=entityScene;
         let cursors:Phaser.Types.Input.Keyboard.CursorKeys = entityScene.input.keyboard.createCursorKeys();
         var controlConfig = {
@@ -68,6 +71,10 @@ class UIManager
             if(this.selectedEntity instanceof EngineerEntity && selectedEntity instanceof MineEntity)
             {
                 (<EngineerEntity>this.selectedEntity).requestMine(selectedEntity);
+            }
+            else if(this.selectedEntity instanceof EngineerEntity && selectedEntity instanceof ScaffoldEntity)
+            {
+                (<EngineerEntity>this.selectedEntity).requestBuild(selectedEntity);
             }
             else
             {

@@ -32,6 +32,17 @@ class CompassDirections {
   public static readonly NorthWest: string = "NW";
 }
 
+export class EntityID {
+  public static readonly Engineer: string = "Engineer";
+  public static readonly Glider: string = "Glider";
+}
+
+export class BuildingEntityID {
+  public static readonly Base: string = "Base";
+  public static readonly Factory: string = "Factory";
+  public static readonly Mine: string = "Mine";
+  public static readonly Scaffold: string = "Scaffold";
+}
 
 namespace EventConstants {
   export class EntityActions {
@@ -44,6 +55,9 @@ namespace EventConstants {
     public static readonly CreateEngineer: string = "CreateEngineer";
     public static readonly CreateGlider: string = "CreateGlider";
     public static readonly CreateBase: string = "CreateBase";
+    public static readonly CreateFactory: string = "CreateFactory";
+    public static readonly CreateBuilding: string = "CreateBuilding";
+    public static readonly DestroyScaffold: string = "DestroyScaffold";
   }
   export enum BuildingStates {
     Idle = "Idle",
@@ -57,7 +71,9 @@ namespace EventConstants {
     public static readonly RequestCancelEngineer: string = "RequestCancelEngineer";
     public static readonly RequestBuildGlider: string = "RequestBuildGlider";
     public static readonly RequestCancelGlider: string = "RequestCancelGlider";
-    public static readonly BuildBase: string = "BuildBase";
+    public static readonly RequestBuildBase: string = "RequestBuildBase";
+    public static readonly RequestBuildScaffold: string = "RequestBuildScaffold";
+    public static readonly RequestBuildFactory: string = "RequestBuildFactory";
     public static readonly Cancel: string = "Create";
   }
   export class Game {
