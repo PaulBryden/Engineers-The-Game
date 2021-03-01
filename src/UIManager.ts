@@ -136,21 +136,21 @@ class UIManager
         this.controls.update(delta);
         if(this.UpArrowDown)
         {
-            this.entityScene.cameras.main.setScroll(this.entityScene.cameras.main.scrollX,this.entityScene.cameras.main.scrollY-(100*(delta/1000)));
+            this.entityScene.cameras.main.setScroll(this.entityScene.cameras.main.scrollX,this.entityScene.cameras.main.scrollY-(500*(delta/1000)));
         }
         if(this.BottomArrowDown)
         {
-            this.entityScene.cameras.main.setScroll(this.entityScene.cameras.main.scrollX,this.entityScene.cameras.main.scrollY+(100*(delta/1000)));
+            this.entityScene.cameras.main.setScroll(this.entityScene.cameras.main.scrollX,this.entityScene.cameras.main.scrollY+(500*(delta/1000)));
 
         }
         if(this.RightArrowDown)
         {
-            this.entityScene.cameras.main.setScroll(this.entityScene.cameras.main.scrollX+(100*(delta/1000)),this.entityScene.cameras.main.scrollY);
+            this.entityScene.cameras.main.setScroll(this.entityScene.cameras.main.scrollX+(500*(delta/1000)),this.entityScene.cameras.main.scrollY);
 
         }
         if(this.LeftArrowDown)
         {
-            this.entityScene.cameras.main.setScroll(this.entityScene.cameras.main.scrollX-(100*(delta/1000)),this.entityScene.cameras.main.scrollY);
+            this.entityScene.cameras.main.setScroll(this.entityScene.cameras.main.scrollX-(500*(delta/1000)),this.entityScene.cameras.main.scrollY);
 
         }
 

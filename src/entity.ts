@@ -11,13 +11,19 @@ class Entity extends Phaser.GameObjects.Sprite implements IStatePublisher {
     eventEmitter: EventEmitterSingleton;
     selected: boolean;
     selectedRectangle: Phaser.GameObjects.Rectangle;
+    healthBackgroundRectangle: Phaser.GameObjects.Rectangle;
+    healthForegroundRectangle: Phaser.GameObjects.Rectangle;
     subscribers: IStateSubscriber[];
     team:number;
     constructor(map: Phaser.Tilemaps.Tilemap, icon: string, name: string, scene: Phaser.Scene, x: number, y: number, texture: string | Phaser.Textures.Texture, team:number, frame?: string | number) {
         let vector: Phaser.Math.Vector2 = Phaser.Tilemaps.Components.IsometricTileToWorldXY(x, y, new Phaser.Math.Vector2(), scene.cameras.main, map.getLayer('Tile Layer 1'));
         super(scene, vector.x, vector.y, texture, frame);
         this.selectedRectangle = new Phaser.GameObjects.Rectangle(scene, this.x, this.y, this.width, this.height, 0xffffff, 0x0).setStrokeStyle(1, 0xffffff);
+        this.healthBackgroundRectangle = new Phaser.GameObjects.Rectangle(scene, this.x, this.y-(10+(this.displayHeight/2)), 40, 5, 0xffffff, 1);
+        this.healthForegroundRectangle = new Phaser.GameObjects.Rectangle(scene, this.x, this.y-(10+(this.displayHeight/2)), 38, 3, 0x064f13, 1);
         scene.add.existing(this.selectedRectangle);
+        scene.add.existing(this.healthBackgroundRectangle);
+        scene.add.existing(this.healthForegroundRectangle);
         this.selectedRectangle.setVisible(false);
         this.eventEmitter = EventEmitterSingleton.getInstance();
         this.setDepth(x + y);
@@ -88,6 +94,10 @@ class Entity extends Phaser.GameObjects.Sprite implements IStatePublisher {
         {
             this.eventEmitter.emit(EventConstants.Game.DestroyEntity,this);
         }
+        else
+        {
+            this.healthForegroundRectangle.displayWidth=38*(this.health/100);
+        }
 
     }
 
@@ -96,8 +106,24 @@ class Entity extends Phaser.GameObjects.Sprite implements IStatePublisher {
         this.selectedRectangle.setX(this.x);
         this.selectedRectangle.setY(this.y);
         this.selectedRectangle.setDepth(250);
+        
+        this.healthBackgroundRectangle.setX(this.x);
+        this.healthBackgroundRectangle.setY(this.y-(10+(this.displayHeight/2)));
+        this.healthBackgroundRectangle.setDepth(250);
+        
+        this.healthForegroundRectangle.setX(this.x-(19*(1-(this.health/100))));
+        this.healthForegroundRectangle.setY(this.y-(10+(this.displayHeight/2)));
+        this.healthForegroundRectangle.setDepth(250);
         this.setDepth(tilePos.x + tilePos.y);
 
+    }
+
+    destroy()
+    {
+        this.selectedRectangle.destroy();
+        this.healthBackgroundRectangle.destroy();
+        this.healthForegroundRectangle.destroy();
+        super.destroy();
     }
 
     updateSelected(selected: boolean) {

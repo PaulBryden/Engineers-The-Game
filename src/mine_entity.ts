@@ -10,6 +10,9 @@ class MineEntity extends BuildingEntity
     {
         super(map,"mine","Mine",scene,x,y,"mine",0);
         this.status="Operating";
+        
+        this.healthForegroundRectangle.setVisible(false);
+        this.healthBackgroundRectangle.setVisible(false);
     }
 
 }
