@@ -24,7 +24,7 @@ class EntityManager {
         this.eventEmitter = EventEmitterSingleton.getInstance();
         this.eventEmitter.on(EventConstants.EntityBuild.CreateEngineer, (vector) => { this.createEngineerEntity(vector.x, vector.y,1) });
         this.eventEmitter.on(EventConstants.EntityBuild.CreateGlider, (vector) => { this.createGliderEntity(vector.x, vector.y,1) });
-
+        this.eventEmitter.on(EventConstants.Game.DestroyEntity, (entity) => { this.deleteEntity(entity); });
         this.resources = StartOfGame.resourceCount;
 
         this.eventEmitter.emit(EventConstants.EntityBuild.DestroyScaffold);

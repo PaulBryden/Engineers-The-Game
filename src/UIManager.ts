@@ -10,6 +10,7 @@ import { UIResources } from './ui_resources'
 import GameScene from './gameScene'
 import { MovingEntity } from './MovingEntity'
 import { ScaffoldEntity } from './scaffold'
+import { GliderEntity } from './glider_entity'
 class UIManager
 {
     uiLayout:UIParentLayout;
@@ -83,9 +84,9 @@ class UIManager
                 this.selectedEntity.updateSelected(true);
                 Math.random()>0.5?AudioEffectsSingleton.getInstance(this.selectedEntity.scene).IdleEngineerSelected1.play():AudioEffectsSingleton.getInstance(this.selectedEntity.scene).IdleEngineerSelected2.play();
             }
-            else if(selectedEntity.team==TeamNumbers.Enemy && this.selectedEntity instanceof MovingEntity)
+            else if(selectedEntity.team==TeamNumbers.Enemy && this.selectedEntity instanceof GliderEntity)
             {
-                console.log("Attacking");
+                this.selectedEntity.requestAttack(selectedEntity);
             }
 
             if(this.uiLayout!=null)

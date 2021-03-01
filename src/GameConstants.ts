@@ -87,6 +87,7 @@ namespace EventConstants {
     public static readonly UpdateResourceCount: string = "UpdateResourceCount";
     public static readonly AddResources: string = "AddResources";
     public static readonly RemoveResources: string = "RemoveResources";
+    public static readonly DestroyEntity: string = "DestroyEntity";
   }
 }
 

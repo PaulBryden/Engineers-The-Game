@@ -81,12 +81,21 @@ class Entity extends Phaser.GameObjects.Sprite implements IStatePublisher {
     getName() {
         return this.name;
     }
+    damage(amount:number)
+    {
+        this.health-=amount;
+        if(this.health<=0)
+        {
+            this.eventEmitter.emit(EventConstants.Game.DestroyEntity,this);
+        }
+
+    }
 
     updateRenderDepth() {
         var tilePos = Phaser.Tilemaps.Components.IsometricWorldToTileXY(this.x - 16, this.y - 16, true, new Phaser.Math.Vector2, this.scene.cameras.main, this.mapReference.layer);
         this.selectedRectangle.setX(this.x);
         this.selectedRectangle.setY(this.y);
-        this.selectedRectangle.setDepth(tilePos.x + tilePos.y);
+        this.selectedRectangle.setDepth(250);
         this.setDepth(tilePos.x + tilePos.y);
 
     }

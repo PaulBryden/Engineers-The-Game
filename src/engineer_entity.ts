@@ -97,6 +97,7 @@ class EngineerEntity extends MovingEntity {
         fsm.from(State.Moving).to(State.Building);
         fsm.from(State.Building).to(State.Moving);
         fsm.from(State.Building).to(State.Idle);
+        fsm.from(State.Mining).to(State.Building);
 
         fsm.from(State.Moving).to(State.Idle);
         fsm.from(State.Mining).to(State.Idle);
@@ -255,6 +256,10 @@ class EngineerEntity extends MovingEntity {
     }
     async MoveInsideMine()
     {
+        if(!this.engineerFSM.is(State.Mining))
+        {
+            return;
+        }
         var tweens = [];
         tweens.push({
             targets: this,
@@ -298,6 +303,10 @@ class EngineerEntity extends MovingEntity {
 
     async MoveInsideBase()
     {
+        if(!this.engineerFSM.is(State.Mining))
+        {
+            return;
+        }
         var tweens = [];
         tweens.push({
             targets: this,
@@ -341,6 +350,10 @@ class EngineerEntity extends MovingEntity {
 
     async MoveToMine()
     {
+        if(!this.engineerFSM.is(State.Mining))
+        {
+            return;
+        }
         var tweens = [];
         let awaitTime:number = 500;
         if (this.miningFSM.is(MiningState.GoingToMine) && this.path != null && this.path.length > 0) {
