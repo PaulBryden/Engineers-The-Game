@@ -52,13 +52,13 @@ class EngineerEntity extends MovingEntity {
     buildingFSM: typestate.FiniteStateMachine<BuildingState>
     currentAnimation: AnimationState
     targetBuilding: ScaffoldEntity;
-    constructor(map: Phaser.Tilemaps.Tilemap, scene: Phaser.Scene, x: number, y: number) {
-        super(map, "Portrait_Engineer", "Engineer", scene, x, y, "player");
+    constructor(map: Phaser.Tilemaps.Tilemap, scene: Phaser.Scene, x: number, y: number, team:number) {
+        super(map, "Portrait_Engineer", "Engineer", scene, x, y, "player"+"-"+team, team);
         this.engineerFSM = this.createFSM();
         this.miningFSM = this.createMiningFSM();
         this.buildingFSM=this.createBuildingFSM();
         this.pathFinder = EasyStarGroundLevelSingleton.getInstance();
-        this.anims.play('engineer-SW', true);
+        this.anims.play('engineer'+"-"+team+"-SW", true);
         this.currentAnimation=AnimationState.Default;
 
     }
@@ -499,35 +499,35 @@ class EngineerEntity extends MovingEntity {
         }
         if((angle>337.5 && angle<=360)||(angle>0 && angle<=22.5))
         {
-            this.anims.play(this.currentAnimation+'engineer-N', true);
+            this.anims.play(this.currentAnimation+'engineer'+"-"+this.team+"-N", true);
         }
         else if(angle>22.5 && angle<=67.5)
         {
-            this.anims.play(this.currentAnimation+'engineer-NE', true);
+            this.anims.play(this.currentAnimation+'engineer'+"-"+this.team+"-NE", true);
         }
         else if(angle>67.5 && angle<=112.5)
         {
-            this.anims.play(this.currentAnimation+'engineer-E', true);
+            this.anims.play(this.currentAnimation+'engineer'+"-"+this.team+"-E", true);
         }
         else if(angle>112.5 && angle<=157.5)
         {
-            this.anims.play(this.currentAnimation+'engineer-SE', true);
+            this.anims.play(this.currentAnimation+'engineer'+"-"+this.team+"-SE", true);
         }
         else if(angle>157.5 && angle<=202.5)
         {
-            this.anims.play(this.currentAnimation+'engineer-S', true);
+            this.anims.play(this.currentAnimation+'engineer'+"-"+this.team+"-S", true);
         }
         else if(angle>202.5 && angle<=247.5)
         {
-            this.anims.play(this.currentAnimation+'engineer-SW', true);
+            this.anims.play(this.currentAnimation+'engineer'+"-"+this.team+"-SW", true);
         }
         else if(angle>247.5 && angle<=292.5)
         {
-            this.anims.play(this.currentAnimation+'engineer-W', true);
+            this.anims.play(this.currentAnimation+'engineer'+"-"+this.team+"-W", true);
         }
         else if(angle>292.5 && angle<=337.5)
         {
-            this.anims.play(this.currentAnimation+'engineer-NW', true);
+            this.anims.play(this.currentAnimation+'engineer'+"-"+this.team+"-NW", true);
         }
     }
 

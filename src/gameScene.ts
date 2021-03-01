@@ -29,17 +29,24 @@ export default class GameScene extends Phaser.Scene {
     preload() {
         this.load.image('tileset', 'assets/tileset.png');
         this.load.spritesheet('tileset_spritesheet', 'assets/tileset.png', { frameWidth: 64, frameHeight: 64 });
-        this.load.image('home_base', 'assets/home_base.png');
+        this.load.image('home_base-1', 'assets/home_base.png');
         this.load.image('portrait_base', 'assets/Portrait_Base.png');
-        this.load.image('factory', 'assets/Factory.png');
+        this.load.image('factory-1', 'assets/Factory.png');
         this.load.image('scaffold', 'assets/scaffold.png');
         this.load.image('mine', 'assets/mine.png');
         this.load.tilemapTiledJSON('map', 'assets/tiledmap2.json');
-        this.load.spritesheet('player', 'assets/spritesheet.png', { frameWidth: 64, frameHeight: 64 });
-        this.load.spritesheet('player-rock', 'assets/spritesheet_rock.png', { frameWidth: 64, frameHeight: 64 });
-        this.load.spritesheet('player-action', 'assets/spritesheet_build.png', { frameWidth: 64, frameHeight: 64 });
-        this.load.spritesheet('turret', 'assets/turret_spritesheet.png', { frameWidth: 64, frameHeight: 64 });
-        this.load.spritesheet('glider', 'assets/glider_spritesheet.png', { frameWidth: 64, frameHeight: 96 });
+        this.load.spritesheet('player-1', 'assets/spritesheet.png', { frameWidth: 64, frameHeight: 64 });
+        this.load.spritesheet('player-rock-1', 'assets/spritesheet_rock.png', { frameWidth: 64, frameHeight: 64 });
+        this.load.spritesheet('player-action-1', 'assets/spritesheet_build.png', { frameWidth: 64, frameHeight: 64 });
+        this.load.spritesheet('turret-1', 'assets/turret_spritesheet.png', { frameWidth: 64, frameHeight: 64 });
+        this.load.spritesheet('glider-1', 'assets/glider_spritesheet.png', { frameWidth: 64, frameHeight: 96 });
+        this.load.image('home_base-2', 'assets/home_base-2.png');
+        this.load.image('factory-2', 'assets/Factory-2.png');
+        this.load.spritesheet('player-2', 'assets/spritesheet-2.png', { frameWidth: 64, frameHeight: 64 });
+        this.load.spritesheet('player-rock-2', 'assets/spritesheet_rock-2.png', { frameWidth: 64, frameHeight: 64 });
+        this.load.spritesheet('player-action-2', 'assets/spritesheet_build-2.png', { frameWidth: 64, frameHeight: 64 });
+        this.load.spritesheet('turret-2', 'assets/turret_spritesheet-2.png', { frameWidth: 64, frameHeight: 64 });
+        this.load.spritesheet('glider-2', 'assets/glider_spritesheet-2.png', { frameWidth: 64, frameHeight: 96 });
         this.load.image('ui_button', 'assets/ui_button.png');
         this.load.image('ui_button_Attack', 'assets/ui_button_Attack.png');
         this.load.image('ui_button_Build', 'assets/ui_button_Build.png');
@@ -97,239 +104,452 @@ export default class GameScene extends Phaser.Scene {
             this.eventEmitterSingleton.emit(EventConstants.EntityActions.Move,new Phaser.Math.Vector2(this.getTileLocation(x,y)));
 
             });
-       /* this.layer1.setInteractive().on('pointerup', (pointer, gameObject)=>{ var x = this.cameras.main.scrollX + pointer.x;
-            var y = this.cameras.main.scrollY + pointer.y;
-            this.eventEmitterSingleton.emit(EventConstants.EntityActions.Move,new Phaser.Math.Vector2(this.getTileLocation(x,y)));
-
-            });*/
+        //N,NE,E,SE,S,SW,W,NW,N
         this.anims.create({
-            key: 'glider-test',
-            frames: this.anims.generateFrameNumbers('glider', { start: 0, end: 7 }),
+            key: 'glider-1-N',
+            frames: this.anims.generateFrameNumbers('glider-1', { start: 0, end: 7  }),
+            frameRate: 15,
+            repeat: -1,
+            yoyo: true
+        });
+        this.anims.create({
+            key: 'glider-1-NW',
+            frames: this.anims.generateFrameNumbers('glider-1', { start: 8, end: 15 }),
+            frameRate: 15,
+            repeat: -1,
+            yoyo: true
+        });
+        this.anims.create({
+            key: 'glider-1-W',
+            frames: this.anims.generateFrameNumbers('glider-1', { start: 16, end: 23 }),
+            frameRate: 15,
+            repeat: -1,
+            yoyo: true
+        });
+        this.anims.create({
+            key: 'glider-1-SW',
+            frames: this.anims.generateFrameNumbers('glider-1', { start: 24, end: 31 }),
+            frameRate: 15,
+            repeat: -1,
+            yoyo: true
+        });
+        this.anims.create({
+            key: 'glider-1-S',
+            frames: this.anims.generateFrameNumbers('glider-1', { start: 32, end: 39 }),
+            frameRate: 15,
+            repeat: -1,
+            yoyo: true
+        });
+        this.anims.create({
+            key: 'glider-1-SE',
+            frames: this.anims.generateFrameNumbers('glider-1', { start: 40, end: 47 }),
+            frameRate: 15,
+            repeat: -1,
+            yoyo: true
+        });
+        this.anims.create({
+            key: 'glider-1-E',
+            frames: this.anims.generateFrameNumbers('glider-1', { start: 48, end: 55 }),
+            frameRate: 15,
+            repeat: -1,
+            yoyo: true
+        });
+        this.anims.create({
+            key: 'glider-1-NE',
+            frames: this.anims.generateFrameNumbers('glider-1', { start: 56, end: 63 }),
+            frameRate: 15,
+            repeat: -1,
+            yoyo: true
+        });
+        this.anims.create({
+            key: 'engineer-1-N',
+            frames: this.anims.generateFrameNumbers('player-1', { start: 0, end: 4 }),
+            frameRate: 15,
+            repeat: -1,
+            yoyo: true
+        });
+        this.anims.create({
+            key: 'engineer-1-NW',
+            frames: this.anims.generateFrameNumbers('player-1', { start: 5, end: 9 }),
+            frameRate: 15,
+            repeat: -1,
+            yoyo: true
+        });
+        this.anims.create({
+            key: 'engineer-1-W',
+            frames: this.anims.generateFrameNumbers('player-1', { start: 10, end: 14 }),
+            frameRate: 15,
+            repeat: -1,
+            yoyo: true
+        });
+        this.anims.create({
+            key: 'engineer-1-SW',
+            frames: this.anims.generateFrameNumbers('player-1', { start: 15, end: 19 }),
+            frameRate: 15,
+            repeat: -1,
+            yoyo: true
+        });
+        this.anims.create({
+            key: 'engineer-1-S',
+            frames: this.anims.generateFrameNumbers('player-1', { start: 20, end: 24 }),
+            frameRate: 15,
+            repeat: -1,
+            yoyo: true
+        });
+        this.anims.create({
+            key: 'engineer-1-SE',
+            frames: this.anims.generateFrameNumbers('player-1', { start: 25, end: 29 }),
+            frameRate: 15,
+            repeat: -1,
+            yoyo: true
+        });
+        this.anims.create({
+            key: 'engineer-1-E',
+            frames: this.anims.generateFrameNumbers('player-1', { start: 30, end: 34 }),
+            frameRate: 15,
+            repeat: -1,
+            yoyo: true
+        });
+        this.anims.create({
+            key: 'engineer-1-NE',
+            frames: this.anims.generateFrameNumbers('player-1', { start: 35, end: 39 }),
+            frameRate: 15,
+            repeat: -1,
+            yoyo: true
+        });
+        this.anims.create({
+            key: 'Miningengineer-1-N',
+            frames: this.anims.generateFrameNumbers('player-rock-1', { start: 0, end: 4 }),
+            frameRate: 15,
+            repeat: -1,
+            yoyo: true
+        });
+        this.anims.create({
+            key: 'Miningengineer-1-NW',
+            frames: this.anims.generateFrameNumbers('player-rock-1', { start: 5, end: 9 }),
+            frameRate: 15,
+            repeat: -1,
+            yoyo: true
+        });
+        this.anims.create({
+            key: 'Miningengineer-1-W',
+            frames: this.anims.generateFrameNumbers('player-rock-1', { start: 10, end: 14 }),
+            frameRate: 15,
+            repeat: -1,
+            yoyo: true
+        });
+        this.anims.create({
+            key: 'Miningengineer-1-SW',
+            frames: this.anims.generateFrameNumbers('player-rock-1', { start: 15, end: 19 }),
+            frameRate: 15,
+            repeat: -1,
+            yoyo: true
+        });
+        this.anims.create({
+            key: 'Miningengineer-1-S',
+            frames: this.anims.generateFrameNumbers('player-rock-1', { start: 20, end: 24 }),
+            frameRate: 15,
+            repeat: -1,
+            yoyo: true
+        });
+        this.anims.create({
+            key: 'Miningengineer-1-SE',
+            frames: this.anims.generateFrameNumbers('player-rock-1', { start: 25, end: 29 }),
+            frameRate: 15,
+            repeat: -1,
+            yoyo: true
+        });
+        this.anims.create({
+            key: 'Miningengineer-1-E',
+            frames: this.anims.generateFrameNumbers('player-rock-1', { start: 30, end: 34 }),
+            frameRate: 15,
+            repeat: -1,
+            yoyo: true
+        });
+        this.anims.create({
+            key: 'Miningengineer-1-NE',
+            frames: this.anims.generateFrameNumbers('player-rock-1', { start: 35, end: 39 }),
+            frameRate: 15,
+            repeat: -1,
+            yoyo: true
+        });
+        this.anims.create({
+            key: 'Actionengineer-1-N',
+            frames: this.anims.generateFrameNumbers('player-action-1', { start: 0, end: 4 }),
+            frameRate: 15,
+            repeat: -1,
+            yoyo: true
+        });
+        this.anims.create({
+            key: 'Actionengineer-1-NW',
+            frames: this.anims.generateFrameNumbers('player-action-1', { start: 5, end: 9 }),
+            frameRate: 15,
+            repeat: -1,
+            yoyo: true
+        });
+        this.anims.create({
+            key: 'Actionengineer-1-W',
+            frames: this.anims.generateFrameNumbers('player-action-1', { start: 10, end: 14 }),
+            frameRate: 15,
+            repeat: -1,
+            yoyo: true
+        });
+        this.anims.create({
+            key: 'Actionengineer-1-SW',
+            frames: this.anims.generateFrameNumbers('player-action-1', { start: 15, end: 19 }),
+            frameRate: 15,
+            repeat: -1,
+            yoyo: true
+        });
+        this.anims.create({
+            key: 'Actionengineer-1-S',
+            frames: this.anims.generateFrameNumbers('player-action-1', { start: 20, end: 24 }),
+            frameRate: 15,
+            repeat: -1,
+            yoyo: true
+        });
+        this.anims.create({
+            key: 'Actionengineer-1-SE',
+            frames: this.anims.generateFrameNumbers('player-action-1', { start: 25, end: 29 }),
+            frameRate: 15,
+            repeat: -1,
+            yoyo: true
+        });
+        this.anims.create({
+            key: 'Actionengineer-1-E',
+            frames: this.anims.generateFrameNumbers('player-action-1', { start: 30, end: 34 }),
+            frameRate: 15,
+            repeat: -1,
+            yoyo: true
+        });
+        this.anims.create({
+            key: 'Actionengineer-1-NE',
+            frames: this.anims.generateFrameNumbers('player-action-1', { start: 35, end: 39 }),
             frameRate: 15,
             repeat: -1,
             yoyo: true
         });
         //N,NE,E,SE,S,SW,W,NW,N
         this.anims.create({
-            key: 'glider-N',
-            frames: this.anims.generateFrameNumbers('glider', { start: 0, end: 7  }),
+            key: 'glider-2-N',
+            frames: this.anims.generateFrameNumbers('glider-2', { start: 0, end: 7  }),
             frameRate: 15,
             repeat: -1,
             yoyo: true
         });
         this.anims.create({
-            key: 'glider-NW',
-            frames: this.anims.generateFrameNumbers('glider', { start: 8, end: 15 }),
+            key: 'glider-2-NW',
+            frames: this.anims.generateFrameNumbers('glider-2', { start: 8, end: 15 }),
             frameRate: 15,
             repeat: -1,
             yoyo: true
         });
         this.anims.create({
-            key: 'glider-W',
-            frames: this.anims.generateFrameNumbers('glider', { start: 16, end: 23 }),
+            key: 'glider-2-W',
+            frames: this.anims.generateFrameNumbers('glider-2', { start: 16, end: 23 }),
             frameRate: 15,
             repeat: -1,
             yoyo: true
         });
         this.anims.create({
-            key: 'glider-SW',
-            frames: this.anims.generateFrameNumbers('glider', { start: 24, end: 31 }),
+            key: 'glider-2-SW',
+            frames: this.anims.generateFrameNumbers('glider-2', { start: 24, end: 31 }),
             frameRate: 15,
             repeat: -1,
             yoyo: true
         });
         this.anims.create({
-            key: 'glider-S',
-            frames: this.anims.generateFrameNumbers('glider', { start: 32, end: 39 }),
+            key: 'glider-2-S',
+            frames: this.anims.generateFrameNumbers('glider-2', { start: 32, end: 39 }),
             frameRate: 15,
             repeat: -1,
             yoyo: true
         });
         this.anims.create({
-            key: 'glider-SE',
-            frames: this.anims.generateFrameNumbers('glider', { start: 40, end: 47 }),
+            key: 'glider-2-SE',
+            frames: this.anims.generateFrameNumbers('glider-2', { start: 40, end: 47 }),
             frameRate: 15,
             repeat: -1,
             yoyo: true
         });
         this.anims.create({
-            key: 'glider-E',
-            frames: this.anims.generateFrameNumbers('glider', { start: 48, end: 55 }),
+            key: 'glider-2-E',
+            frames: this.anims.generateFrameNumbers('glider-2', { start: 48, end: 55 }),
             frameRate: 15,
             repeat: -1,
             yoyo: true
         });
         this.anims.create({
-            key: 'glider-NE',
-            frames: this.anims.generateFrameNumbers('glider', { start: 56, end: 63 }),
+            key: 'glider-2-NE',
+            frames: this.anims.generateFrameNumbers('glider-2', { start: 56, end: 63 }),
             frameRate: 15,
             repeat: -1,
             yoyo: true
         });
         this.anims.create({
-            key: 'engineer-N',
-            frames: this.anims.generateFrameNumbers('player', { start: 0, end: 4 }),
+            key: 'engineer-2-N',
+            frames: this.anims.generateFrameNumbers('player-2', { start: 0, end: 4 }),
             frameRate: 15,
             repeat: -1,
             yoyo: true
         });
         this.anims.create({
-            key: 'engineer-NW',
-            frames: this.anims.generateFrameNumbers('player', { start: 5, end: 9 }),
+            key: 'engineer-2-NW',
+            frames: this.anims.generateFrameNumbers('player-2', { start: 5, end: 9 }),
             frameRate: 15,
             repeat: -1,
             yoyo: true
         });
         this.anims.create({
-            key: 'engineer-W',
-            frames: this.anims.generateFrameNumbers('player', { start: 10, end: 14 }),
+            key: 'engineer-2-W',
+            frames: this.anims.generateFrameNumbers('player-2', { start: 10, end: 14 }),
             frameRate: 15,
             repeat: -1,
             yoyo: true
         });
         this.anims.create({
-            key: 'engineer-SW',
-            frames: this.anims.generateFrameNumbers('player', { start: 15, end: 19 }),
+            key: 'engineer-2-SW',
+            frames: this.anims.generateFrameNumbers('player-2', { start: 15, end: 19 }),
             frameRate: 15,
             repeat: -1,
             yoyo: true
         });
         this.anims.create({
-            key: 'engineer-S',
-            frames: this.anims.generateFrameNumbers('player', { start: 20, end: 24 }),
+            key: 'engineer-2-S',
+            frames: this.anims.generateFrameNumbers('player-2', { start: 20, end: 24 }),
             frameRate: 15,
             repeat: -1,
             yoyo: true
         });
         this.anims.create({
-            key: 'engineer-SE',
-            frames: this.anims.generateFrameNumbers('player', { start: 25, end: 29 }),
+            key: 'engineer-2-SE',
+            frames: this.anims.generateFrameNumbers('player-2', { start: 25, end: 29 }),
             frameRate: 15,
             repeat: -1,
             yoyo: true
         });
         this.anims.create({
-            key: 'engineer-E',
-            frames: this.anims.generateFrameNumbers('player', { start: 30, end: 34 }),
+            key: 'engineer-2-E',
+            frames: this.anims.generateFrameNumbers('player-2', { start: 30, end: 34 }),
             frameRate: 15,
             repeat: -1,
             yoyo: true
         });
         this.anims.create({
-            key: 'engineer-NE',
-            frames: this.anims.generateFrameNumbers('player', { start: 35, end: 39 }),
+            key: 'engineer-2-NE',
+            frames: this.anims.generateFrameNumbers('player-2', { start: 35, end: 39 }),
             frameRate: 15,
             repeat: -1,
             yoyo: true
         });
         this.anims.create({
-            key: 'Miningengineer-N',
-            frames: this.anims.generateFrameNumbers('player-rock', { start: 0, end: 4 }),
+            key: 'Miningengineer-2-N',
+            frames: this.anims.generateFrameNumbers('player-rock-2', { start: 0, end: 4 }),
             frameRate: 15,
             repeat: -1,
             yoyo: true
         });
         this.anims.create({
-            key: 'Miningengineer-NW',
-            frames: this.anims.generateFrameNumbers('player-rock', { start: 5, end: 9 }),
+            key: 'Miningengineer-2-NW',
+            frames: this.anims.generateFrameNumbers('player-rock-2', { start: 5, end: 9 }),
             frameRate: 15,
             repeat: -1,
             yoyo: true
         });
         this.anims.create({
-            key: 'Miningengineer-W',
-            frames: this.anims.generateFrameNumbers('player-rock', { start: 10, end: 14 }),
+            key: 'Miningengineer-2-W',
+            frames: this.anims.generateFrameNumbers('player-rock-2', { start: 10, end: 14 }),
             frameRate: 15,
             repeat: -1,
             yoyo: true
         });
         this.anims.create({
-            key: 'Miningengineer-SW',
-            frames: this.anims.generateFrameNumbers('player-rock', { start: 15, end: 19 }),
+            key: 'Miningengineer-2-SW',
+            frames: this.anims.generateFrameNumbers('player-rock-2', { start: 15, end: 19 }),
             frameRate: 15,
             repeat: -1,
             yoyo: true
         });
         this.anims.create({
-            key: 'Miningengineer-S',
-            frames: this.anims.generateFrameNumbers('player-rock', { start: 20, end: 24 }),
+            key: 'Miningengineer-2-S',
+            frames: this.anims.generateFrameNumbers('player-rock-2', { start: 20, end: 24 }),
             frameRate: 15,
             repeat: -1,
             yoyo: true
         });
         this.anims.create({
-            key: 'Miningengineer-SE',
-            frames: this.anims.generateFrameNumbers('player-rock', { start: 25, end: 29 }),
+            key: 'Miningengineer-2-SE',
+            frames: this.anims.generateFrameNumbers('player-rock-2', { start: 25, end: 29 }),
             frameRate: 15,
             repeat: -1,
             yoyo: true
         });
         this.anims.create({
-            key: 'Miningengineer-E',
-            frames: this.anims.generateFrameNumbers('player-rock', { start: 30, end: 34 }),
+            key: 'Miningengineer-2-E',
+            frames: this.anims.generateFrameNumbers('player-rock-2', { start: 30, end: 34 }),
             frameRate: 15,
             repeat: -1,
             yoyo: true
         });
         this.anims.create({
-            key: 'Miningengineer-NE',
-            frames: this.anims.generateFrameNumbers('player-rock', { start: 35, end: 39 }),
+            key: 'Miningengineer-2-NE',
+            frames: this.anims.generateFrameNumbers('player-rock-2', { start: 35, end: 39 }),
             frameRate: 15,
             repeat: -1,
             yoyo: true
         });
         this.anims.create({
-            key: 'Actionengineer-N',
-            frames: this.anims.generateFrameNumbers('player-action', { start: 0, end: 4 }),
+            key: 'Actionengineer-2-N',
+            frames: this.anims.generateFrameNumbers('player-action-2', { start: 0, end: 4 }),
             frameRate: 15,
             repeat: -1,
             yoyo: true
         });
         this.anims.create({
-            key: 'Actionengineer-NW',
-            frames: this.anims.generateFrameNumbers('player-action', { start: 5, end: 9 }),
+            key: 'Actionengineer-2-NW',
+            frames: this.anims.generateFrameNumbers('player-action-2', { start: 5, end: 9 }),
             frameRate: 15,
             repeat: -1,
             yoyo: true
         });
         this.anims.create({
-            key: 'Actionengineer-W',
-            frames: this.anims.generateFrameNumbers('player-action', { start: 10, end: 14 }),
+            key: 'Actionengineer-2-W',
+            frames: this.anims.generateFrameNumbers('player-action-2', { start: 10, end: 14 }),
             frameRate: 15,
             repeat: -1,
             yoyo: true
         });
         this.anims.create({
-            key: 'Actionengineer-SW',
-            frames: this.anims.generateFrameNumbers('player-action', { start: 15, end: 19 }),
+            key: 'Actionengineer-2-SW',
+            frames: this.anims.generateFrameNumbers('player-action-2', { start: 15, end: 19 }),
             frameRate: 15,
             repeat: -1,
             yoyo: true
         });
         this.anims.create({
-            key: 'Actionengineer-S',
-            frames: this.anims.generateFrameNumbers('player-action', { start: 20, end: 24 }),
+            key: 'Actionengineer-2-S',
+            frames: this.anims.generateFrameNumbers('player-action-2', { start: 20, end: 24 }),
             frameRate: 15,
             repeat: -1,
             yoyo: true
         });
         this.anims.create({
-            key: 'Actionengineer-SE',
-            frames: this.anims.generateFrameNumbers('player-action', { start: 25, end: 29 }),
+            key: 'Actionengineer-2-SE',
+            frames: this.anims.generateFrameNumbers('player-action-2', { start: 25, end: 29 }),
             frameRate: 15,
             repeat: -1,
             yoyo: true
         });
         this.anims.create({
-            key: 'Actionengineer-E',
-            frames: this.anims.generateFrameNumbers('player-action', { start: 30, end: 34 }),
+            key: 'Actionengineer-2-E',
+            frames: this.anims.generateFrameNumbers('player-action-2', { start: 30, end: 34 }),
             frameRate: 15,
             repeat: -1,
             yoyo: true
         });
         this.anims.create({
-            key: 'Actionengineer-NE',
-            frames: this.anims.generateFrameNumbers('player-action', { start: 35, end: 39 }),
+            key: 'Actionengineer-2-NE',
+            frames: this.anims.generateFrameNumbers('player-action-2', { start: 35, end: 39 }),
             frameRate: 15,
             repeat: -1,
             yoyo: true
@@ -337,14 +557,15 @@ export default class GameScene extends Phaser.Scene {
         this.entityManager = new EntityManager(this, this.map);
 
         this.mine = this.entityManager.createMineEntity(6, 6);
-        this.base = this.entityManager.createBaseEntity(14, 5);
-        this.base = this.entityManager.createBaseEntity(16, 16);
+        this.base = this.entityManager.createBaseEntity(14, 5,1);
+        this.base = this.entityManager.createBaseEntity(16, 16,1);
         this.mine = this.entityManager.createMineEntity(6, 14);
-        var turret = this.entityManager.createTurretEntity(9, 9);
-        var turret = this.entityManager.createGliderEntity(15, 7);
-        var test = this.entityManager.createFactoryEntity(20, 20);
-        var testScaffold = this.entityManager.createScaffoldEntity(25, 20, BuildingEntityID.Base);
-        this.player = this.entityManager.createEngineerEntity(3, 4);
+        var turret = this.entityManager.createTurretEntity(9, 9, 2);
+        var turret = this.entityManager.createGliderEntity(15, 7, 1);
+        var test = this.entityManager.createFactoryEntity(20, 20,2);
+        var testScaffold = this.entityManager.createScaffoldEntity(25, 20, BuildingEntityID.Base,1);
+        this.player = this.entityManager.createEngineerEntity(3, 4,1);
+        this.player = this.entityManager.createEngineerEntity(17, 17,2);
         //let uiPortraitParentLayout:UIParentLayout = new UIParentLayout(this,portraitLayout,uiLayout,110,400)
 
         this.finder = EasyStarGroundLevelSingleton.getInstance(); //new EasyStarWrapper();

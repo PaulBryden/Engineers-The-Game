@@ -12,7 +12,8 @@ class Entity extends Phaser.GameObjects.Sprite implements IStatePublisher {
     selected: boolean;
     selectedRectangle: Phaser.GameObjects.Rectangle;
     subscribers: IStateSubscriber[];
-    constructor(map: Phaser.Tilemaps.Tilemap, icon: string, name: string, scene: Phaser.Scene, x: number, y: number, texture: string | Phaser.Textures.Texture, frame?: string | number) {
+    team:number;
+    constructor(map: Phaser.Tilemaps.Tilemap, icon: string, name: string, scene: Phaser.Scene, x: number, y: number, texture: string | Phaser.Textures.Texture, team:number, frame?: string | number) {
         let vector: Phaser.Math.Vector2 = Phaser.Tilemaps.Components.IsometricTileToWorldXY(x, y, new Phaser.Math.Vector2(), scene.cameras.main, map.getLayer('Tile Layer 1'));
         super(scene, vector.x, vector.y, texture, frame);
         this.selectedRectangle = new Phaser.GameObjects.Rectangle(scene, this.x, this.y, this.width, this.height, 0xffffff, 0x0).setStrokeStyle(1, 0xffffff);
@@ -30,8 +31,9 @@ class Entity extends Phaser.GameObjects.Sprite implements IStatePublisher {
         this.status = "Idle";
         this.name = name;
         this.selected = false;
-
+        this.team=team;
     }
+    
     GetTileLocation()
     {
         return Phaser.Tilemaps.Components.IsometricWorldToTileXY(this.x, this.y, true, new Phaser.Math.Vector2, this.scene.cameras.main, this.mapReference.layer);

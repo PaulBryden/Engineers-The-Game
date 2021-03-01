@@ -4,7 +4,7 @@ import {Entity} from './entity'
 import {EngineerEntity} from './engineer_entity'
 import {EventEmitterSingleton} from './EventEmitterSingleton'
 import {AudioEffectsSingleton} from './AudioEffectsSingleton'
-import {BuildingEntityID, EntityConstants, EventConstants} from './GameConstants'
+import {BuildingEntityID, EntityConstants, EventConstants, TeamNumbers} from './GameConstants'
 import { MineEntity } from './mine_entity'
 import { UIResources } from './ui_resources'
 import GameScene from './gameScene'
@@ -76,12 +76,16 @@ class UIManager
             {
                 (<EngineerEntity>this.selectedEntity).requestBuild(selectedEntity);
             }
-            else
+            else if(selectedEntity.team==TeamNumbers.Player)
             {
                 this.selectedEntity!=null?this.selectedEntity.updateSelected(false):{};
                 this.selectedEntity = selectedEntity;
                 this.selectedEntity.updateSelected(true);
                 Math.random()>0.5?AudioEffectsSingleton.getInstance(this.selectedEntity.scene).IdleEngineerSelected1.play():AudioEffectsSingleton.getInstance(this.selectedEntity.scene).IdleEngineerSelected2.play();
+            }
+            else if(selectedEntity.team==TeamNumbers.Enemy && this.selectedEntity instanceof MovingEntity)
+            {
+                console.log("Attacking");
             }
 
             if(this.uiLayout!=null)

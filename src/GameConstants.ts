@@ -32,6 +32,13 @@ class CompassDirections {
   public static readonly NorthWest: string = "NW";
 }
 
+
+export class TeamNumbers {
+  public static readonly Neutral: number = 0;
+  public static readonly Player: number = 1;
+  public static readonly Enemy: number = 2;
+}
+
 export class EntityID {
   public static readonly Engineer: string = "Engineer";
   public static readonly Glider: string = "Glider";

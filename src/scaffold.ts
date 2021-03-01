@@ -11,9 +11,9 @@ class ScaffoldEntity extends BuildingEntity
     desiredBuildingCoordinates:Phaser.Math.Vector2;
     buildingCompletionProgress:number;
     buildingCompletionTarget:number;
-    constructor(map: Phaser.Tilemaps.Tilemap, scene: Phaser.Scene, x: number, y: number, desiredBuilding:string)
+    constructor(map: Phaser.Tilemaps.Tilemap, scene: Phaser.Scene, x: number, y: number, desiredBuilding:string, team:number)
     {
-        super(map,"scaffold","desiredBuilding",scene,x,y,"scaffold");
+        super(map,"scaffold","desiredBuilding",scene,x,y,"scaffold", team);
         this.desiredBuilding=desiredBuilding;
         this.desiredBuildingCoordinates = new Phaser.Math.Vector2(x,y);
         this.status="...";

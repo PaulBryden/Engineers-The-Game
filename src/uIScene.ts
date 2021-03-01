@@ -26,13 +26,8 @@ export default class UI extends Phaser.Scene {
     preload() {
         this.load.image('tileset', 'assets/tileset.png');
         this.load.spritesheet('tileset_spritesheet', 'assets/tileset.png', { frameWidth: 64, frameHeight: 64 });
-        this.load.image('home_base', 'assets/home_base.png');
         this.load.image('portrait_base', 'assets/Portrait_Base.png');
         this.load.image('mine', 'assets/mine.png');
-        this.load.spritesheet('player', 'assets/spritesheet.png', { frameWidth: 64, frameHeight: 64 });
-        this.load.spritesheet('player-rock', 'assets/spritesheet_rock.png', { frameWidth: 64, frameHeight: 64 });
-        this.load.spritesheet('turret', 'assets/turret_spritesheet.png', { frameWidth: 64, frameHeight: 64 });
-        this.load.spritesheet('glider', 'assets/glider_spritesheet.png', { frameWidth: 64, frameHeight: 96 });
         this.load.image('ui_overlay', 'assets/ui_overlay_2.png');
         this.load.image('ui_button', 'assets/ui_button.png');
         this.load.image('ui_button_Attack', 'assets/ui_button_Attack.png');

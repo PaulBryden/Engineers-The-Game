@@ -7,8 +7,8 @@ class BuildUnitsEntity extends BuildingEntity {
     buildingFSM: typestate.FiniteStateMachine<EventConstants.BuildingStates>;
     buildCounter: number;
     createEntityEvent: string;
-    constructor(map: Phaser.Tilemaps.Tilemap, icon: string, name: string, scene: Phaser.Scene, x: number, y: number, requestBuildEvent: string, createEntityEvent: string, texture: string | Phaser.Textures.Texture, frame?: string | number) {
-        super(map, icon, name, scene, x, y, texture);
+    constructor(map: Phaser.Tilemaps.Tilemap, icon: string, name: string, scene: Phaser.Scene, x: number, y: number, requestBuildEvent: string, createEntityEvent: string, texture: string | Phaser.Textures.Texture,team:number, frame?: string | number) {
+        super(map, icon, name, scene, x, y, texture, team);
         this.createEntityEvent = createEntityEvent;
         this.eventEmitter.on(requestBuildEvent, () => { this.selected ? this.requestBuild() : {}; });
         this.eventEmitter.on(EventConstants.Input.Cancel, () => { this.selected ? this.requestCancel() : {}; });

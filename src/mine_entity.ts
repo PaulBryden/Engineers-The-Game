@@ -8,7 +8,7 @@ class MineEntity extends BuildingEntity
 {
     constructor(map: Phaser.Tilemaps.Tilemap, scene: Phaser.Scene, x: number, y: number)
     {
-        super(map,"mine","Mine",scene,x,y,"mine");
+        super(map,"mine","Mine",scene,x,y,"mine",0);
         this.status="Operating";
     }
 

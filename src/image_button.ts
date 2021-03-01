@@ -83,7 +83,7 @@ class BuildGliderButton extends ImageButton
 {
     constructor(scene:Phaser.Scene)
     {
-        super(scene,"ui_button_not_pressed","ui_button","glider","300");
+        super(scene,"ui_button_not_pressed","ui_button","glider-1","300");
         this.setInteractive().on('pointerup', function(pointer, localX, localY, event){
             EventEmitterSingleton.getInstance().emit(EventConstants.Input.RequestBuildGlider);
         });
@@ -93,7 +93,7 @@ class BuildBaseButton extends ImageButton
 {
     constructor(scene:Phaser.Scene)
     {
-        super(scene,"ui_button_not_pressed","ui_button","home_base","500");
+        super(scene,"ui_button_not_pressed","ui_button","home_base-1","500");
         this.setInteractive().on('pointerup', function(pointer, localX, localY, event){
             EventEmitterSingleton.getInstance().emit(EventConstants.Input.RequestBuildBase);
         });
@@ -103,7 +103,7 @@ class BuildFactoryButton extends ImageButton
 {
     constructor(scene:Phaser.Scene)
     {
-        super(scene,"ui_button_not_pressed","ui_button","factory","300");
+        super(scene,"ui_button_not_pressed","ui_button","factory-1","300");
         this.setInteractive().on('pointerup', function(pointer, localX, localY, event){
             EventEmitterSingleton.getInstance().emit(EventConstants.Input.RequestBuildFactory);
         });

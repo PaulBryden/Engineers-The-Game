@@ -22,15 +22,15 @@ class EntityManager {
         this.map = map;
         this.entityList = new Array();
         this.eventEmitter = EventEmitterSingleton.getInstance();
-        this.eventEmitter.on(EventConstants.EntityBuild.CreateEngineer, (vector) => { this.createEngineerEntity(vector.x, vector.y) });
-        this.eventEmitter.on(EventConstants.EntityBuild.CreateGlider, (vector) => { this.createGliderEntity(vector.x, vector.y) });
+        this.eventEmitter.on(EventConstants.EntityBuild.CreateEngineer, (vector) => { this.createEngineerEntity(vector.x, vector.y,1) });
+        this.eventEmitter.on(EventConstants.EntityBuild.CreateGlider, (vector) => { this.createGliderEntity(vector.x, vector.y,1) });
 
         this.resources = StartOfGame.resourceCount;
 
         this.eventEmitter.emit(EventConstants.EntityBuild.DestroyScaffold);
         this.eventEmitter.emit(EventConstants.EntityBuild.CreateBuilding);
         this.eventEmitter.on(EventConstants.EntityBuild.DestroyScaffold, (scaffold) => { this.deleteEntity(scaffold); });
-        this.eventEmitter.on(EventConstants.EntityBuild.CreateBuilding, (x, y, entityName) => { this.createEntity(x, y, entityName) });
+        this.eventEmitter.on(EventConstants.EntityBuild.CreateBuilding, (x, y, entityName) => { this.createEntity(x, y, entityName,1) });
         this.eventEmitter.on(EventConstants.Input.RequestBuildScaffold, (entity, buildingID) => { 
             if(buildingID==BuildingEntityID.Base)
             {
@@ -57,7 +57,7 @@ class EntityManager {
                 }
                 
             }
-            let scaffold:ScaffoldEntity = this.createScaffoldEntity(entity.GetTileLocation().x, entity.GetTileLocation().y, buildingID);
+            let scaffold:ScaffoldEntity = this.createScaffoldEntity(entity.GetTileLocation().x, entity.GetTileLocation().y, buildingID,1);
             entity.requestBuild(scaffold);
         });
 
@@ -106,29 +106,29 @@ class EntityManager {
         return nearestBase;
     }
 
-    createEntity(x: number, y: number, type: string) {
+    createEntity(x: number, y: number, type: string, team:number) {
         switch (type) {
             case BuildingEntityID.Base:
-                this.createBaseEntity(x, y);
+                this.createBaseEntity(x, y, team);
                 break;
             case BuildingEntityID.Factory:
-                this.createFactoryEntity(x, y);
+                this.createFactoryEntity(x, y, team);
                 break;
         }
     }
 
-    createEngineerEntity(x: number, y: number): EngineerEntity//tile coordinates 
+    createEngineerEntity(x: number, y: number, team:number): EngineerEntity//tile coordinates 
     {
-        let engineer: EngineerEntity = new EngineerEntity(this.map, this.scene, x, y);
+        let engineer: EngineerEntity = new EngineerEntity(this.map, this.scene, x, y, team);
         this.entityList.push(engineer);
         engineer.updateNearestBase(this.getNearestBaseToEntity(engineer));
         return engineer;
 
     }
 
-    createBaseEntity(x: number, y: number): BaseEntity//tile coordinates 
+    createBaseEntity(x: number, y: number, team:number): BaseEntity//tile coordinates 
     {
-        let base: BaseEntity = new BaseEntity(this.map, this.scene, x, y);
+        let base: BaseEntity = new BaseEntity(this.map, this.scene, x, y, team);
         this.entityList.push(base);
         return base;
 
@@ -140,30 +140,30 @@ class EntityManager {
         return base;
 
     }
-    createTurretEntity(x: number, y: number): TurretEntity//tile coordinates 
+    createTurretEntity(x: number, y: number, team:number): TurretEntity//tile coordinates 
     {
-        let base: TurretEntity = new TurretEntity(this.map, this.scene, x, y);
+        let base: TurretEntity = new TurretEntity(this.map, this.scene, x, y, team);
         this.entityList.push(base);
         return base;
 
     }
-    createScaffoldEntity(x: number, y: number, targetBuilding: string): ScaffoldEntity//tile coordinates 
+    createScaffoldEntity(x: number, y: number, targetBuilding: string, team:number): ScaffoldEntity//tile coordinates 
     {
-        let base: ScaffoldEntity = new ScaffoldEntity(this.map, this.scene, x, y, targetBuilding);
+        let base: ScaffoldEntity = new ScaffoldEntity(this.map, this.scene, x, y, targetBuilding, team);
         this.entityList.push(base);
         return base;
 
     }
-    createGliderEntity(x: number, y: number): TurretEntity//tile coordinates 
+    createGliderEntity(x: number, y: number, team:number): TurretEntity//tile coordinates 
     {
-        let base: GliderEntity = new GliderEntity(this.map, this.scene, x, y);
+        let base: GliderEntity = new GliderEntity(this.map, this.scene, x, y, team);
         this.entityList.push(base);
         return base;
 
     }
-    createFactoryEntity(x: number, y: number): FactoryEntity//tile coordinates 
+    createFactoryEntity(x: number, y: number, team:number): FactoryEntity//tile coordinates 
     {
-        let base: FactoryEntity = new FactoryEntity(this.map, this.scene, x, y);
+        let base: FactoryEntity = new FactoryEntity(this.map, this.scene, x, y, team);
         this.entityList.push(base);
         return base;
 

@@ -15,15 +15,15 @@ class GliderEntity extends MovingEntity
     pathFinder: EasyStar.js;
     targetDestination: Phaser.Math.Vector2;
     path: Path;
-    constructor(map: Phaser.Tilemaps.Tilemap, scene: Phaser.Scene, x: number, y: number)
+    constructor(map: Phaser.Tilemaps.Tilemap, scene: Phaser.Scene, x: number, y: number, team:number)
     {
-        super(map, "glider", "Glider", scene, x, y, "glider");
+        super(map, "glider"+"-"+team, "Glider", scene, x, y, "glider"+"-"+team,team);
         this.y+=this.mapReference.layer.tileWidth/4;
         this.removeInteractive();
         this.setInteractive(new Phaser.Geom.Circle(this.displayWidth/2, 1*this.displayWidth/4, this.displayWidth/2),this.handler);
         this.pathFinder = EasyStarFlightLevelSingleton.getInstance();       
          this.gliderFSM = this.createFSM();
-        this.anims.play('glider-NW', true);
+        this.anims.play('glider'+"-"+this.team+"-NW", true);
 
     }
 
@@ -108,35 +108,35 @@ class GliderEntity extends MovingEntity
         }
         if((angle>337.5 && angle<=360)||(angle>0 && angle<=22.5))
         {
-            this.anims.play('glider-N', true);
+            this.anims.play('glider'+"-"+this.team+"-N", true);
         }
         else if(angle>22.5 && angle<=67.5)
         {
-            this.anims.play('glider-NE', true);
+            this.anims.play('glider'+"-"+this.team+"-NE", true);
         }
         else if(angle>67.5 && angle<=112.5)
         {
-            this.anims.play('glider-E', true);
+            this.anims.play('glider'+"-"+this.team+"-E", true);
         }
         else if(angle>112.5 && angle<=157.5)
         {
-            this.anims.play('glider-SE', true);
+            this.anims.play('glider'+"-"+this.team+"-SE", true);
         }
         else if(angle>157.5 && angle<=202.5)
         {
-            this.anims.play('glider-S', true);
+            this.anims.play('glider'+"-"+this.team+"-S", true);
         }
         else if(angle>202.5 && angle<=247.5)
         {
-            this.anims.play('glider-SW', true);
+            this.anims.play('glider'+"-"+this.team+"-SW", true);
         }
         else if(angle>247.5 && angle<=292.5)
         {
-            this.anims.play('glider-W', true);
+            this.anims.play('glider'+"-"+this.team+"-W", true);
         }
         else if(angle>292.5 && angle<=337.5)
         {
-            this.anims.play('glider-NW', true);
+            this.anims.play('glider'+"-"+this.team+"-NW", true);
         }
     }
     
