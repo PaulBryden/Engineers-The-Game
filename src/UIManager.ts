@@ -20,6 +20,10 @@ class UIManager
     eventEmitter: EventEmitterSingleton;
     uiScene:Phaser.Scene;
     entityScene:GameScene;
+    LeftArrowDown:boolean;
+    RightArrowDown:boolean;
+    UpArrowDown:boolean;
+    BottomArrowDown:boolean;
 
     controls: any;
     constructor(scene:Phaser.Scene, entityScene:GameScene, initialEntity?: Entity)
@@ -41,10 +45,35 @@ class UIManager
             drag: 0.0005,
             maxSpeed: 0.4
         };
+        
+        this.LeftArrowDown=false;
+        this.RightArrowDown=false;
+        this.UpArrowDown=false;
+        this.BottomArrowDown=false;
 
         this.controls = new Phaser.Cameras.Controls.SmoothedKeyControl(controlConfig);
         //scene.add.rectangle(1400,15,2100,1800,0xffffff,0x0).setInteractive().setScrollFactor(0).setDepth(1).on('pointerup', (pointer, gameObject)=>{this.handleClick(pointer,gameObject)});
         scene.add.image(800, 450, 'ui_overlay').setScrollFactor(0).setScale(2).setDepth(250);
+        scene.add.image(200,228,"Up_Button").setScrollFactor(0).setScale(1).setDepth(250).setInteractive().on('pointerdown', (pointer, localX, localY, event)=>{
+            this.UpArrowDown=true;
+        }).on('pointerup', (pointer, localX, localY, event)=>{
+            this.UpArrowDown=false;
+        });
+        scene.add.image(200,270,"Down_Button").setScrollFactor(0).setScale(1).setDepth(250).setInteractive().on('pointerdown', (pointer, localX, localY, event)=>{
+            this.BottomArrowDown=true;
+        }).on('pointerup', (pointer, localX, localY, event)=>{
+            this.BottomArrowDown=false;
+        });
+        scene.add.image(177,249,"Left_Button").setScrollFactor(0).setScale(1).setDepth(250).setInteractive().on('pointerdown', (pointer, localX, localY, event)=>{
+            this.LeftArrowDown=true;
+        }).on('pointerup', (pointer, localX, localY, event)=>{
+            this.LeftArrowDown=false;
+        });
+        scene.add.image(223,249,"Right_Button").setScrollFactor(0).setScale(1).setDepth(250).setInteractive().on('pointerdown', (pointer, localX, localY, event)=>{
+            this.RightArrowDown=true;
+        }).on('pointerup', (pointer, localX, localY, event)=>{
+            this.RightArrowDown=false;
+        });
         this.eventEmitter.on(EventConstants.EntityActions.Move,this.handleMovement,this);
 
         if(initialEntity!=null)
@@ -105,6 +134,25 @@ class UIManager
     update(delta:number)
     {
         this.controls.update(delta);
+        if(this.UpArrowDown)
+        {
+            this.entityScene.cameras.main.setScroll(this.entityScene.cameras.main.scrollX,this.entityScene.cameras.main.scrollY-(100*(delta/1000)));
+        }
+        if(this.BottomArrowDown)
+        {
+            this.entityScene.cameras.main.setScroll(this.entityScene.cameras.main.scrollX,this.entityScene.cameras.main.scrollY+(100*(delta/1000)));
+
+        }
+        if(this.RightArrowDown)
+        {
+            this.entityScene.cameras.main.setScroll(this.entityScene.cameras.main.scrollX+(100*(delta/1000)),this.entityScene.cameras.main.scrollY);
+
+        }
+        if(this.LeftArrowDown)
+        {
+            this.entityScene.cameras.main.setScroll(this.entityScene.cameras.main.scrollX-(100*(delta/1000)),this.entityScene.cameras.main.scrollY);
+
+        }
 
     }
 } 

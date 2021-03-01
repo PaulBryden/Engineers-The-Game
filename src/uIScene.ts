@@ -43,6 +43,10 @@ export default class UI extends Phaser.Scene {
         this.load.image('ui_button_Cancel_No_Background', 'assets/ui_button_Cancel_No_Background.png');
         this.load.image('ui_button_Build_Engineer_No_Background', 'assets/ui_button_Engineer_Build_No_Background.png');
         this.load.image('Portrait', 'assets/portrait.png');  // urls: an array of file url
+        this.load.image('Up_Button', 'assets/UI_Up_Button.png');  // urls: an array of file url
+        this.load.image('Down_Button', 'assets/UI_Bottom_Button.png');  // urls: an array of file url
+        this.load.image('Left_Button', 'assets/UI_Left_Button.png');  // urls: an array of file url
+        this.load.image('Right_Button', 'assets/UI_Right_Button.png');  // urls: an array of file url
 
     }
 
@@ -57,6 +61,7 @@ export default class UI extends Phaser.Scene {
         this.minimap = this.gameScene.cameras.add(8, 17, 360, 190).setZoom(0.05).setName('mini');
         this.minimap.setScroll(-100,1400);
         this.minimap.setBackgroundColor(0x002244);
+
         this.uiManager = new UIManager(this,this.gameScene,null);
 
     }
