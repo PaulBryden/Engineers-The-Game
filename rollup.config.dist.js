@@ -1,9 +1,8 @@
 import commonjs from 'rollup-plugin-commonjs';
 import resolve from 'rollup-plugin-node-resolve';
 import replace from '@rollup/plugin-replace';
-import { uglify } from 'rollup-plugin-uglify';
 import typescript from 'rollup-plugin-typescript2';
-
+import { terser } from "rollup-plugin-terser";
 export default {
 
     //  Our games entry point (edit as required)
@@ -20,6 +19,7 @@ export default {
         name: 'MyGame',
         format: 'iife',
         sourcemap: false,
+        compact: true,
         intro: 'var global = window;'
     },
 
@@ -39,6 +39,12 @@ export default {
         resolve({
             extensions: [ '.ts', '.tsx' ]
         }),
+        terser({
+            output: {
+              comments: "all",
+            },
+            compress: true
+          }),
 
         //  We need to convert the Phaser 3 CJS modules into a format Rollup can use:
         commonjs({
@@ -46,22 +52,22 @@ export default {
                 'node_modules/eventemitter3/**',
                 'node_modules/phaser/**',
                 'node_modules/easystarjs/**',
-                'node_modules/easystarts/**'
+                'node_modules/heap/**',
+                'node_modules/phaser3-rex-plugins/**',
+                'node_modules/typestate/**'
+                
             ],
             exclude: [ 
                 'node_modules/phaser/src/polyfills/requestAnimationFrame.js'
             ],
+            extensions: [ '.js', '.ts' ],  // Default: [ '.js' ]
             sourceMap: false,
             ignoreGlobal: true
         }),
+        
 
         //  See https://www.npmjs.com/package/rollup-plugin-typescript2 for config options
-        typescript(),
-
-        //  See https://www.npmjs.com/package/rollup-plugin-uglify for config options
-        uglify({
-            mangle: false
-        })
+        typescript()
 
     ]
 };
