@@ -368,7 +368,8 @@ class EngineerEntity extends MovingEntity {
             tweens.push({
                 targets: this,
                 x: { value: xyPos.x+this.mapReference.layer.tileWidth/2, duration: awaitTime },
-                y: { value: xyPos.y+this.mapReference.layer.tileWidth/2, duration: awaitTime }
+                y: { value: xyPos.y+this.mapReference.layer.tileWidth/2, duration: awaitTime },
+                onComplete: ()=>{this.MoveToMine()}
             });
             
             this.updateAngle(Phaser.Math.Angle.Between(this.x,this.y,xyPos.x+this.mapReference.layer.tileWidth/2,xyPos.y+this.mapReference.layer.tileWidth/2));
@@ -378,14 +379,8 @@ class EngineerEntity extends MovingEntity {
             });
             this.path.shift();
         }
-        if(this.miningFSM.is(MiningState.GoingToMine)&& (this.path!=null && this.path.length > 0))
-        {
-            await this.delay(awaitTime);
-            await this.MoveToMine();
-        }
         else if(this.miningFSM.is(MiningState.GoingToMine))
         {
-            await this.delay(awaitTime);
             this.miningFSM.go(MiningState.InMine);
 
         }
@@ -423,20 +418,15 @@ class EngineerEntity extends MovingEntity {
             tweens.push({
                 targets: this,
                 x: { value: xyPos.x+this.mapReference.layer.tileWidth/2, duration: awaitTime },
-                y: { value: xyPos.y+this.mapReference.layer.tileWidth/2, duration: awaitTime }
+                y: { value: xyPos.y+this.mapReference.layer.tileWidth/2, duration: awaitTime },
+                onComplete: ()=>{this.MoveToBuilding()}
             });
-            
             this.updateAngle(Phaser.Math.Angle.Between(this.x,this.y,xyPos.x+this.mapReference.layer.tileWidth/2,xyPos.y+this.mapReference.layer.tileWidth/2));
             
             this.scene.tweens.timeline({
                 tweens: tweens
             });
             this.path.shift();
-        }
-        if(this.buildingFSM.is(BuildingState.GoingToBuilding)&& (this.path!=null && this.path.length > 0))
-        {
-            await this.delay(awaitTime);
-            await this.MoveToBuilding();
         }
         else if(this.buildingFSM.is(BuildingState.GoingToBuilding))
         {
@@ -461,7 +451,8 @@ class EngineerEntity extends MovingEntity {
             tweens.push({
                 targets: this,
                 x: { value: xyPos.x+this.mapReference.layer.tileWidth/2, duration: awaitTime },
-                y: { value: xyPos.y+this.mapReference.layer.tileWidth/2, duration: awaitTime }
+                y: { value: xyPos.y+this.mapReference.layer.tileWidth/2, duration: awaitTime },
+                onComplete: ()=>{this.MoveToBase()}
             });
             
             this.updateAngle(Phaser.Math.Angle.Between(this.x,this.y,xyPos.x+this.mapReference.layer.tileWidth/2,xyPos.y+this.mapReference.layer.tileWidth/2));
@@ -471,14 +462,8 @@ class EngineerEntity extends MovingEntity {
             });
             this.path.shift();
         }
-        if(this.miningFSM.is(MiningState.GoingToBase)&& (this.path!=null && this.path.length > 0))
-        {
-            await this.delay(awaitTime);
-            await this.MoveToBase();
-        }
         else if(this.miningFSM.is(MiningState.GoingToBase))
         {
-            await this.delay(awaitTime);
             this.miningFSM.go(MiningState.InBase);
 
         }
@@ -560,7 +545,8 @@ class EngineerEntity extends MovingEntity {
             tweens.push({
                 targets: this,
                 x: { value: xyPos.x+this.mapReference.layer.tileWidth/2, duration: awaitTime },
-                y: { value: xyPos.y+this.mapReference.layer.tileWidth/2, duration: awaitTime }
+                y: { value: xyPos.y+this.mapReference.layer.tileWidth/2, duration: awaitTime },
+                onComplete: ()=>{this.Move()}
             });
             
             this.updateAngle(Phaser.Math.Angle.Between(this.x,this.y,xyPos.x+this.mapReference.layer.tileWidth/2,xyPos.y+this.mapReference.layer.tileWidth/2));
@@ -569,11 +555,6 @@ class EngineerEntity extends MovingEntity {
                 tweens: tweens
             });
             this.path.shift();
-        }
-        if(this.engineerFSM.is(State.Moving)&& this.path.length > 0)
-        {
-            await this.delay(awaitTime);
-            await this.Move();
         }
         else
         {

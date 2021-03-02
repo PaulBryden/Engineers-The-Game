@@ -100,7 +100,8 @@ class GliderEntity extends MovingEntity {
                     tweens.push({
                         targets: this,
                         x: { value: xyPos.x + this.mapReference.layer.tileWidth / 2, duration: awaitTime },
-                        y: { value: xyPos.y + this.mapReference.layer.tileWidth / 2, duration: awaitTime }
+                        y: { value: xyPos.y + this.mapReference.layer.tileWidth / 2, duration: awaitTime },
+                        onComplete: ()=>{this.Attack()}
                     });
 
                     this.updateAngle(Phaser.Math.Angle.Between(this.x, this.y, xyPos.x + this.mapReference.layer.tileWidth / 2, xyPos.y + this.mapReference.layer.tileWidth));
@@ -110,12 +111,7 @@ class GliderEntity extends MovingEntity {
                     });
                     this.path.shift();
                 }
-                if (this.gliderFSM.is(State.Attacking)) {
-                    await this.delay(awaitTime);
-                    await this.Attack();
-                }
                 else {
-                    await this.delay(awaitTime);
                     this.gliderFSM.go(State.Idle);
                 }
 
@@ -145,7 +141,8 @@ class GliderEntity extends MovingEntity {
             tweens.push({
                 targets: this,
                 x: { value: xyPos.x + this.mapReference.layer.tileWidth / 2, duration: awaitTime },
-                y: { value: xyPos.y + this.mapReference.layer.tileWidth / 2, duration: awaitTime }
+                y: { value: xyPos.y + this.mapReference.layer.tileWidth / 2, duration: awaitTime },
+                onComplete: ()=>{this.Move()}
             });
 
             this.updateAngle(Phaser.Math.Angle.Between(this.x, this.y, xyPos.x + this.mapReference.layer.tileWidth / 2, xyPos.y + this.mapReference.layer.tileWidth / 2));
@@ -155,12 +152,7 @@ class GliderEntity extends MovingEntity {
             });
             this.path.shift();
         }
-        if (this.gliderFSM.is(State.Moving) && this.path.length > 0) {
-            await this.delay(awaitTime);
-            await this.Move();
-        }
         else {
-            await this.delay(awaitTime);
             this.gliderFSM.go(State.Idle);
         }
 
