@@ -82,7 +82,6 @@ class GliderEntity extends MovingEntity {
                     tweens: tweens
                 });
                 this.scene.add.existing(bullet);
-                this.updateAngle(Phaser.Math.Angle.Between(this.x, this.y, this.targetEntity.x + this.mapReference.layer.tileWidth / 2, this.targetEntity.y + this.mapReference.layer.tileWidth / 2));
                 this.destroyBullet(bullet);
                 
             } else if (this.path!=null && this.targetEntity.GetTileLocation().distance(new Phaser.Math.Vector2(this.path[this.path.length - 1].x, this.path[this.path.length - 1].y)) > maxDistanceToTarget) {
@@ -104,14 +103,20 @@ class GliderEntity extends MovingEntity {
                         onComplete: ()=>{this.Attack()}
                     });
 
-                    this.updateAngle(Phaser.Math.Angle.Between(this.x, this.y, xyPos.x + this.mapReference.layer.tileWidth / 2, xyPos.y + this.mapReference.layer.tileWidth));
+                    this.updateAngle(Phaser.Math.Angle.Between(this.x, this.y, xyPos.x + this.mapReference.layer.tileWidth / 2, xyPos.y + this.mapReference.layer.tileWidth / 2));
 
                     this.scene.tweens.timeline({
                         tweens: tweens
                     });
                     this.path.shift();
                 }
-                else {
+                else if (this.gliderFSM.is(State.Attacking)){
+                    //Not Moving but still firing Delay 500ms
+                    this.updateAngle(Phaser.Math.Angle.Between(this.x, this.y, this.targetEntity.x + this.mapReference.layer.tileWidth / 2, this.targetEntity.y + this.mapReference.layer.tileWidth));
+                    await this.delay(500);
+                    this.Attack();
+                }
+                else if (!this.gliderFSM.is(State.Attacking)){
                     this.gliderFSM.go(State.Idle);
                 }
 
