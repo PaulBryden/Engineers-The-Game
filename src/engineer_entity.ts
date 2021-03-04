@@ -349,14 +349,23 @@ class EngineerEntity extends MovingEntity {
     }
 
     ProcessBuilding() {
-        this.delay(1000).then(() => {
-            if (this.targetBuilding.increaseBuildingCompletionProgress()) {
-                this.buildingFSM.go(BuildingState.Initial);
-                this.engineerFSM.go(State.Idle);
+        var tweens = [];
+        tweens.push({
+            targets: this,
+            x: { value: this.x, duration: 1000 },
+            y: { value: this.y, duration: 1000 },
+            onComplete: () => {
+                if (this.targetBuilding.increaseBuildingCompletionProgress()) {
+                    this.buildingFSM.go(BuildingState.Initial);
+                    this.engineerFSM.go(State.Idle);
+                }
+                else {
+                    this.ProcessBuilding();
+                }
             }
-            else {
-                this.ProcessBuilding();
-            }
+        });
+        this.scene.tweens.timeline({
+            tweens: tweens
         });
     }
     MoveToBuilding() {
@@ -385,7 +394,15 @@ class EngineerEntity extends MovingEntity {
             this.path.shift();
         }
         else if (this.buildingFSM.is(BuildingState.GoingToBuilding)) {
-            this.delay(awaitTime).then(() => this.buildingFSM.go(BuildingState.Building));
+            tweens.push({
+                targets: this,
+                x: { value: this.x, duration: awaitTime },
+                y: { value: this.y, duration: awaitTime },
+                onComplete: () => {this.buildingFSM.go(BuildingState.Building);}
+            });
+            this.scene.tweens.timeline({
+                tweens: tweens
+            });
         }
     }
     MoveToBase() {

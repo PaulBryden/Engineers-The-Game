@@ -36,7 +36,7 @@ class GliderEntity extends MovingEntity {
         fsm.from(State.Attacking).to(State.Moving);
         fsm.from(State.Attacking).to(State.Idle);
         fsm.from(State.Idle).to(State.Attacking);
-        fsm.on(State.Idle, async (from: State) => {
+        fsm.on(State.Idle,  (from: State) => {
             for (let sub of this.subscribers) {
                 sub.notify(State.Idle);
             }
