@@ -41,29 +41,28 @@ class GliderEntity extends MovingEntity {
                 sub.notify(State.Idle);
             }
         });
-        fsm.on(State.Moving, async (from: State) => {
+        fsm.on(State.Moving,  (from: State) => {
             for (let sub of this.subscribers) {
                 sub.notify(State.Moving);
             }
-            await this.Move();
+             this.Move();
         });
-        fsm.on(State.Attacking, async (from: State) => {
+        fsm.on(State.Attacking,  (from: State) => {
             for (let sub of this.subscribers) {
                 sub.notify(State.Attacking);
             }
-            await this.Attack();
+             this.Attack();
         });
         return fsm;
     }
 
-    async destroyBullet(bullet:Phaser.GameObjects.PointLight)
+    destroyBullet(bullet:Phaser.GameObjects.PointLight)
     {
-        await this.delay(200);
         this.targetEntity.damage(5);
         bullet.destroy();
     }
 
-    async Attack() {
+    Attack() {
         var tweens = [];
         let awaitTime: number = 500;
         let maxDistanceToTarget: number = 7;
@@ -75,14 +74,14 @@ class GliderEntity extends MovingEntity {
                 tweens.push({
                     targets: bullet,
                     x: { value: this.targetEntity.x, duration: 200 },
-                    y: { value: this.targetEntity.y, duration: 200 }
+                    y: { value: this.targetEntity.y, duration: 200 },
+                    onComplete: ()=>{this.destroyBullet(bullet);}
                 });
 
                 this.scene.tweens.timeline({
                     tweens: tweens
                 });
                 this.scene.add.existing(bullet);
-                this.destroyBullet(bullet);
                 
             } else if (this.path!=null && this.targetEntity.GetTileLocation().distance(new Phaser.Math.Vector2(this.path[this.path.length - 1].x, this.path[this.path.length - 1].y)) > maxDistanceToTarget) {
                     this.requestAttack(this.targetEntity);
@@ -100,7 +99,7 @@ class GliderEntity extends MovingEntity {
                         targets: this,
                         x: { value: xyPos.x + this.mapReference.layer.tileWidth / 2, duration: awaitTime },
                         y: { value: xyPos.y + this.mapReference.layer.tileWidth / 2, duration: awaitTime },
-                        onComplete: ()=>{this.Attack()}
+                        onComplete: ()=>{this.Attack();}
                     });
 
                     this.updateAngle(Phaser.Math.Angle.Between(this.x, this.y, xyPos.x + this.mapReference.layer.tileWidth / 2, xyPos.y + this.mapReference.layer.tileWidth / 2));
@@ -111,10 +110,19 @@ class GliderEntity extends MovingEntity {
                     this.path.shift();
                 }
                 else if (this.gliderFSM.is(State.Attacking)){
+                    
+                        tweens.push({
+                            targets: this,
+                            x: { value: this.x, duration: 500 },
+                            y: { value: this.y, duration: 500 },
+                            onComplete: ()=>{this.Attack()}
+                        });
+                        this.scene.tweens.timeline({
+                            tweens: tweens
+                        });
                     //Not Moving but still firing Delay 500ms
                     this.updateAngle(Phaser.Math.Angle.Between(this.x, this.y, this.targetEntity.x + this.mapReference.layer.tileWidth / 2, this.targetEntity.y + this.mapReference.layer.tileWidth));
-                    await this.delay(500);
-                    this.Attack();
+
                 }
                 else if (!this.gliderFSM.is(State.Attacking)){
                     this.gliderFSM.go(State.Idle);
@@ -130,7 +138,7 @@ class GliderEntity extends MovingEntity {
 
     }
 
-    async Move() {
+    Move() {
 
         var tweens = [];
         let awaitTime: number = 500;
