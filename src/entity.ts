@@ -118,6 +118,11 @@ class Entity extends Phaser.GameObjects.Sprite implements IStatePublisher {
 
     }
 
+    update(delta)
+    {
+        this.updateRenderDepth();
+    }
+
     destroy()
     {
         this.selectedRectangle.destroy();

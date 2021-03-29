@@ -177,8 +177,8 @@ class EntityManager {
         }
     }
 
-    update() {
-        this.entityList.forEach(element => element.updateRenderDepth());
+    update(delta) {
+        this.entityList.forEach(element => element.update(delta));
     }
 
 }
