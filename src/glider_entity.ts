@@ -26,7 +26,7 @@ class GliderEntity extends MovingEntity {
         this.gliderFSM = this.createFSM();
         this.anims.play('glider' + "-" + this.team + "-NW", true);
         this.tweenManager = new Phaser.Tweens.TweenManager(scene);
-
+        this.centerToTileOffset = 16
     }
 
     createFSM(): typestate.FiniteStateMachine<State> {
@@ -84,17 +84,18 @@ class GliderEntity extends MovingEntity {
         let awaitTime: number = 500;
         let maxDistanceToTarget: number = 7;
         let minDistanceToTarget: number = 4;
+        let playerPos: Phaser.Math.Vector2 = this.GetTileLocation();
         if (this.targetEntity && this.targetEntity.health > 0 && this.gliderFSM.is(State.Attacking)) {
-            if (this.targetEntity.GetTileLocation().distance(this.GetTileLocation()) < maxDistanceToTarget) {
+            if (this.targetEntity.GetTileLocation().distance(playerPos) < maxDistanceToTarget) {
                 this.CreateBullet();
-                this.path = [];
+                this.updateAngle(Phaser.Math.Angle.Between(this.x, this.y, this.targetEntity.x, this.targetEntity.y));
             }
-            if (this.gliderFSM.is(State.Attacking) && this.path != null && (this.path.length > 0) && (this.targetEntity.GetTileLocation().distance(this.GetTileLocation()) > minDistanceToTarget)) {
+            if (this.gliderFSM.is(State.Attacking) && this.path != null && (this.path.length > 0) && (this.targetEntity.GetTileLocation().distance(playerPos) > minDistanceToTarget)) {
                 var ex = this.path[0].x;
                 var ey = this.path[0].y;
                 var testCoords;
                 var xyPos = Phaser.Tilemaps.Components.IsometricTileToWorldXY(ex, ey, testCoords, this.scene.cameras.main, this.mapReference.layer);
-                if ((this.y - (xyPos.y + this.mapReference.layer.tileWidth / 2) > -2) && (this.y - (xyPos.y + this.mapReference.layer.tileWidth / 2) < 2)) //Horizontal moves are a greater distance. As such, ensure we treat it that way.
+                if ((playerPos.y - (xyPos.y + this.mapReference.layer.tileWidth / 2) > -2) && (playerPos.y - (xyPos.y + this.mapReference.layer.tileWidth / 2) < 2)) //Horizontal moves are a greater distance. As such, ensure we treat it that way.
                 {
                     awaitTime += awaitTime * 0.3
                 }
@@ -117,13 +118,14 @@ class GliderEntity extends MovingEntity {
                 this.scene.tweens.timeline({
                     tweens: tweens
                 });
+                this.path = [];
                 //Not Moving but still firing Delay 500ms
             }
             else if (!this.gliderFSM.is(State.Attacking)) {
                 this.gliderFSM.go(State.Idle);
             }
 
-            if (this.path != null && this.path.length>0 && this.targetEntity.GetTileLocation().distance(new Phaser.Math.Vector2(this.path[this.path.length - 1].x, this.path[this.path.length - 1].y)) > maxDistanceToTarget) {
+            if (this.path != null && this.path.length > 0 && this.targetEntity.GetTileLocation().distance(new Phaser.Math.Vector2(this.path[this.path.length - 1].x, this.path[this.path.length - 1].y)) > maxDistanceToTarget) {
                 this.requestAttack(this.targetEntity);
             }
 
@@ -145,7 +147,8 @@ class GliderEntity extends MovingEntity {
             var ey = this.path[0].y;
             var testCoords;
             var xyPos = Phaser.Tilemaps.Components.IsometricTileToWorldXY(ex, ey, testCoords, this.scene.cameras.main, this.mapReference.layer);
-            if ((this.y - (xyPos.y + this.mapReference.layer.tileWidth / 2) > -2) && (this.y - (xyPos.y + this.mapReference.layer.tileWidth / 2) < 2)) //Horizontal moves are a greater distance. As such, ensure we treat it that way.
+            let playerPos: Phaser.Math.Vector2 = this.GetTileLocation();
+            if ((playerPos.y - (xyPos.y + this.mapReference.layer.tileWidth / 2) > -2) && (playerPos.y - (xyPos.y + this.mapReference.layer.tileWidth / 2) < 2)) //Horizontal moves are a greater distance. As such, ensure we treat it that way.
             {
                 awaitTime += awaitTime * 0.3
             }
@@ -159,7 +162,7 @@ class GliderEntity extends MovingEntity {
                 tweens: tweens
             });
         }
-        else {
+        else if (this.gliderFSM.is(State.Moving)){
             this.gliderFSM.go(State.Idle);
         }
 
@@ -177,8 +180,6 @@ class GliderEntity extends MovingEntity {
     }
 
     updateAngle(angle: number) {
-        console.log("OG ANGLE:"+angle);
-        console.log(Phaser.Math.RadToDeg(angle));
         angle = Phaser.Math.Angle.Normalize(angle);
         angle = Phaser.Math.RadToDeg(angle) + 90;
         if (angle > 360) {
@@ -212,7 +213,7 @@ class GliderEntity extends MovingEntity {
 
     updateRenderDepth() {
         super.updateRenderDepth();
-        var tilePos = Phaser.Tilemaps.Components.IsometricWorldToTileXY(this.x - 16, this.y - 16, true, new Phaser.Math.Vector2, this.scene.cameras.main, this.mapReference.layer);
+        var tilePos = Phaser.Tilemaps.Components.IsometricWorldToTileXY(this.x, this.y + 16, true, new Phaser.Math.Vector2, this.scene.cameras.main, this.mapReference.layer);
         this.selectedRectangle.setX(this.x);
         this.selectedRectangle.setY(this.y);
         this.selectedRectangle.setDepth(tilePos.x + tilePos.y + 3);
@@ -221,9 +222,8 @@ class GliderEntity extends MovingEntity {
 
 
     requestMove(coordinates: Phaser.Math.Vector2) {
-        console.log("X:" + coordinates.x + " , Y:" + coordinates.y);
         this.targetDestination = coordinates;
-        var PlayerPos = Phaser.Tilemaps.Components.IsometricWorldToTileXY(this.x, this.y, true, PlayerPos, this.scene.cameras.main, this.mapReference.layer);
+        var PlayerPos = this.GetTileLocation();
         this.pathFinder.findPath(PlayerPos.x - 1, PlayerPos.y, coordinates.x - 1, coordinates.y, (path) => {
 
             if (path != null && path.length > 0) {
@@ -256,47 +256,10 @@ class GliderEntity extends MovingEntity {
     }
     update(delta) {
         super.update(delta);
-        if (this.path.length > 0) {
-            var justShifted=false;
-            var ex = this.path[0].x;
-            var ey = this.path[0].y;
-            var testCoords;
-            let xyPos: Phaser.Math.Vector2 = Phaser.Tilemaps.Components.IsometricTileToWorldXY(ex, ey, testCoords, this.scene.cameras.main, this.mapReference.layer);
-            xyPos.x += this.mapReference.layer.tileWidth / 2;
-            xyPos.y += this.mapReference.layer.tileWidth / 2;
-            let currentPosition: Phaser.Math.Vector2 = new Phaser.Math.Vector2(this.x, this.y);
-            //v*t = d;
-            let distanceToTravelThisTick: number = this.speed * delta * 0.001;
-            if (xyPos.distance(currentPosition) < distanceToTravelThisTick) {
-                this.path.shift();
-                justShifted = true;
-                distanceToTravelThisTick = distanceToTravelThisTick - xyPos.distance(currentPosition);
-            }
-            else {
-                this.updateAngle(Phaser.Math.Angle.Between(this.x, this.y, xyPos.x, xyPos.y));
-                let scaleRatio: number = distanceToTravelThisTick / xyPos.distance(currentPosition);
-                this.x += (xyPos.x - this.x) * scaleRatio;
-                this.y += (xyPos.y - this.y) * scaleRatio;
-                return
-            }
+    }
 
-            if (this.path.length > 0) {
-                ex = this.path[0].x;
-                ey = this.path[0].y;
-                xyPos = Phaser.Tilemaps.Components.IsometricTileToWorldXY(ex, ey, testCoords, this.scene.cameras.main, this.mapReference.layer);
-                xyPos.x += this.mapReference.layer.tileWidth / 2;
-                xyPos.y += this.mapReference.layer.tileWidth / 2;
-                currentPosition = new Phaser.Math.Vector2(this.x, this.y);
-                if(justShifted)
-                {
-                    this.updateAngle(Phaser.Math.Angle.Between(this.x, this.y, xyPos.x, xyPos.y));
-                }
-                let scaleRatio: number = distanceToTravelThisTick / xyPos.distance(currentPosition);
-                this.x += (xyPos.x - this.x) * scaleRatio;
-                this.y += (xyPos.y - this.y) * scaleRatio;
-            }
-        }
-
+    GetTileLocation() {
+        return Phaser.Tilemaps.Components.IsometricWorldToTileXY(this.x, this.y + this.centerToTileOffset, true, new Phaser.Math.Vector2, this.scene.cameras.main, this.mapReference.layer);
     }
 
 }

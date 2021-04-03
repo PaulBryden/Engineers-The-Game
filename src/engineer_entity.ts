@@ -315,27 +315,15 @@ class EngineerEntity extends MovingEntity {
         var tweens = [];
         let awaitTime: number = 500;
         if (this.miningFSM.is(MiningState.GoingToMine) && this.path != null && this.path.length > 0) {
-            var ex = this.path[0].x;
-            var ey = this.path[0].y;
-            var testCoords;
-            var xyPos = Phaser.Tilemaps.Components.IsometricTileToWorldXY(ex, ey, testCoords, this.scene.cameras.main, this.mapReference.layer);
-            if ((this.y - (xyPos.y + this.mapReference.layer.tileWidth / 2) > -2) && (this.y - (xyPos.y + this.mapReference.layer.tileWidth / 2) < 2)) //Horizontal moves are a greater distance. As such, ensure we treat it that way.
-            {
-                awaitTime += awaitTime * 0.3
-            }
             tweens.push({
                 targets: this,
-                x: { value: xyPos.x + this.mapReference.layer.tileWidth / 2, duration: awaitTime },
-                y: { value: xyPos.y + this.mapReference.layer.tileWidth / 2, duration: awaitTime },
+                NOTHING: { value: 0, duration: awaitTime },
                 onComplete: () => { this.MoveToMine() }
             });
-
-            this.updateAngle(Phaser.Math.Angle.Between(this.x, this.y, xyPos.x + this.mapReference.layer.tileWidth / 2, xyPos.y + this.mapReference.layer.tileWidth / 2));
 
             this.scene.tweens.timeline({
                 tweens: tweens
             });
-            this.path.shift();
         }
         else if (this.miningFSM.is(MiningState.GoingToMine)) {
             this.miningFSM.go(MiningState.InMine);
@@ -352,8 +340,7 @@ class EngineerEntity extends MovingEntity {
         var tweens = [];
         tweens.push({
             targets: this,
-            x: { value: this.x, duration: 1000 },
-            y: { value: this.y, duration: 1000 },
+            NOTHING: { value: 0, duration: 1000 },
             onComplete: () => {
                 if (this.targetBuilding.increaseBuildingCompletionProgress()) {
                     this.buildingFSM.go(BuildingState.Initial);
@@ -372,32 +359,20 @@ class EngineerEntity extends MovingEntity {
         var tweens = [];
         let awaitTime: number = 500;
         if (this.buildingFSM.is(BuildingState.GoingToBuilding) && this.path != null && this.path.length > 0) {
-            var ex = this.path[0].x;
-            var ey = this.path[0].y;
-            var testCoords;
-            var xyPos = Phaser.Tilemaps.Components.IsometricTileToWorldXY(ex, ey, testCoords, this.scene.cameras.main, this.mapReference.layer);
-            if ((this.y - (xyPos.y + this.mapReference.layer.tileWidth / 2) > -2) && (this.y - (xyPos.y + this.mapReference.layer.tileWidth / 2) < 2)) //Horizontal moves are a greater distance. As such, ensure we treat it that way.
-            {
-                awaitTime += awaitTime * 0.3
-            }
             tweens.push({
                 targets: this,
-                x: { value: xyPos.x + this.mapReference.layer.tileWidth / 2, duration: awaitTime },
-                y: { value: xyPos.y + this.mapReference.layer.tileWidth / 2, duration: awaitTime },
+                NOTHING: { value: 0, duration: awaitTime },
                 onComplete: () => { this.MoveToBuilding(); }
             });
-            this.updateAngle(Phaser.Math.Angle.Between(this.x, this.y, xyPos.x + this.mapReference.layer.tileWidth / 2, xyPos.y + this.mapReference.layer.tileWidth / 2));
 
             this.scene.tweens.timeline({
                 tweens: tweens
             });
-            this.path.shift();
         }
         else if (this.buildingFSM.is(BuildingState.GoingToBuilding)) {
             tweens.push({
                 targets: this,
-                x: { value: this.x, duration: awaitTime },
-                y: { value: this.y, duration: awaitTime },
+                NOTHING: { value: 0, duration: awaitTime },
                 onComplete: () => {this.buildingFSM.go(BuildingState.Building);}
             });
             this.scene.tweens.timeline({
@@ -409,27 +384,16 @@ class EngineerEntity extends MovingEntity {
         var tweens = [];
         let awaitTime: number = 500;
         if (this.miningFSM.is(MiningState.GoingToBase) && this.path != null && this.path.length > 0) {
-            var ex = this.path[0].x;
-            var ey = this.path[0].y;
-            var testCoords;
-            var xyPos = Phaser.Tilemaps.Components.IsometricTileToWorldXY(ex, ey, testCoords, this.scene.cameras.main, this.mapReference.layer);
-            if ((this.y - (xyPos.y + this.mapReference.layer.tileWidth / 2) > -2) && (this.y - (xyPos.y + this.mapReference.layer.tileWidth / 2) < 2)) //Horizontal moves are a greater distance. As such, ensure we treat it that way.
-            {
-                awaitTime += awaitTime * 0.3
-            }
+
             tweens.push({
                 targets: this,
-                x: { value: xyPos.x + this.mapReference.layer.tileWidth / 2, duration: awaitTime },
-                y: { value: xyPos.y + this.mapReference.layer.tileWidth / 2, duration: awaitTime },
+                NOTHING: { value: 0, duration: awaitTime },
                 onComplete: () => { this.MoveToBase() }
             });
-
-            this.updateAngle(Phaser.Math.Angle.Between(this.x, this.y, xyPos.x + this.mapReference.layer.tileWidth / 2, xyPos.y + this.mapReference.layer.tileWidth / 2));
 
             this.scene.tweens.timeline({
                 tweens: tweens
             });
-            this.path.shift();
         }
         else if (this.miningFSM.is(MiningState.GoingToBase)) {
             this.miningFSM.go(MiningState.InBase);
@@ -492,29 +456,18 @@ class EngineerEntity extends MovingEntity {
         var tweens = [];
         let awaitTime: number = 500;
         if (this.engineerFSM.is(State.Moving) && this.path != null && this.path.length > 0) {
-            var ex = this.path[0].x;
-            var ey = this.path[0].y;
-            var testCoords;
-            var xyPos = Phaser.Tilemaps.Components.IsometricTileToWorldXY(ex, ey, testCoords, this.scene.cameras.main, this.mapReference.layer);
-            if ((this.y - (xyPos.y + this.mapReference.layer.tileWidth / 2) > -2) && (this.y - (xyPos.y + this.mapReference.layer.tileWidth / 2) < 2)) //Horizontal moves are a greater distance. As such, ensure we treat it that way.
-            {
-                awaitTime += awaitTime * 0.3
-            }
+
             tweens.push({
                 targets: this,
-                x: { value: xyPos.x + this.mapReference.layer.tileWidth / 2, duration: awaitTime },
-                y: { value: xyPos.y + this.mapReference.layer.tileWidth / 2, duration: awaitTime },
+                NOTHING: { value: 0, duration: awaitTime },
                 onComplete: () => { this.Move() }
             });
-
-            this.updateAngle(Phaser.Math.Angle.Between(this.x, this.y, xyPos.x + this.mapReference.layer.tileWidth / 2, xyPos.y + this.mapReference.layer.tileWidth / 2));
 
             this.scene.tweens.timeline({
                 tweens: tweens
             });
-            this.path.shift();
         }
-        else {
+        else if(this.engineerFSM.is(State.Moving)){
             this.engineerFSM.go(State.Idle);
         }
 
