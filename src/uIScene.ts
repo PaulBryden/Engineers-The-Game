@@ -58,8 +58,8 @@ export default class UI extends Phaser.Scene {
 
         this.gameScene = <GameScene>this.scene.get('GameScene');
 
-        this.minimap = this.gameScene.cameras.add(8, 17, 360, 190).setZoom(0.05).setName('mini');
-        this.minimap.setScroll(-100,1400);
+        this.minimap = this.gameScene.cameras.add(8, 17, 360, 190).setZoom(0.1).setName('mini');
+        this.minimap.setScroll(-110,670);
         this.minimap.setBackgroundColor(0x002244);
 
         this.uiManager = new UIManager(this,this.gameScene,null);

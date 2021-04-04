@@ -34,12 +34,13 @@ export default class GameScene extends Phaser.Scene {
         this.load.image('factory-1', 'assets/Factory.png');
         this.load.image('scaffold', 'assets/scaffold.png');
         this.load.image('mine', 'assets/mine.png');
-        this.load.tilemapTiledJSON('map', 'assets/tiledmap2.json');
+        this.load.tilemapTiledJSON('map', 'assets/tiledmap3.json');
         this.load.spritesheet('player-1', 'assets/spritesheet.png', { frameWidth: 64, frameHeight: 64 });
         this.load.spritesheet('player-rock-1', 'assets/spritesheet_rock.png', { frameWidth: 64, frameHeight: 64 });
         this.load.spritesheet('player-action-1', 'assets/spritesheet_build.png', { frameWidth: 64, frameHeight: 64 });
         this.load.spritesheet('turret-1', 'assets/turret_spritesheet.png', { frameWidth: 64, frameHeight: 64 });
         this.load.spritesheet('glider-1', 'assets/glider_spritesheet.png', { frameWidth: 64, frameHeight: 96 });
+        this.load.spritesheet('gliderPortrait-1', 'assets/glider_portrait.png', { frameWidth: 64, frameHeight: 96 });
         this.load.image('home_base-2', 'assets/home_base-2.png');
         this.load.image('factory-2', 'assets/Factory-2.png');
         this.load.spritesheet('player-2', 'assets/spritesheet-2.png', { frameWidth: 64, frameHeight: 64 });
@@ -611,7 +612,7 @@ export default class GameScene extends Phaser.Scene {
         }
         pathFinder.setAcceptableTiles(acceptableTiles);
         pathFinder.enableDiagonals();
-        pathFinder.setIterationsPerCalculation(1000);
+        pathFinder.setIterationsPerCalculation(100);
     }
 
     update(time, delta) {

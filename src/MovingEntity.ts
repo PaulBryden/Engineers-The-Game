@@ -1,16 +1,19 @@
 import { Entity } from "./entity";
 import EasyStar from 'easystarjs'
 import { Path } from "./EasyStarSingleton";
+import { EventConstants } from "./GameConstants";
 class MovingEntity extends Entity {
 
     path: Path;
     speed: number; //Speed in world coords/second
     centerToTileOffset: number;
+    movingEventEmitter: Phaser.Events.EventEmitter;
     constructor(map: Phaser.Tilemaps.Tilemap, icon: string, name: string, scene: Phaser.Scene, x: number, y: number, texture: string | Phaser.Textures.Texture, team: number, frame?: string | number) {
         super(map, icon, name, scene, x, y, texture, team, frame);
         this.speed = 100;
         this.centerToTileOffset=0;
         this.path = [];
+        this.movingEventEmitter = new Phaser.Events.EventEmitter();
     }
     requestMove(coordinates: Phaser.Math.Vector2) {
     }
@@ -39,6 +42,7 @@ class MovingEntity extends Entity {
                 this.updateAngle(Phaser.Math.Angle.Between(this.x, this.y, xyPos.x, xyPos.y));
                 this.x = (xyPos.x);
                 this.y = (xyPos.y);
+                this.movingEventEmitter.emit(EventConstants.EntityMovingUpdates.FinishedMoving);
             }
             else {
                 this.updateAngle(Phaser.Math.Angle.Between(this.x, this.y, xyPos.x, xyPos.y));

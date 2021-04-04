@@ -57,6 +57,9 @@ namespace EventConstants {
     public static readonly Move: string = "Move";
     public static readonly Mine: string = "Mine";
   }
+  export class EntityMovingUpdates {
+    public static readonly FinishedMoving: string = "FinishedMoving";
+  }
 
   export class EntityBuild {
     public static readonly CreateEngineer: string = "CreateEngineer";

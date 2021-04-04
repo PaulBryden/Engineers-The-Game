@@ -54,22 +54,22 @@ class UIManager
         this.controls = new Phaser.Cameras.Controls.SmoothedKeyControl(controlConfig);
         //scene.add.rectangle(1400,15,2100,1800,0xffffff,0x0).setInteractive().setScrollFactor(0).setDepth(1).on('pointerup', (pointer, gameObject)=>{this.handleClick(pointer,gameObject)});
         scene.add.image(800, 450, 'ui_overlay').setScrollFactor(0).setScale(2).setDepth(250);
-        scene.add.image(180,252,"Up_Button").setScrollFactor(0).setScale(2.5).setDepth(250).setInteractive().on('pointerdown', (pointer, localX, localY, event)=>{
+        scene.add.image(190,252,"Up_Button").setScrollFactor(0).setScale(2.5).setDepth(250).setInteractive().on('pointerdown', (pointer, localX, localY, event)=>{
             this.UpArrowDown=true;
         }).on('pointerup', (pointer, localX, localY, event)=>{
             this.UpArrowDown=false;
         });
-        scene.add.image(180,342,"Down_Button").setScrollFactor(0).setScale(2.5).setDepth(250).setInteractive().on('pointerdown', (pointer, localX, localY, event)=>{
+        scene.add.image(190,342,"Down_Button").setScrollFactor(0).setScale(2.5).setDepth(250).setInteractive().on('pointerdown', (pointer, localX, localY, event)=>{
             this.BottomArrowDown=true;
         }).on('pointerup', (pointer, localX, localY, event)=>{
             this.BottomArrowDown=false;
         });
-        scene.add.image(125,297,"Left_Button").setScrollFactor(0).setScale(2.5).setDepth(250).setInteractive().on('pointerdown', (pointer, localX, localY, event)=>{
+        scene.add.image(135,297,"Left_Button").setScrollFactor(0).setScale(2.5).setDepth(250).setInteractive().on('pointerdown', (pointer, localX, localY, event)=>{
             this.LeftArrowDown=true;
         }).on('pointerup', (pointer, localX, localY, event)=>{
             this.LeftArrowDown=false;
         });
-        scene.add.image(235,297,"Right_Button").setScrollFactor(0).setScale(2.5).setDepth(250).setInteractive().on('pointerdown', (pointer, localX, localY, event)=>{
+        scene.add.image(245,297,"Right_Button").setScrollFactor(0).setScale(2.5).setDepth(250).setInteractive().on('pointerdown', (pointer, localX, localY, event)=>{
             this.RightArrowDown=true;
         }).on('pointerup', (pointer, localX, localY, event)=>{
             this.RightArrowDown=false;

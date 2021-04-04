@@ -57,6 +57,7 @@ class EngineerEntity extends MovingEntity {
         this.pathFinder = EasyStarGroundLevelSingleton.getInstance();
         this.anims.play('engineer' + "-" + team + "-SW", true);
         this.currentAnimation = AnimationState.Default;
+        this.speed = 80;
 
     }
 
@@ -315,23 +316,10 @@ class EngineerEntity extends MovingEntity {
         var tweens = [];
         let awaitTime: number = 500;
         if (this.miningFSM.is(MiningState.GoingToMine) && this.path != null && this.path.length > 0) {
-            tweens.push({
-                targets: this,
-                NOTHING: { value: 0, duration: awaitTime },
-                onComplete: () => { this.MoveToMine() }
-            });
-
-            this.scene.tweens.timeline({
-                tweens: tweens
-            });
-        }
-        else if (this.miningFSM.is(MiningState.GoingToMine)) {
-            this.miningFSM.go(MiningState.InMine);
-
-        }
-        else
-        {
-            return;
+            this.movingEventEmitter.once(EventConstants.EntityMovingUpdates.FinishedMoving,()=>{
+                if (this.miningFSM.is(MiningState.GoingToMine)) {
+                    this.miningFSM.go(MiningState.InMine);
+            }});
         }
 
     }
@@ -359,47 +347,21 @@ class EngineerEntity extends MovingEntity {
         var tweens = [];
         let awaitTime: number = 500;
         if (this.buildingFSM.is(BuildingState.GoingToBuilding) && this.path != null && this.path.length > 0) {
-            tweens.push({
-                targets: this,
-                NOTHING: { value: 0, duration: awaitTime },
-                onComplete: () => { this.MoveToBuilding(); }
-            });
-
-            this.scene.tweens.timeline({
-                tweens: tweens
-            });
-        }
-        else if (this.buildingFSM.is(BuildingState.GoingToBuilding)) {
-            tweens.push({
-                targets: this,
-                NOTHING: { value: 0, duration: awaitTime },
-                onComplete: () => {this.buildingFSM.go(BuildingState.Building);}
-            });
-            this.scene.tweens.timeline({
-                tweens: tweens
-            });
+            
+            this.movingEventEmitter.once(EventConstants.EntityMovingUpdates.FinishedMoving,()=>{
+                if (this.buildingFSM.is(BuildingState.GoingToBuilding)) {
+                    this.buildingFSM.go(BuildingState.Building);
+            }});
         }
     }
     MoveToBase() {
-        var tweens = [];
-        let awaitTime: number = 500;
         if (this.miningFSM.is(MiningState.GoingToBase) && this.path != null && this.path.length > 0) {
-
-            tweens.push({
-                targets: this,
-                NOTHING: { value: 0, duration: awaitTime },
-                onComplete: () => { this.MoveToBase() }
-            });
-
-            this.scene.tweens.timeline({
-                tweens: tweens
-            });
+            
+            this.movingEventEmitter.once(EventConstants.EntityMovingUpdates.FinishedMoving,()=>{
+                if (this.miningFSM.is(MiningState.GoingToBase)) {
+                this.miningFSM.go(MiningState.InBase);
+            }});
         }
-        else if (this.miningFSM.is(MiningState.GoingToBase)) {
-            this.miningFSM.go(MiningState.InBase);
-
-        }
-
     }
 
 

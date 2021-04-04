@@ -18,7 +18,7 @@ class GliderEntity extends MovingEntity {
     tweenManager: Phaser.Tweens.TweenManager;
 
     constructor(map: Phaser.Tilemaps.Tilemap, scene: Phaser.Scene, x: number, y: number, team: number) {
-        super(map, "glider" + "-" + team, "Glider", scene, x, y, "glider" + "-" + team, team);
+        super(map, "gliderPortrait" + "-" + team, "Glider", scene, x, y, "glider" + "-" + team, team);
         this.y += this.mapReference.layer.tileWidth / 4;
         this.removeInteractive();
         this.setInteractive(new Phaser.Geom.Circle(this.displayWidth / 2, 1 * this.displayWidth / 4, this.displayWidth / 2), this.handler);
