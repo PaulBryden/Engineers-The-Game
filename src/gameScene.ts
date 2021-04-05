@@ -20,7 +20,7 @@ export default class GameScene extends Phaser.Scene {
     entityManager: EntityManager;
     minimap: Phaser.Cameras.Scene2D.Camera;
     eventEmitterSingleton: EventEmitterSingleton;
-
+    fogOfWar: Phaser.GameObjects.RenderTexture;
     constructor() {
         super('GameScene');
 
@@ -69,6 +69,7 @@ export default class GameScene extends Phaser.Scene {
         this.load.audio('Engineer_Moving_1', 'assets/Engineer_Moving_1.mp3');  // urls: an array of file url
         this.load.audio('Engineer_Moving_2', 'assets/Engineer_Moving_2.mp3');  // urls: an array of file url
         this.load.image('Portrait', 'assets/portrait.png');  // urls: an array of file url
+        this.load.image('vision', 'assets/mask.png');  // urls: an array of file url
         this.load.scenePlugin({
             key: 'rexuiplugin',
             url: 'https://raw.githubusercontent.com/rexrainbow/phaser3-rex-notes/master/dist/rexuiplugin.min.js',
@@ -99,6 +100,22 @@ export default class GameScene extends Phaser.Scene {
         var tileset = this.map.addTilesetImage('tileset', 'tileset');
         this.layer1 = this.map.createLayer('Tile Layer 1', [tileset]);
         this.layer2 = this.map.createLayer('Tile Layer 2', [tileset]);
+        
+        this.fogOfWar = this.make.renderTexture({
+            width:3300,
+            height: 1800,
+            x:-1600
+        }, true)
+    
+        // fill it with black
+        this.fogOfWar.fill(0x424242, 1)
+        this.fogOfWar.setDepth(101);
+        // draw the floorLayer into it
+        this.fogOfWar.draw(this.layer2,1600)
+        this.fogOfWar.draw(this.layer1,1600)
+
+        // set a dark blue tint
+        this.fogOfWar.setTint(0x0a2948);
         this.cameras.main.setZoom(1.0);
         this.cameras.main.setScroll(-800,0);
         this.add.rectangle(1400,15,2100,1800,0xffffff,0x0).setInteractive().setScrollFactor(0).setDepth(1).on('pointerup', (pointer, gameObject)=>{ var x = this.cameras.main.scrollX + pointer.x;
@@ -556,18 +573,14 @@ export default class GameScene extends Phaser.Scene {
             repeat: -1,
             yoyo: true
         });
-        this.entityManager = new EntityManager(this, this.map);
+        this.entityManager = new EntityManager(this, this.map, this.fogOfWar);
 
         this.mine = this.entityManager.createMineEntity(6, 6);
+        this.mine = this.entityManager.createMineEntity(44, 44);
         this.base = this.entityManager.createBaseEntity(14, 5,1);
-        this.base = this.entityManager.createBaseEntity(16, 16,1);
-        this.mine = this.entityManager.createMineEntity(6, 14);
-        var turret = this.entityManager.createTurretEntity(9, 9, 2);
-        var turret = this.entityManager.createGliderEntity(15, 7, 1);
-        var test = this.entityManager.createFactoryEntity(20, 20,2);
-        var testScaffold = this.entityManager.createScaffoldEntity(25, 20, BuildingEntityID.Base,1);
+        this.base = this.entityManager.createBaseEntity(45, 36,2);
         this.player = this.entityManager.createEngineerEntity(3, 4,1);
-        this.player = this.entityManager.createEngineerEntity(17, 17,2);
+        this.player = this.entityManager.createEngineerEntity(40,40,2);
         //let uiPortraitParentLayout:UIParentLayout = new UIParentLayout(this,portraitLayout,uiLayout,110,400)
 
         this.finder = EasyStarGroundLevelSingleton.getInstance(); //new EasyStarWrapper();
@@ -617,16 +630,12 @@ export default class GameScene extends Phaser.Scene {
 
     update(time, delta) {
         this.entityManager.update(delta);
-
     }
 
     SetupLargeTiles(tileID) {
         var sprites = this.layer1.createFromTiles(tileID, 18, { key: "tileset_spritesheet", frame: tileID - 1 }, this, this.cameras.main);
         this.addDepthsToTiles(sprites);
     }
-
-
-
 
     addDepthsToTiles(sprites: Phaser.GameObjects.Sprite[]) {
         for (let entry of sprites) {

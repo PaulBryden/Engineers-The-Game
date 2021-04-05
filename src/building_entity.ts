@@ -13,6 +13,7 @@ class BuildingEntity extends Entity
         this.blockedTiles.push(new Phaser.Math.Vector2(x-1,y-1));
         this.blockedTiles.push(new Phaser.Math.Vector2(x-2,y-1));
         this.avoidAdditionalPoints();
+        this.fogOfWarMask.scale = 2.0
     }
 
     avoidAdditionalPoints()

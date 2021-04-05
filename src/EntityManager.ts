@@ -5,7 +5,7 @@ import { Entity } from './entity'
 import { MineEntity } from './mine_entity'
 
 import { EventEmitterSingleton } from './EventEmitterSingleton'
-import { SoundConstants, EventConstants, CompassDirections, EntityConstants, StartOfGame, EntityID, BuildingEntityID } from './GameConstants'
+import { SoundConstants, EventConstants, CompassDirections, EntityConstants, StartOfGame, EntityID, BuildingEntityID, TeamNumbers } from './GameConstants'
 import { TurretEntity } from './turret_entity'
 import { GliderEntity } from './glider_entity'
 import { FactoryEntity } from './factory_entity'
@@ -16,8 +16,9 @@ class EntityManager {
     map: Phaser.Tilemaps.Tilemap
     eventEmitter: EventEmitterSingleton;
     resources: number;
-
-    constructor(scene: Phaser.Scene, map: Phaser.Tilemaps.Tilemap) {
+    fogOfWar: Phaser.GameObjects.RenderTexture;
+    fogOfWarMasks: Phaser.GameObjects.Container;
+    constructor(scene: Phaser.Scene, map: Phaser.Tilemaps.Tilemap, fogOfWar: Phaser.GameObjects.RenderTexture) {
         this.scene = scene;
         this.map = map;
         this.entityList = new Array();
@@ -26,7 +27,9 @@ class EntityManager {
         this.eventEmitter.on(EventConstants.EntityBuild.CreateGlider, (vector) => { this.createGliderEntity(vector.x, vector.y,1) });
         this.eventEmitter.on(EventConstants.Game.DestroyEntity, (entity) => { this.deleteEntity(entity); });
         this.resources = StartOfGame.resourceCount;
-
+        this.fogOfWar = fogOfWar;
+        this.fogOfWarMasks = this.scene.make.container({x:0,y:0},false);
+        
         this.eventEmitter.emit(EventConstants.EntityBuild.DestroyScaffold);
         this.eventEmitter.emit(EventConstants.EntityBuild.CreateBuilding);
         this.eventEmitter.on(EventConstants.EntityBuild.DestroyScaffold, (scaffold) => { this.deleteEntity(scaffold); });
@@ -90,6 +93,13 @@ class EntityManager {
 
     }
 
+    addToFogOfWarMasks(image: Phaser.GameObjects.Image)
+    {
+        this.fogOfWarMasks.add(image);
+        this.fogOfWar.mask = new Phaser.Display.Masks.BitmapMask( this.scene, this.fogOfWarMasks);
+        this.fogOfWar.mask.invertAlpha = true;
+    }
+
     getNearestBaseToEntity(entity: Entity): BaseEntity {
         let nearestBase: BaseEntity;
         for (let item of this.entityList) {
@@ -122,6 +132,7 @@ class EntityManager {
         let engineer: EngineerEntity = new EngineerEntity(this.map, this.scene, x, y, team);
         this.entityList.push(engineer);
         engineer.updateNearestBase(this.getNearestBaseToEntity(engineer));
+        team==TeamNumbers.Player?this.addToFogOfWarMasks(engineer.GetFogOfWarMask()):()=>{};
         return engineer;
 
     }
@@ -130,6 +141,7 @@ class EntityManager {
     {
         let base: BaseEntity = new BaseEntity(this.map, this.scene, x, y, team);
         this.entityList.push(base);
+        team==TeamNumbers.Player?this.addToFogOfWarMasks(base.GetFogOfWarMask()):()=>{};
         return base;
 
     }
@@ -144,6 +156,7 @@ class EntityManager {
     {
         let base: TurretEntity = new TurretEntity(this.map, this.scene, x, y, team);
         this.entityList.push(base);
+        team==TeamNumbers.Player?this.addToFogOfWarMasks(base.GetFogOfWarMask()):()=>{};
         return base;
 
     }
@@ -151,6 +164,7 @@ class EntityManager {
     {
         let base: ScaffoldEntity = new ScaffoldEntity(this.map, this.scene, x, y, targetBuilding, team);
         this.entityList.push(base);
+        team==TeamNumbers.Player?this.addToFogOfWarMasks(base.GetFogOfWarMask()):()=>{};
         return base;
 
     }
@@ -158,6 +172,7 @@ class EntityManager {
     {
         let base: GliderEntity = new GliderEntity(this.map, this.scene, x, y, team);
         this.entityList.push(base);
+        team==TeamNumbers.Player?this.addToFogOfWarMasks(base.GetFogOfWarMask()):()=>{};
         return base;
 
     }
@@ -165,6 +180,7 @@ class EntityManager {
     {
         let base: FactoryEntity = new FactoryEntity(this.map, this.scene, x, y, team);
         this.entityList.push(base);
+        team==TeamNumbers.Player?this.addToFogOfWarMasks(base.GetFogOfWarMask()):()=>{};
         return base;
 
     }

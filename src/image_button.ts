@@ -83,7 +83,7 @@ class BuildGliderButton extends ImageButton
 {
     constructor(scene:Phaser.Scene)
     {
-        super(scene,"ui_button_not_pressed","ui_button","glider-1","300");
+        super(scene,"ui_button_not_pressed","ui_button","gliderPortrait-1","300");
         this.setInteractive().on('pointerup', function(pointer, localX, localY, event){
             EventEmitterSingleton.getInstance().emit(EventConstants.Input.RequestBuildGlider);
         });

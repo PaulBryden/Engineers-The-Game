@@ -15,6 +15,7 @@ class Entity extends Phaser.GameObjects.Sprite implements IStatePublisher {
     healthForegroundRectangle: Phaser.GameObjects.Rectangle;
     subscribers: IStateSubscriber[];
     team:number;
+    fogOfWarMask: Phaser.GameObjects.Image;
     constructor(map: Phaser.Tilemaps.Tilemap, icon: string, name: string, scene: Phaser.Scene, x: number, y: number, texture: string | Phaser.Textures.Texture, team:number, frame?: string | number) {
         let vector: Phaser.Math.Vector2 = Phaser.Tilemaps.Components.IsometricTileToWorldXY(x, y, new Phaser.Math.Vector2(), scene.cameras.main, map.getLayer('Tile Layer 1'));
         super(scene, vector.x, vector.y, texture, frame);
@@ -38,8 +39,20 @@ class Entity extends Phaser.GameObjects.Sprite implements IStatePublisher {
         this.name = name;
         this.selected = false;
         this.team=team;
+        
+        this.fogOfWarMask = this.scene.make.image({
+            x: this.x,
+            y: this.y,
+            key: 'vision',
+            add: false
+        })
+        this.fogOfWarMask.scale = 1.5
     }
     
+    GetFogOfWarMask()
+    {
+        return this.fogOfWarMask;
+    }
     GetTileLocation()
     {
         return Phaser.Tilemaps.Components.IsometricWorldToTileXY(this.x, this.y, true, new Phaser.Math.Vector2, this.scene.cameras.main, this.mapReference.layer);
@@ -105,15 +118,17 @@ class Entity extends Phaser.GameObjects.Sprite implements IStatePublisher {
         var tilePos = Phaser.Tilemaps.Components.IsometricWorldToTileXY(this.x - 16, this.y - 16, true, new Phaser.Math.Vector2, this.scene.cameras.main, this.mapReference.layer);
         this.selectedRectangle.setX(this.x);
         this.selectedRectangle.setY(this.y);
-        this.selectedRectangle.setDepth(250);
+        this.fogOfWarMask.setX(this.x);
+        this.fogOfWarMask.setY(this.y);
+        this.selectedRectangle.setDepth(100);
         
         this.healthBackgroundRectangle.setX(this.x);
         this.healthBackgroundRectangle.setY(this.y-(10+(this.displayHeight/2)));
-        this.healthBackgroundRectangle.setDepth(250);
+        this.healthBackgroundRectangle.setDepth(100);
         
         this.healthForegroundRectangle.setX(this.x-(19*(1-(this.health/100))));
         this.healthForegroundRectangle.setY(this.y-(10+(this.displayHeight/2)));
-        this.healthForegroundRectangle.setDepth(250);
+        this.healthForegroundRectangle.setDepth(100);
         this.setDepth(tilePos.x + tilePos.y);
 
     }
@@ -128,6 +143,7 @@ class Entity extends Phaser.GameObjects.Sprite implements IStatePublisher {
         this.selectedRectangle.destroy();
         this.healthBackgroundRectangle.destroy();
         this.healthForegroundRectangle.destroy();
+        this.fogOfWarMask.destroy();
         super.destroy();
     }
 
