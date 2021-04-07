@@ -33,6 +33,7 @@ class UIManager
         this.eventEmitter.on(EventConstants.EntityActions.Selected,this.updateSelected, this );
         this.eventEmitter.on(EventConstants.Input.RequestBuildBase,()=>{this.eventEmitter.emit(EventConstants.Input.RequestBuildScaffold,this.selectedEntity,BuildingEntityID.Base)});
         this.eventEmitter.on(EventConstants.Input.RequestBuildFactory,()=>{this.eventEmitter.emit(EventConstants.Input.RequestBuildScaffold,this.selectedEntity,BuildingEntityID.Factory)});
+        this.eventEmitter.on(EventConstants.Input.RequestBuildTurret,()=>{this.eventEmitter.emit(EventConstants.Input.RequestBuildScaffold,this.selectedEntity,BuildingEntityID.Turret)});
         this.entityScene=entityScene;
         let cursors:Phaser.Types.Input.Keyboard.CursorKeys = entityScene.input.keyboard.createCursorKeys();
         var controlConfig = {

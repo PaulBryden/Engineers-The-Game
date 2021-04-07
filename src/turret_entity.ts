@@ -12,6 +12,8 @@ class TurretEntity extends Entity
         this.y+=this.mapReference.layer.tileWidth/4;
         EasyStarGroundLevelSingleton.getInstance().avoidAdditionalPoint(x-1,y);
         this.status="Operating";
+        this.anims.play('turret' + "-" + this.team, true);
+        this.setScale(1.3);
     }
 
 }

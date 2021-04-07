@@ -47,6 +47,7 @@ export class EntityID {
 export class BuildingEntityID {
   public static readonly Base: string = "Base";
   public static readonly Factory: string = "Factory";
+  public static readonly Turret: string = "Turret";
   public static readonly Mine: string = "Mine";
   public static readonly Scaffold: string = "Scaffold";
 }
@@ -84,6 +85,7 @@ namespace EventConstants {
     public static readonly RequestBuildBase: string = "RequestBuildBase";
     public static readonly RequestBuildScaffold: string = "RequestBuildScaffold";
     public static readonly RequestBuildFactory: string = "RequestBuildFactory";
+    public static readonly RequestBuildTurret: string = "RequestBuildTurret";
     public static readonly Cancel: string = "Create";
   }
   export class Game {

@@ -150,6 +150,10 @@ class EngineerEntity extends MovingEntity {
                 this.path = path;
                 this.path.shift();
             }
+            else
+            {
+                this.engineerFSM.go(State.Idle);
+            }
         });
         this.pathFinder.calculate();
     }
@@ -166,6 +170,10 @@ class EngineerEntity extends MovingEntity {
                 this.path = path;
                 this.path.shift();
                 this.MoveToBuilding();
+            }
+            else
+            {
+                this.engineerFSM.go(State.Idle);
             }
         });
         this.pathFinder.calculate();
@@ -191,6 +199,10 @@ class EngineerEntity extends MovingEntity {
                     this.path.shift();
                     this.MoveToMine();
                 }
+                else
+                {
+                    this.engineerFSM.go(State.Idle);
+                }
             });
             this.pathFinder.calculate();
         });
@@ -205,6 +217,10 @@ class EngineerEntity extends MovingEntity {
                     this.path = path;
                     this.path.shift();
                     this.MoveToBase();
+                }
+                else
+                {
+                    this.engineerFSM.go(State.Idle);
                 }
             });
             this.pathFinder.calculate();
@@ -246,7 +262,7 @@ class EngineerEntity extends MovingEntity {
             targets: this,
             alpha: { value: 1, duration: 500 },
             x: { value: (this.x + (this.mapReference.layer.tileWidth * 3 / 2)), duration: 1500 },
-            onComplete: ()=> {this.miningFSM.go(MiningState.GoingToBase)}
+            onComplete: ()=> {if(this.miningFSM.is(MiningState.InMine)){this.miningFSM.go(MiningState.GoingToBase);}}
 
         });
         this.currentAnimation = AnimationState.Mining;
@@ -284,7 +300,7 @@ class EngineerEntity extends MovingEntity {
             x: { value: (this.x - (this.mapReference.layer.tileWidth)), duration: 1000 },
             onComplete: ()=>{
                 this.eventEmitter.emit(EventConstants.Game.AddResources, (25));
-                this.miningFSM.go(MiningState.GoingToMine);}
+                if(this.miningFSM.is(MiningState.InBase)){this.miningFSM.go(MiningState.GoingToMine);}}
 
         });
         this.currentAnimation = AnimationState.Default;
@@ -376,6 +392,11 @@ class EngineerEntity extends MovingEntity {
                 this.path.shift(); //first move is current position
                 Math.random() > 0.5 ? AudioEffectsSingleton.getInstance(this.scene).EngineerMoving1.play() : AudioEffectsSingleton.getInstance(this.scene).EngineerMoving2.play();
                 this.engineerFSM.go(State.Moving);
+            }
+            else
+            {
+                
+                this.engineerFSM.go(State.Idle);
             }
         });
         this.pathFinder.calculate();

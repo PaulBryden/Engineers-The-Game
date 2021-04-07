@@ -109,4 +109,14 @@ class BuildFactoryButton extends ImageButton
         });
     }
 }
-export { ImageButton, AttackButton, GatherButton, BuildButton, CancelButton, BuildEngineerButton, BuildGliderButton, BuildBaseButton, BuildFactoryButton };
+class BuildTurretButton extends ImageButton
+{
+    constructor(scene:Phaser.Scene)
+    {
+        super(scene,"ui_button_not_pressed","ui_button","turret-1","300");
+        this.setInteractive().on('pointerup', function(pointer, localX, localY, event){
+            EventEmitterSingleton.getInstance().emit(EventConstants.Input.RequestBuildTurret);
+        });
+    }
+}
+export { ImageButton, AttackButton, GatherButton, BuildButton, CancelButton, BuildEngineerButton, BuildGliderButton, BuildBaseButton, BuildFactoryButton, BuildTurretButton };

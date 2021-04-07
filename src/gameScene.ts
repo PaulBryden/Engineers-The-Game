@@ -38,7 +38,8 @@ export default class GameScene extends Phaser.Scene {
         this.load.spritesheet('player-1', 'assets/spritesheet.png', { frameWidth: 64, frameHeight: 64 });
         this.load.spritesheet('player-rock-1', 'assets/spritesheet_rock.png', { frameWidth: 64, frameHeight: 64 });
         this.load.spritesheet('player-action-1', 'assets/spritesheet_build.png', { frameWidth: 64, frameHeight: 64 });
-        this.load.spritesheet('turret-1', 'assets/turret_spritesheet.png', { frameWidth: 64, frameHeight: 64 });
+        this.load.spritesheet('turret-1', 'assets/turret-test-spritesheet.png', { frameWidth: 64, frameHeight: 64 });
+        this.load.spritesheet('turret-2', 'assets/turret-test-spritesheet-2.png', { frameWidth: 64, frameHeight: 64 });
         this.load.spritesheet('glider-1', 'assets/glider_spritesheet.png', { frameWidth: 64, frameHeight: 96 });
         this.load.spritesheet('gliderPortrait-1', 'assets/glider_portrait.png', { frameWidth: 64, frameHeight: 96 });
         this.load.image('home_base-2', 'assets/home_base-2.png');
@@ -124,6 +125,20 @@ export default class GameScene extends Phaser.Scene {
 
             });
         //N,NE,E,SE,S,SW,W,NW,N
+        this.anims.create({
+            key: 'turret-1',
+            frames: this.anims.generateFrameNumbers('turret-1', { start: 0, end: 4  }),
+            frameRate: 15,
+            repeat: -1,
+            yoyo: true
+        });
+        this.anims.create({
+            key: 'turret-2',
+            frames: this.anims.generateFrameNumbers('turret-2', { start: 0, end: 4  }),
+            frameRate: 15,
+            repeat: -1,
+            yoyo: true
+        });
         this.anims.create({
             key: 'glider-1-N',
             frames: this.anims.generateFrameNumbers('glider-1', { start: 0, end: 7  }),
@@ -580,7 +595,9 @@ export default class GameScene extends Phaser.Scene {
         this.base = this.entityManager.createBaseEntity(14, 5,1);
         this.base = this.entityManager.createBaseEntity(45, 36,2);
         this.player = this.entityManager.createEngineerEntity(3, 4,1);
-        this.player = this.entityManager.createEngineerEntity(40,40,2);
+        var entity = this.entityManager.createTurretEntity(2, 2,1);
+        this.player = this.entityManager.createEngineerEntity(38,38,2);
+        var entity = this.entityManager.createTurretEntity(40, 40,2);
         //let uiPortraitParentLayout:UIParentLayout = new UIParentLayout(this,portraitLayout,uiLayout,110,400)
 
         this.finder = EasyStarGroundLevelSingleton.getInstance(); //new EasyStarWrapper();

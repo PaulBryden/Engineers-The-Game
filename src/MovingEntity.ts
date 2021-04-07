@@ -43,13 +43,14 @@ class MovingEntity extends Entity {
                 this.x = (xyPos.x);
                 this.y = (xyPos.y);
                 this.movingEventEmitter.emit(EventConstants.EntityMovingUpdates.FinishedMoving);
+                break;
             }
             else {
                 this.updateAngle(Phaser.Math.Angle.Between(this.x, this.y, xyPos.x, xyPos.y));
                 let scaleRatio: number = distanceToTravelThisTick / xyPos.distance(currentPosition);
                 this.x += (xyPos.x - this.x) * scaleRatio;
                 this.y += (xyPos.y - this.y) * scaleRatio;
-                return
+                break;
             }
         }
 

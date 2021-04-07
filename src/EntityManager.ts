@@ -60,6 +60,19 @@ class EntityManager {
                 }
                 
             }
+            else if(buildingID==BuildingEntityID.Turret)
+            {
+                if (this.resources >= 300) 
+                {
+                    this.resources -= 300;
+                    this.eventEmitter.emit(EventConstants.Game.UpdateResourceCount, (this.resources));
+                }
+                else
+                {
+                    return;
+                }
+                
+            }
             let scaffold:ScaffoldEntity = this.createScaffoldEntity(entity.GetTileLocation().x, entity.GetTileLocation().y, buildingID,1);
             entity.requestBuild(scaffold);
         });
@@ -123,6 +136,9 @@ class EntityManager {
                 break;
             case BuildingEntityID.Factory:
                 this.createFactoryEntity(x, y, team);
+                break;
+            case BuildingEntityID.Turret:
+                this.createTurretEntity(x, y, team);
                 break;
         }
     }

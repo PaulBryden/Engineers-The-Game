@@ -1,5 +1,5 @@
 import 'phaser';
-import {ImageButton, AttackButton, GatherButton, BuildButton, CancelButton, BuildEngineerButton, BuildGliderButton, BuildBaseButton, BuildFactoryButton } from './image_button'
+import {ImageButton, AttackButton, GatherButton, BuildButton, CancelButton, BuildEngineerButton, BuildGliderButton, BuildBaseButton, BuildFactoryButton, BuildTurretButton } from './image_button'
 import {BaseEntity} from './base_entity'
 import {EngineerEntity} from './engineer_entity'
 import {Entity} from './entity'
@@ -104,11 +104,12 @@ class FactoryUIButtonLayout extends BuildingButtonLayout
     }
 }
 
+
 class EngineerUIButtonLayout extends UIButtonLayout
 {
     constructor(publisher:IStatePublisher,scene:Phaser.Scene, x:number, y:number)
     {
-        super(publisher,scene,[new BuildBaseButton(scene), new BuildFactoryButton(scene)],x,y);
+        super(publisher,scene,[new BuildBaseButton(scene), new BuildFactoryButton(scene), new BuildTurretButton(scene)],x,y);
     }
 }
 
