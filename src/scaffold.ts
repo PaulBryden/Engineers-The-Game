@@ -1,6 +1,6 @@
 import {Entity} from './entity'
 import { typestate } from 'typestate';
-import {EventConstants} from './GameConstants'
+import {BuildingEntityID, EventConstants} from './GameConstants'
 import { EasyStarGroundLevelSingleton, Path } from './EasyStarSingleton';
 import { BuildingEntity } from './building_entity';
 import { EngineerEntity } from './engineer_entity';
@@ -19,6 +19,20 @@ class ScaffoldEntity extends BuildingEntity
         this.status="...";
         this.buildingCompletionTarget=10;
         this.buildingCompletionProgress=0;
+        if(desiredBuilding==BuildingEntityID.Turret)
+        {
+            this.blockedTiles.push(new Phaser.Math.Vector2(x-1,y));
+            this.setScale(0.5);
+            this.y+=this.mapReference.layer.tileWidth/2;
+
+        }else
+        {
+            this.blockedTiles.push(new Phaser.Math.Vector2(x-1,y));
+            this.blockedTiles.push(new Phaser.Math.Vector2(x-2,y));
+            this.blockedTiles.push(new Phaser.Math.Vector2(x-1,y-1));
+            this.blockedTiles.push(new Phaser.Math.Vector2(x-2,y-1));
+        }
+        this.avoidAdditionalPoints();
     }
 
     increaseBuildingCompletionProgress() : boolean

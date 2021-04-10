@@ -38,8 +38,8 @@ export default class GameScene extends Phaser.Scene {
         this.load.spritesheet('player-1', 'assets/spritesheet.png', { frameWidth: 64, frameHeight: 64 });
         this.load.spritesheet('player-rock-1', 'assets/spritesheet_rock.png', { frameWidth: 64, frameHeight: 64 });
         this.load.spritesheet('player-action-1', 'assets/spritesheet_build.png', { frameWidth: 64, frameHeight: 64 });
-        this.load.spritesheet('turret-1', 'assets/turret-test-spritesheet.png', { frameWidth: 64, frameHeight: 64 });
-        this.load.spritesheet('turret-2', 'assets/turret-test-spritesheet-2.png', { frameWidth: 64, frameHeight: 64 });
+        this.load.spritesheet('turret-1', 'assets/turret-test-spritesheet-cropped.png', { frameWidth: 64, frameHeight: 32 });
+        this.load.spritesheet('turret-2', 'assets/turret-test-spritesheet-2-cropped.png', { frameWidth: 64, frameHeight: 32 });
         this.load.spritesheet('glider-1', 'assets/glider_spritesheet.png', { frameWidth: 64, frameHeight: 96 });
         this.load.spritesheet('gliderPortrait-1', 'assets/glider_portrait.png', { frameWidth: 64, frameHeight: 96 });
         this.load.image('home_base-2', 'assets/home_base-2.png');
@@ -95,7 +95,7 @@ export default class GameScene extends Phaser.Scene {
             loop: true,
             delay: 0
         });
-        music.play();
+       // music.play();
 
 
         var tileset = this.map.addTilesetImage('tileset', 'tileset');
@@ -642,7 +642,6 @@ export default class GameScene extends Phaser.Scene {
         }
         pathFinder.setAcceptableTiles(acceptableTiles);
         pathFinder.enableDiagonals();
-        pathFinder.setIterationsPerCalculation(100);
     }
 
     update(time, delta) {

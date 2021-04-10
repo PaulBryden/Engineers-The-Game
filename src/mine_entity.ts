@@ -13,6 +13,11 @@ class MineEntity extends BuildingEntity
         
         this.healthForegroundRectangle.setVisible(false);
         this.healthBackgroundRectangle.setVisible(false);
+        this.blockedTiles.push(new Phaser.Math.Vector2(x-1,y));
+        this.blockedTiles.push(new Phaser.Math.Vector2(x-2,y));
+        this.blockedTiles.push(new Phaser.Math.Vector2(x-1,y-1));
+        this.blockedTiles.push(new Phaser.Math.Vector2(x-2,y-1));
+        this.avoidAdditionalPoints();
     }
 
 }

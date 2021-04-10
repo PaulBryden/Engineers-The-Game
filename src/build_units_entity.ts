@@ -8,12 +8,18 @@ class BuildUnitsEntity extends BuildingEntity {
     buildCounter: number;
     createEntityEvent: string;
     constructor(map: Phaser.Tilemaps.Tilemap, icon: string, name: string, scene: Phaser.Scene, x: number, y: number, requestBuildEvent: string, createEntityEvent: string, texture: string | Phaser.Textures.Texture,team:number, frame?: string | number) {
+        
         super(map, icon, name, scene, x, y, texture, team);
         this.createEntityEvent = createEntityEvent;
         this.eventEmitter.on(requestBuildEvent, () => { this.selected ? this.requestBuild() : {}; });
         this.eventEmitter.on(EventConstants.Input.Cancel, () => { this.selected ? this.requestCancel() : {}; });
         this.buildingFSM = this.createFSM();
         this.buildCounter = 0;
+        this.blockedTiles.push(new Phaser.Math.Vector2(x-1,y));
+        this.blockedTiles.push(new Phaser.Math.Vector2(x-2,y));
+        this.blockedTiles.push(new Phaser.Math.Vector2(x-1,y-1));
+        this.blockedTiles.push(new Phaser.Math.Vector2(x-2,y-1));
+        this.avoidAdditionalPoints();
     }
 
     createFSM(): typestate.FiniteStateMachine<EventConstants.BuildingStates> {

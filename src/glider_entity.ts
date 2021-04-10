@@ -233,7 +233,10 @@ class GliderEntity extends MovingEntity {
                 this.gliderFSM.go(State.Moving);
             }
         });
+        try{
         this.pathFinder.calculate();
+        }
+        catch{}
     }
 
     requestAttack(entity: Entity) {
@@ -252,7 +255,10 @@ class GliderEntity extends MovingEntity {
                 this.gliderFSM.go(State.Idle);
             }
         });
+        try{
         this.pathFinder.calculate();
+        }
+        catch{}
     }
     update(delta) {
         super.update(delta);
