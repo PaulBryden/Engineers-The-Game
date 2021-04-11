@@ -65,7 +65,7 @@ class BuildUnitsEntity extends BuildingEntity {
             }
             else {
                 this.buildCounter = 0;
-                this.eventEmitter.emit(this.createEntityEvent, Phaser.Tilemaps.Components.IsometricWorldToTileXY(this.x - 32, this.y - 32, true, new Phaser.Math.Vector2(), this.scene.cameras.main, this.mapReference.layer));
+                this.eventEmitter.emit(this.createEntityEvent, Phaser.Tilemaps.Components.IsometricWorldToTileXY(this.x - 32, this.y - 32, true, new Phaser.Math.Vector2(), this.scene.cameras.main, this.mapReference.layer), this.team);
                 this.buildingFSM.go(EventConstants.BuildingStates.Idle);
 
             }

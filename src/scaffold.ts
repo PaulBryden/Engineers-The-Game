@@ -41,7 +41,7 @@ class ScaffoldEntity extends BuildingEntity
         if(this.buildingCompletionProgress>=this.buildingCompletionTarget)
         {
             this.eventEmitter.emit(EventConstants.EntityBuild.DestroyScaffold,this);
-            this.eventEmitter.emit(EventConstants.EntityBuild.CreateBuilding,this.desiredBuildingCoordinates.x,this.desiredBuildingCoordinates.y,this.desiredBuilding);
+            this.eventEmitter.emit(EventConstants.EntityBuild.CreateBuilding,this.desiredBuildingCoordinates.x,this.desiredBuildingCoordinates.y,this.desiredBuilding, this.team);
             return true;
         }
         return false;

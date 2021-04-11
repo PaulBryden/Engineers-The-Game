@@ -1,6 +1,6 @@
 import 'phaser';
 import {EventEmitterSingleton} from './EventEmitterSingleton'
-import {EventConstants} from './GameConstants'
+import {EventConstants, TeamNumbers} from './GameConstants'
 class ImageButton extends Phaser.GameObjects.Container
 {
     backgroundUnpressed:Phaser.GameObjects.Image;
@@ -65,7 +65,7 @@ class CancelButton extends ImageButton
     {
         super(scene,"ui_button_not_pressed","ui_button","ui_button_Cancel_No_Background");
         this.setInteractive().on('pointerup', function(pointer, localX, localY, event){
-            EventEmitterSingleton.getInstance().emit(eventString);
+            EventEmitterSingleton.getInstance().emit(eventString, TeamNumbers.Player);
         });
     }
 }
@@ -75,7 +75,7 @@ class BuildEngineerButton extends ImageButton
     {
         super(scene,"ui_button_not_pressed","ui_button","ui_button_Build_Engineer_No_Background","100");
         this.setInteractive().on('pointerup', function(pointer, localX, localY, event){
-            EventEmitterSingleton.getInstance().emit(EventConstants.Input.RequestBuildEngineer);
+            EventEmitterSingleton.getInstance().emit(EventConstants.Input.RequestBuildEngineer, TeamNumbers.Player);
         });
     }
 }
@@ -85,7 +85,7 @@ class BuildGliderButton extends ImageButton
     {
         super(scene,"ui_button_not_pressed","ui_button","gliderPortrait-1","300");
         this.setInteractive().on('pointerup', function(pointer, localX, localY, event){
-            EventEmitterSingleton.getInstance().emit(EventConstants.Input.RequestBuildGlider);
+            EventEmitterSingleton.getInstance().emit(EventConstants.Input.RequestBuildGlider, TeamNumbers.Player);
         });
     }
 }
@@ -95,7 +95,7 @@ class BuildBaseButton extends ImageButton
     {
         super(scene,"ui_button_not_pressed","ui_button","home_base-1","500");
         this.setInteractive().on('pointerup', function(pointer, localX, localY, event){
-            EventEmitterSingleton.getInstance().emit(EventConstants.Input.RequestBuildBase);
+            EventEmitterSingleton.getInstance().emit(EventConstants.Input.RequestBuildBase, TeamNumbers.Player);
         });
     }
 }
@@ -105,7 +105,7 @@ class BuildFactoryButton extends ImageButton
     {
         super(scene,"ui_button_not_pressed","ui_button","factory-1","300");
         this.setInteractive().on('pointerup', function(pointer, localX, localY, event){
-            EventEmitterSingleton.getInstance().emit(EventConstants.Input.RequestBuildFactory);
+            EventEmitterSingleton.getInstance().emit(EventConstants.Input.RequestBuildFactory, TeamNumbers.Player);
         });
     }
 }
@@ -115,7 +115,7 @@ class BuildTurretButton extends ImageButton
     {
         super(scene,"ui_button_not_pressed","ui_button","turret-1","300");
         this.setInteractive().on('pointerup', function(pointer, localX, localY, event){
-            EventEmitterSingleton.getInstance().emit(EventConstants.Input.RequestBuildTurret);
+            EventEmitterSingleton.getInstance().emit(EventConstants.Input.RequestBuildTurret, TeamNumbers.Player);
         });
     }
 }

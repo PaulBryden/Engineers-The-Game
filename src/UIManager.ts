@@ -34,9 +34,9 @@ class UIManager
         this.uiFactory = new UIFactory();
         this.eventEmitter = EventEmitterSingleton.getInstance();
         this.eventEmitter.on(EventConstants.EntityActions.Selected,this.updateSelected, this );
-        this.eventEmitter.on(EventConstants.Input.RequestBuildBase,()=>{this.eventEmitter.emit(EventConstants.Input.RequestBuildScaffold,this.selectedEntity,BuildingEntityID.Base)});
-        this.eventEmitter.on(EventConstants.Input.RequestBuildFactory,()=>{this.eventEmitter.emit(EventConstants.Input.RequestBuildScaffold,this.selectedEntity,BuildingEntityID.Factory)});
-        this.eventEmitter.on(EventConstants.Input.RequestBuildTurret,()=>{this.eventEmitter.emit(EventConstants.Input.RequestBuildScaffold,this.selectedEntity,BuildingEntityID.Turret)});
+        this.eventEmitter.on(EventConstants.Input.RequestBuildBase,()=>{this.eventEmitter.emit(EventConstants.Input.RequestBuildScaffold,this.selectedEntity,BuildingEntityID.Base,  TeamNumbers.Player)});
+        this.eventEmitter.on(EventConstants.Input.RequestBuildFactory,()=>{this.eventEmitter.emit(EventConstants.Input.RequestBuildScaffold,this.selectedEntity,BuildingEntityID.Factory, TeamNumbers.Player)});
+        this.eventEmitter.on(EventConstants.Input.RequestBuildTurret,()=>{this.eventEmitter.emit(EventConstants.Input.RequestBuildScaffold,this.selectedEntity,BuildingEntityID.Turret,  TeamNumbers.Player)});
         this.entityScene=entityScene;
 
         this.MiniMapOverlay = new Phaser.GameObjects.Rectangle(scene, 200, 75, 110, 66, 0xffffff, 0x0).setDepth(251).setStrokeStyle(1, 0xffffff);

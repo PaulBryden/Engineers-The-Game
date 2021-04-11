@@ -305,7 +305,7 @@ class EngineerEntity extends MovingEntity {
             alpha: { value: 1, duration: 1000 },
             x: { value: (this.x - (this.mapReference.layer.tileWidth)), duration: 1000 },
             onComplete: () => {
-                this.eventEmitter.emit(EventConstants.Game.AddResources, (25));
+                this.eventEmitter.emit(EventConstants.Game.AddResources, (25), this.team);
                 AudioEffectsSingleton.getInstance(this.scene).AddResource.play();
                 if (this.miningFSM.is(MiningState.InBase)) { this.miningFSM.go(MiningState.GoingToMine); }
             }
