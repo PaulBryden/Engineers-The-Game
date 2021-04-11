@@ -356,7 +356,7 @@ class EngineerEntity extends MovingEntity {
                 targets: this,
                 NOTHING: { value: 0, duration: 1000 },
                 onComplete: () => {
-                    if (this.targetBuilding.increaseBuildingCompletionProgress()) {
+                    if (this.targetBuilding.getHealth()<=0 || this.targetBuilding.increaseBuildingCompletionProgress()) {
                         try {
                             this.buildingFSM.go(BuildingState.Initial);
                             this.engineerFSM.go(State.Idle);

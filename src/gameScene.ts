@@ -117,8 +117,8 @@ export default class GameScene extends Phaser.Scene {
         this.fogOfWar.fill(0x424242, 1)
         this.fogOfWar.setDepth(101);
         // draw the floorLayer into it
-        this.fogOfWar.draw(this.layer2,1600)
-        this.fogOfWar.draw(this.layer1,1600)
+        this.fogOfWar.draw(this.layer2,1600,200)
+        this.fogOfWar.draw(this.layer1,1600,200)
 
         // set a dark blue tint
         this.fogOfWar.setTint(0x0a2948);
