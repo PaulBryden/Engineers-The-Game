@@ -154,6 +154,8 @@ class EngineerEntity extends MovingEntity {
             }
         });
         try {
+            
+            AudioEffectsSingleton.getInstance(this.scene).Blocked.play();
             this.pathFinder.calculate();
         }
         catch { }
@@ -177,6 +179,7 @@ class EngineerEntity extends MovingEntity {
             }
         });
         try {
+            AudioEffectsSingleton.getInstance(this.scene).Blocked.play();
             this.pathFinder.calculate();
         }
         catch { }
@@ -303,6 +306,7 @@ class EngineerEntity extends MovingEntity {
             x: { value: (this.x - (this.mapReference.layer.tileWidth)), duration: 1000 },
             onComplete: () => {
                 this.eventEmitter.emit(EventConstants.Game.AddResources, (25));
+                AudioEffectsSingleton.getInstance(this.scene).AddResource.play();
                 if (this.miningFSM.is(MiningState.InBase)) { this.miningFSM.go(MiningState.GoingToMine); }
             }
 
@@ -408,6 +412,7 @@ class EngineerEntity extends MovingEntity {
             }
             else {
                 try {
+                    AudioEffectsSingleton.getInstance(this.scene).Blocked.play();
                     this.engineerFSM.go(State.Idle);
                 } catch { }
             }

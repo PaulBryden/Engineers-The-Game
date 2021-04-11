@@ -10,6 +10,8 @@ class AudioEffectsSingleton extends Phaser.Events.EventEmitter {
     public EngineerMining:Phaser.Sound.BaseSound;
     public Laser:Phaser.Sound.BaseSound;
     public Destroyed:Phaser.Sound.BaseSound;
+    public Blocked:Phaser.Sound.BaseSound;
+    public AddResource:Phaser.Sound.BaseSound;
     private scene:Phaser.Scene;
     private constructor(scene:Phaser.Scene)
     {
@@ -23,6 +25,8 @@ class AudioEffectsSingleton extends Phaser.Events.EventEmitter {
         this.IdleEngineerSelected1 =  scene.sound.add('Engineer_Idle_Selected_1', SoundConstants.soundEffectConfig);
         this.Laser =  scene.sound.add('laser', SoundConstants.soundEffectConfig);
         this.Destroyed =  scene.sound.add('explosion', SoundConstants.soundEffectConfig);
+        this.Blocked =  scene.sound.add('blocked', SoundConstants.soundEffectConfig);
+        this.AddResource =  scene.sound.add('addResource', SoundConstants.soundEffectConfig);
 
     }
     static getInstance(scene:Phaser.Scene): AudioEffectsSingleton {

@@ -71,6 +71,8 @@ export default class GameScene extends Phaser.Scene {
         this.load.audio('Engineer_Moving_2', 'assets/Engineer_Moving_2.mp3');  // urls: an array of file url
         this.load.audio('laser', 'assets/laser.mp3');  // urls: an array of file url
         this.load.audio('explosion', 'assets/destroyed.mp3');  // urls: an array of file url
+        this.load.audio('blocked', 'assets/blocked.mp3');  // urls: an array of file url
+        this.load.audio('addResource', 'assets/resource_add.mp3');  // urls: an array of file url
         this.load.image('Portrait', 'assets/portrait.png');  // urls: an array of file url
         this.load.image('vision', 'assets/mask.png');  // urls: an array of file url
         this.load.scenePlugin({
@@ -97,7 +99,7 @@ export default class GameScene extends Phaser.Scene {
             loop: true,
             delay: 0
         });
-       // music.play();
+        music.play();
 
 
         var tileset = this.map.addTilesetImage('tileset', 'tileset');
