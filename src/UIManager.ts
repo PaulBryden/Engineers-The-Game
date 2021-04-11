@@ -24,8 +24,11 @@ class UIManager
     RightArrowDown:boolean;
     UpArrowDown:boolean;
     BottomArrowDown:boolean;
-
+    MiniMapOverlay:Phaser.GameObjects.Rectangle;
     controls: any;
+    cursors: Phaser.Types.Input.Keyboard.CursorKeys
+    ZoomIn: boolean
+    ZoomOut: boolean
     constructor(scene:Phaser.Scene, entityScene:GameScene, initialEntity?: Entity)
     {
         this.uiFactory = new UIFactory();
@@ -35,46 +38,49 @@ class UIManager
         this.eventEmitter.on(EventConstants.Input.RequestBuildFactory,()=>{this.eventEmitter.emit(EventConstants.Input.RequestBuildScaffold,this.selectedEntity,BuildingEntityID.Factory)});
         this.eventEmitter.on(EventConstants.Input.RequestBuildTurret,()=>{this.eventEmitter.emit(EventConstants.Input.RequestBuildScaffold,this.selectedEntity,BuildingEntityID.Turret)});
         this.entityScene=entityScene;
-        let cursors:Phaser.Types.Input.Keyboard.CursorKeys = entityScene.input.keyboard.createCursorKeys();
-        var controlConfig = {
-            camera: entityScene.cameras.main,
-            left: cursors.left,
-            right: cursors.right,
-            up: cursors.up,
-            down: cursors.down,
-            acceleration: 0.04,
-            drag: 0.0005,
-            maxSpeed: 0.4
-        };
-        
+
+        this.MiniMapOverlay = new Phaser.GameObjects.Rectangle(scene, 200, 75, 110, 66, 0xffffff, 0x0).setDepth(251).setStrokeStyle(1, 0xffffff);
+        scene.add.existing(this.MiniMapOverlay);
         this.LeftArrowDown=false;
         this.RightArrowDown=false;
         this.UpArrowDown=false;
         this.BottomArrowDown=false;
-
-        this.controls = new Phaser.Cameras.Controls.SmoothedKeyControl(controlConfig);
+        this.cursors = this.entityScene.input.keyboard.createCursorKeys();
+        this.entityScene.input.keyboard.on('keydown-W', function (event) { this.UpArrowDown=true; }, this);
+        this.entityScene.input.keyboard.on('keydown-A', function (event) { this.LeftArrowDown=true; }, this);
+        this.entityScene.input.keyboard.on('keydown-S', function (event) { this.BottomArrowDown=true; }, this);
+        this.entityScene.input.keyboard.on('keydown-D', function (event) { this.RightArrowDown=true; }, this);
+        this.entityScene.input.keyboard.on('keyup-W', function (event) { this.UpArrowDown=false; }, this);
+        this.entityScene.input.keyboard.on('keyup-A', function (event) { this.LeftArrowDown=false;}, this);
+        this.entityScene.input.keyboard.on('keyup-S', function (event)  {this.BottomArrowDown=false; }, this);
+        this.entityScene.input.keyboard.on('keyup-D', function (event) { this.RightArrowDown=false; }, this);
         //scene.add.rectangle(1400,15,2100,1800,0xffffff,0x0).setInteractive().setScrollFactor(0).setDepth(1).on('pointerup', (pointer, gameObject)=>{this.handleClick(pointer,gameObject)});
         scene.add.image(800, 450, 'ui_overlay').setScrollFactor(0).setScale(2).setDepth(250);
-        scene.add.image(190,252,"Up_Button").setScrollFactor(0).setScale(2.5).setDepth(250).setInteractive().on('pointerdown', (pointer, localX, localY, event)=>{
+        //190,252
+        scene.add.image(1450,700,"Up_Button").setScrollFactor(0).setScale(2.5).setAlpha(0.35).setDepth(250).setInteractive().on('pointerdown', (pointer, localX, localY, event)=>{
             this.UpArrowDown=true;
         }).on('pointerup', (pointer, localX, localY, event)=>{
             this.UpArrowDown=false;
-        });
-        scene.add.image(190,342,"Down_Button").setScrollFactor(0).setScale(2.5).setDepth(250).setInteractive().on('pointerdown', (pointer, localX, localY, event)=>{
+        }).on('pointerout', function (pointer, event) { 
+            this.UpArrowDown=false;},this);
+        scene.add.image(1450,790,"Down_Button").setScrollFactor(0).setScale(2.5).setAlpha(0.35).setDepth(250).setInteractive().on('pointerdown', (pointer, localX, localY, event)=>{
             this.BottomArrowDown=true;
         }).on('pointerup', (pointer, localX, localY, event)=>{
             this.BottomArrowDown=false;
-        });
-        scene.add.image(135,297,"Left_Button").setScrollFactor(0).setScale(2.5).setDepth(250).setInteractive().on('pointerdown', (pointer, localX, localY, event)=>{
+        }).on('pointerout', function (pointer, event) { 
+            this.BottomArrowDown=false;},this);
+        scene.add.image(1395,745,"Left_Button").setScrollFactor(0).setScale(2.5).setAlpha(0.35).setDepth(250).setInteractive().on('pointerdown', (pointer, localX, localY, event)=>{
             this.LeftArrowDown=true;
         }).on('pointerup', (pointer, localX, localY, event)=>{
             this.LeftArrowDown=false;
-        });
-        scene.add.image(245,297,"Right_Button").setScrollFactor(0).setScale(2.5).setDepth(250).setInteractive().on('pointerdown', (pointer, localX, localY, event)=>{
+        }).on('pointerout', function (pointer, event) { 
+            this.LeftArrowDown=false;},this);
+        scene.add.image(1505,745,"Right_Button").setScrollFactor(0).setScale(2.5).setAlpha(0.35).setDepth(250).setInteractive().on('pointerdown', (pointer, localX, localY, event)=>{
             this.RightArrowDown=true;
         }).on('pointerup', (pointer, localX, localY, event)=>{
             this.RightArrowDown=false;
-        });
+        }).on('pointerout', function (pointer, event) { 
+            this.RightArrowDown=false;},this);
         this.eventEmitter.on(EventConstants.EntityActions.Move,this.handleMovement,this);
 
         if(initialEntity!=null)
@@ -125,6 +131,11 @@ class UIManager
             }
             this.uiLayout = this.uiFactory.GetUI(this.selectedEntity,this.uiScene);
         }
+        else
+        {
+            this.selectedEntity=null;
+            this.uiLayout.destroy();
+        }
     }
     handleMovement(coords:Phaser.Math.Vector2) {
            
@@ -134,25 +145,38 @@ class UIManager
     };
     update(delta:number)
     {
-        this.controls.update(delta);
         if(this.UpArrowDown)
         {
-            this.entityScene.cameras.main.setScroll(this.entityScene.cameras.main.scrollX,this.entityScene.cameras.main.scrollY-(500*(delta/1000)));
+            if(this.entityScene.cameras.main.scrollY>-60)
+            {
+                this.entityScene.cameras.main.setScroll(this.entityScene.cameras.main.scrollX,this.entityScene.cameras.main.scrollY-(500*(delta/1000)));
+                this.MiniMapOverlay.setY(this.MiniMapOverlay.y-(58*(delta/1000)));
+            }
         }
         if(this.BottomArrowDown)
         {
-            this.entityScene.cameras.main.setScroll(this.entityScene.cameras.main.scrollX,this.entityScene.cameras.main.scrollY+(500*(delta/1000)));
-
+            if(this.entityScene.cameras.main.scrollY<750)
+            {
+                this.entityScene.cameras.main.setScroll(this.entityScene.cameras.main.scrollX,this.entityScene.cameras.main.scrollY+(500*(delta/1000)));
+                this.MiniMapOverlay.setY(this.MiniMapOverlay.y+(58*(delta/1000)));
+            }
         }
         if(this.RightArrowDown)
         {
-            this.entityScene.cameras.main.setScroll(this.entityScene.cameras.main.scrollX+(500*(delta/1000)),this.entityScene.cameras.main.scrollY);
+            if(this.entityScene.cameras.main.scrollX<20)
+            {
+                this.entityScene.cameras.main.setScroll(this.entityScene.cameras.main.scrollX+(500*(delta/1000)),this.entityScene.cameras.main.scrollY);
+                this.MiniMapOverlay.setX(this.MiniMapOverlay.x+(54*(delta/1000)));
+            }
 
         }
         if(this.LeftArrowDown)
         {
-            this.entityScene.cameras.main.setScroll(this.entityScene.cameras.main.scrollX-(500*(delta/1000)),this.entityScene.cameras.main.scrollY);
-
+            if(this.entityScene.cameras.main.scrollX>-1920)
+            {
+                this.entityScene.cameras.main.setScroll(this.entityScene.cameras.main.scrollX-(500*(delta/1000)),this.entityScene.cameras.main.scrollY);
+                this.MiniMapOverlay.setX(this.MiniMapOverlay.x-(54*(delta/1000)));
+            }
         }
 
     }

@@ -69,6 +69,8 @@ export default class GameScene extends Phaser.Scene {
         this.load.audio('Engineer_Mining', 'assets/Engineer_Mining.mp3');  // urls: an array of file url
         this.load.audio('Engineer_Moving_1', 'assets/Engineer_Moving_1.mp3');  // urls: an array of file url
         this.load.audio('Engineer_Moving_2', 'assets/Engineer_Moving_2.mp3');  // urls: an array of file url
+        this.load.audio('laser', 'assets/laser.mp3');  // urls: an array of file url
+        this.load.audio('explosion', 'assets/destroyed.mp3');  // urls: an array of file url
         this.load.image('Portrait', 'assets/portrait.png');  // urls: an array of file url
         this.load.image('vision', 'assets/mask.png');  // urls: an array of file url
         this.load.scenePlugin({
@@ -104,8 +106,9 @@ export default class GameScene extends Phaser.Scene {
         
         this.fogOfWar = this.make.renderTexture({
             width:3300,
-            height: 1800,
-            x:-1600
+            height: 1900,
+            x:-1600,
+            y:-200
         }, true)
     
         // fill it with black

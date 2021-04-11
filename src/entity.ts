@@ -1,3 +1,4 @@
+import { AudioEffectsSingleton } from './AudioEffectsSingleton';
 import { EventEmitterSingleton } from './EventEmitterSingleton'
 import { EventConstants } from './GameConstants'
 import { IStatePublisher, IStateSubscriber } from './stateful';
@@ -106,6 +107,7 @@ class Entity extends Phaser.GameObjects.Sprite implements IStatePublisher {
         if(this.health<=0)
         {
             this.eventEmitter.emit(EventConstants.Game.DestroyEntity,this);
+            AudioEffectsSingleton.getInstance(this.scene).Destroyed.play();
         }
         else
         {

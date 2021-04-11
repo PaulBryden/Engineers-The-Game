@@ -462,9 +462,12 @@ class EngineerEntity extends MovingEntity {
                 onComplete: () => { this.Move() }
             });
 
-            this.scene.tweens.timeline({
-                tweens: tweens
-            });
+            if(this.scene!=undefined)
+            {
+                this.scene.tweens.timeline({
+                    tweens: tweens
+                });
+            }
         }
         else if (this.engineerFSM.is(State.Moving)) {
             this.engineerFSM.go(State.Idle);

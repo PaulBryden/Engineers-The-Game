@@ -10,6 +10,7 @@ import { TurretEntity } from './turret_entity'
 import { GliderEntity } from './glider_entity'
 import { FactoryEntity } from './factory_entity'
 import { ScaffoldEntity } from './scaffold'
+import { Vector } from 'matter'
 class EntityManager {
     scene: Phaser.Scene;
     entityList: Entity[]
@@ -23,57 +24,49 @@ class EntityManager {
         this.map = map;
         this.entityList = new Array();
         this.eventEmitter = EventEmitterSingleton.getInstance();
-        this.eventEmitter.on(EventConstants.EntityBuild.CreateEngineer, (vector) => { this.createEngineerEntity(vector.x, vector.y,1) });
-        this.eventEmitter.on(EventConstants.EntityBuild.CreateGlider, (vector) => { this.createGliderEntity(vector.x, vector.y,1) });
+        this.eventEmitter.on(EventConstants.EntityBuild.CreateEngineer, (vector) => { this.createEngineerEntity(vector.x, vector.y, 1) });
+        this.eventEmitter.on(EventConstants.EntityBuild.CreateGlider, (vector) => { this.createGliderEntity(vector.x, vector.y, 1) });
         this.eventEmitter.on(EventConstants.Game.DestroyEntity, (entity) => { this.deleteEntity(entity); });
         this.resources = StartOfGame.resourceCount;
         this.fogOfWar = fogOfWar;
-        this.fogOfWarMasks = this.scene.make.container({x:0,y:0},false);
-        
+        this.fogOfWarMasks = this.scene.make.container({ x: 0, y: 0 }, false);
+
         this.eventEmitter.emit(EventConstants.EntityBuild.DestroyScaffold);
         this.eventEmitter.emit(EventConstants.EntityBuild.CreateBuilding);
         this.eventEmitter.on(EventConstants.EntityBuild.DestroyScaffold, (scaffold) => { this.deleteEntity(scaffold); });
-        this.eventEmitter.on(EventConstants.EntityBuild.CreateBuilding, (x, y, entityName) => { this.createEntity(x, y, entityName,1) });
-        this.eventEmitter.on(EventConstants.Input.RequestBuildScaffold, (entity, buildingID) => { 
-            if(buildingID==BuildingEntityID.Base)
-            {
+        this.eventEmitter.on(EventConstants.EntityBuild.CreateBuilding, (x, y, entityName) => { this.createEntity(x, y, entityName, 1) });
+        this.eventEmitter.on(EventConstants.Input.RequestBuildScaffold, (entity, buildingID) => {
+            if (buildingID == BuildingEntityID.Base) {
                 if (this.resources >= 500) {
                     this.resources -= 500;
                     this.eventEmitter.emit(EventConstants.Game.UpdateResourceCount, (this.resources));
                 }
-                else
-                {
+                else {
                     return;
                 }
 
             }
-            else if(buildingID==BuildingEntityID.Factory)
-            {
-                if (this.resources >= 300) 
-                {
+            else if (buildingID == BuildingEntityID.Factory) {
+                if (this.resources >= 300) {
                     this.resources -= 300;
                     this.eventEmitter.emit(EventConstants.Game.UpdateResourceCount, (this.resources));
                 }
-                else
-                {
+                else {
                     return;
                 }
-                
+
             }
-            else if(buildingID==BuildingEntityID.Turret)
-            {
-                if (this.resources >= 300) 
-                {
+            else if (buildingID == BuildingEntityID.Turret) {
+                if (this.resources >= 300) {
                     this.resources -= 300;
                     this.eventEmitter.emit(EventConstants.Game.UpdateResourceCount, (this.resources));
                 }
-                else
-                {
+                else {
                     return;
                 }
-                
+
             }
-            let scaffold:ScaffoldEntity = this.createScaffoldEntity(entity.GetTileLocation().x, entity.GetTileLocation().y, buildingID,1);
+            let scaffold: ScaffoldEntity = this.createScaffoldEntity(entity.GetTileLocation().x, entity.GetTileLocation().y, buildingID, 1);
             entity.requestBuild(scaffold);
         });
 
@@ -106,10 +99,9 @@ class EntityManager {
 
     }
 
-    addToFogOfWarMasks(image: Phaser.GameObjects.Image)
-    {
+    addToFogOfWarMasks(image: Phaser.GameObjects.Image) {
         this.fogOfWarMasks.add(image);
-        this.fogOfWar.mask = new Phaser.Display.Masks.BitmapMask( this.scene, this.fogOfWarMasks);
+        this.fogOfWar.mask = new Phaser.Display.Masks.BitmapMask(this.scene, this.fogOfWarMasks);
         this.fogOfWar.mask.invertAlpha = true;
     }
 
@@ -129,7 +121,7 @@ class EntityManager {
         return nearestBase;
     }
 
-    createEntity(x: number, y: number, type: string, team:number) {
+    createEntity(x: number, y: number, type: string, team: number) {
         switch (type) {
             case BuildingEntityID.Base:
                 this.createBaseEntity(x, y, team);
@@ -143,21 +135,21 @@ class EntityManager {
         }
     }
 
-    createEngineerEntity(x: number, y: number, team:number): EngineerEntity//tile coordinates 
+    createEngineerEntity(x: number, y: number, team: number): EngineerEntity//tile coordinates 
     {
         let engineer: EngineerEntity = new EngineerEntity(this.map, this.scene, x, y, team);
         this.entityList.push(engineer);
         engineer.updateNearestBase(this.getNearestBaseToEntity(engineer));
-        team==TeamNumbers.Player?this.addToFogOfWarMasks(engineer.GetFogOfWarMask()):()=>{};
+        team == TeamNumbers.Player ? this.addToFogOfWarMasks(engineer.GetFogOfWarMask()) : () => { };
         return engineer;
 
     }
 
-    createBaseEntity(x: number, y: number, team:number): BaseEntity//tile coordinates 
+    createBaseEntity(x: number, y: number, team: number): BaseEntity//tile coordinates 
     {
         let base: BaseEntity = new BaseEntity(this.map, this.scene, x, y, team);
         this.entityList.push(base);
-        team==TeamNumbers.Player?this.addToFogOfWarMasks(base.GetFogOfWarMask()):()=>{};
+        team == TeamNumbers.Player ? this.addToFogOfWarMasks(base.GetFogOfWarMask()) : () => { };
         return base;
 
     }
@@ -168,41 +160,46 @@ class EntityManager {
         return base;
 
     }
-    createTurretEntity(x: number, y: number, team:number): TurretEntity//tile coordinates 
+    createTurretEntity(x: number, y: number, team: number): TurretEntity//tile coordinates 
     {
         let base: TurretEntity = new TurretEntity(this.map, this.scene, x, y, team);
         this.entityList.push(base);
-        team==TeamNumbers.Player?this.addToFogOfWarMasks(base.GetFogOfWarMask()):()=>{};
+        team == TeamNumbers.Player ? this.addToFogOfWarMasks(base.GetFogOfWarMask()) : () => { };
         return base;
 
     }
-    createScaffoldEntity(x: number, y: number, targetBuilding: string, team:number): ScaffoldEntity//tile coordinates 
+    createScaffoldEntity(x: number, y: number, targetBuilding: string, team: number): ScaffoldEntity//tile coordinates 
     {
         let base: ScaffoldEntity = new ScaffoldEntity(this.map, this.scene, x, y, targetBuilding, team);
         this.entityList.push(base);
-        team==TeamNumbers.Player?this.addToFogOfWarMasks(base.GetFogOfWarMask()):()=>{};
+        team == TeamNumbers.Player ? this.addToFogOfWarMasks(base.GetFogOfWarMask()) : () => { };
         return base;
 
     }
-    createGliderEntity(x: number, y: number, team:number): TurretEntity//tile coordinates 
+    createGliderEntity(x: number, y: number, team: number): GliderEntity//tile coordinates 
     {
         let base: GliderEntity = new GliderEntity(this.map, this.scene, x, y, team);
         this.entityList.push(base);
-        team==TeamNumbers.Player?this.addToFogOfWarMasks(base.GetFogOfWarMask()):()=>{};
+        team == TeamNumbers.Player ? this.addToFogOfWarMasks(base.GetFogOfWarMask()) : () => { };
         return base;
 
     }
-    createFactoryEntity(x: number, y: number, team:number): FactoryEntity//tile coordinates 
+    createFactoryEntity(x: number, y: number, team: number): FactoryEntity//tile coordinates 
     {
         let base: FactoryEntity = new FactoryEntity(this.map, this.scene, x, y, team);
         this.entityList.push(base);
-        team==TeamNumbers.Player?this.addToFogOfWarMasks(base.GetFogOfWarMask()):()=>{};
+        team == TeamNumbers.Player ? this.addToFogOfWarMasks(base.GetFogOfWarMask()) : () => { };
         return base;
 
     }
 
     deleteEntity(entity: Entity) {
         let index = this.entityList.indexOf(entity);
+        if(entity.selected)
+        {
+            entity.selected=false;
+            this.eventEmitter.emit(EventConstants.EntityActions.Selected, undefined );
+        }
         entity.destroy();
         if (index !== -1) {
             this.entityList.splice(index, 1);
@@ -211,8 +208,31 @@ class EntityManager {
 
     update(delta) {
         this.entityList.forEach(element => element.update(delta));
+        this.entityList.forEach(element => {
+            if (element instanceof TurretEntity) {
+                if (element.targetEntity!=undefined && new Phaser.Math.Vector2(element.targetEntity.x, element.targetEntity.y).distance(new Phaser.Math.Vector2(element.x, element.y)) < 200) {
+                    return
+                }
+                else {
+                    element.targetEntity = undefined;
+                }
+                this.entityList.forEach(target => {
+                    this.entityList.forEach(target => {
+                        if (target.team != element.team && target.team != TeamNumbers.Neutral) {
+                            let distanceBetween: number = new Phaser.Math.Vector2(target.x, target.y).distance(new Phaser.Math.Vector2(element.x, element.y));
+                            if ((distanceBetween < 200)) {
+                                element.targetEntity = target;
+                                return;
+                            }
+                        }
+                    }
+                    );
+                }
+                );
+            }
+        });
     }
-
 }
+
 
 export { EntityManager }

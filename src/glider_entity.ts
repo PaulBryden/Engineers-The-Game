@@ -77,6 +77,7 @@ class GliderEntity extends MovingEntity {
             tweens: tweens
         });
         this.scene.add.existing(bullet);
+        AudioEffectsSingleton.getInstance(this.scene).Laser.play();
     }
 
     Attack() {
@@ -84,6 +85,10 @@ class GliderEntity extends MovingEntity {
         let awaitTime: number = 500;
         let maxDistanceToTarget: number = 7;
         let minDistanceToTarget: number = 4;
+        if(this.health<=0)
+        {
+            return;
+        }
         let playerPos: Phaser.Math.Vector2 = this.GetTileLocation();
         if (this.targetEntity && this.targetEntity.health > 0 && this.gliderFSM.is(State.Attacking)) {
             if (this.targetEntity.GetTileLocation().distance(playerPos) < maxDistanceToTarget) {
@@ -157,10 +162,12 @@ class GliderEntity extends MovingEntity {
                 NOTHING: { value: 0, duration: awaitTime },
                 onComplete: () => { this.Move() }
             });
-
-            this.scene.tweens.timeline({
-                tweens: tweens
-            });
+            if(this.scene!=undefined)
+            {
+                this.scene.tweens.timeline({
+                    tweens: tweens
+                });
+            }
         }
         else if (this.gliderFSM.is(State.Moving)){
             this.gliderFSM.go(State.Idle);
