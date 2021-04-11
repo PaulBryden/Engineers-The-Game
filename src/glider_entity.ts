@@ -127,7 +127,14 @@ class GliderEntity extends MovingEntity {
                 //Not Moving but still firing Delay 500ms
             }
             else if (!this.gliderFSM.is(State.Attacking)) {
+                try
+                {
                 this.gliderFSM.go(State.Idle);
+                }
+                catch
+                {
+
+                }
             }
 
             if (this.path != null && this.path.length > 0 && this.targetEntity.GetTileLocation().distance(new Phaser.Math.Vector2(this.path[this.path.length - 1].x, this.path[this.path.length - 1].y)) > maxDistanceToTarget) {
@@ -137,7 +144,14 @@ class GliderEntity extends MovingEntity {
         }
         else {
             if (this.gliderFSM.is(State.Attacking)) {
+                try
+                {
                 this.gliderFSM.go(State.Idle);
+                }
+                catch
+                {
+
+                }
             }
         }
 
@@ -170,7 +184,14 @@ class GliderEntity extends MovingEntity {
             }
         }
         else if (this.gliderFSM.is(State.Moving)){
+            try
+            {
             this.gliderFSM.go(State.Idle);
+            }
+            catch
+            {
+
+            }
         }
 
     }
@@ -237,7 +258,10 @@ class GliderEntity extends MovingEntity {
                 this.path = path;
                 this.path.shift(); //first move is current position
                 Math.random() > 0.5 ? AudioEffectsSingleton.getInstance(this.scene).EngineerMoving1.play() : AudioEffectsSingleton.getInstance(this.scene).EngineerMoving2.play();
+                try
+                {
                 this.gliderFSM.go(State.Moving);
+                }catch{}
             }
         });
         try{
@@ -256,10 +280,17 @@ class GliderEntity extends MovingEntity {
                 this.path = path;
                 this.path.shift(); //first move is current position
                 Math.random() > 0.5 ? AudioEffectsSingleton.getInstance(this.scene).EngineerAttacking.play() : AudioEffectsSingleton.getInstance(this.scene).EngineerAttacking.play();
+                try
+                {
                 this.gliderFSM.go(State.Attacking);
+                }
+                catch{}
             }
             else {
+                try
+                {
                 this.gliderFSM.go(State.Idle);
+                }catch{}
             }
         });
         try{
