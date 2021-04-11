@@ -11,8 +11,6 @@ class BuildUnitsEntity extends BuildingEntity {
         
         super(map, icon, name, scene, x, y, texture, team);
         this.createEntityEvent = createEntityEvent;
-        this.eventEmitter.on(requestBuildEvent, () => { this.selected ? this.requestBuild() : {}; });
-        this.eventEmitter.on(EventConstants.Input.Cancel, () => { this.selected ? this.requestCancel() : {}; });
         this.buildingFSM = this.createFSM();
         this.buildCounter = 0;
         this.blockedTiles.push(new Phaser.Math.Vector2(x-1,y));

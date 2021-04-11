@@ -11,6 +11,7 @@ import { GliderEntity } from './glider_entity'
 import { FactoryEntity } from './factory_entity'
 import { ScaffoldEntity } from './scaffold'
 import { Vector } from 'matter'
+import { BuildUnitsEntity } from './build_units_entity'
 class EntityManager {
     scene: Phaser.Scene;
     entityList: Entity[]
@@ -39,7 +40,7 @@ class EntityManager {
             if (buildingID == BuildingEntityID.Base) {
                 if (this.resources.get(teamNumber) >= 500) {
                     this.resources.set(teamNumber,this.resources.get(teamNumber) - 500);
-                    this.eventEmitter.emit(EventConstants.Game.UpdateResourceCount, this.resources.get(teamNumber));
+                    this.eventEmitter.emit(EventConstants.Game.UpdateResourceCount, this.resources.get(teamNumber), teamNumber);
                 }
                 else {
                     return;
@@ -49,7 +50,7 @@ class EntityManager {
             else if (buildingID == BuildingEntityID.Factory) {
                 if (this.resources.get(teamNumber) >= 300) {
                     this.resources.set(teamNumber,this.resources.get(teamNumber) - 300);
-                    this.eventEmitter.emit(EventConstants.Game.UpdateResourceCount, this.resources.get(teamNumber));
+                    this.eventEmitter.emit(EventConstants.Game.UpdateResourceCount, this.resources.get(teamNumber), teamNumber);
                 }
                 else {
                     return;
@@ -59,7 +60,7 @@ class EntityManager {
             else if (buildingID == BuildingEntityID.Turret) {
                 if (this.resources.get(teamNumber) >= 300) {
                     this.resources.set(teamNumber,this.resources.get(teamNumber) - 300);
-                    this.eventEmitter.emit(EventConstants.Game.UpdateResourceCount,this.resources.get(teamNumber));
+                    this.eventEmitter.emit(EventConstants.Game.UpdateResourceCount,this.resources.get(teamNumber), teamNumber);
                 }
                 else {
                     return;
@@ -70,31 +71,31 @@ class EntityManager {
             entity.requestBuild(scaffold);
         });
 
-        this.eventEmitter.on(EventConstants.Game.AddResources, (resources, teamNumber) => {  this.resources.set(teamNumber,this.resources.get(teamNumber) + resources); this.eventEmitter.emit(EventConstants.Game.UpdateResourceCount, (this.resources.get(TeamNumbers.Player))); });
-        this.eventEmitter.on(EventConstants.Game.RemoveResources, (resources, teamNumber) => { this.resources.set(teamNumber,this.resources.get(teamNumber) - resources); this.eventEmitter.emit(EventConstants.Game.UpdateResourceCount, (this.resources.get(TeamNumbers.Player))); });
-        this.eventEmitter.on(EventConstants.Input.RequestBuildEngineer, (teamNumber) => {
+        this.eventEmitter.on(EventConstants.Game.AddResources, (resources, teamNumber) => {  this.resources.set(teamNumber,this.resources.get(teamNumber) + resources); this.eventEmitter.emit(EventConstants.Game.UpdateResourceCount, (this.resources.get(TeamNumbers.Player)),TeamNumbers.Player); });
+        this.eventEmitter.on(EventConstants.Game.RemoveResources, (resources, teamNumber) => { this.resources.set(teamNumber,this.resources.get(teamNumber) - resources); this.eventEmitter.emit(EventConstants.Game.UpdateResourceCount, (this.resources.get(TeamNumbers.Player)),TeamNumbers.Player); });
+        this.eventEmitter.on(EventConstants.Input.BuildEngineer, (entity: BuildUnitsEntity, teamNumber) => {
             if (this.resources.get(teamNumber) >= 100) {
                 this.resources.set(teamNumber,this.resources.get(teamNumber) - 100);
-                this.eventEmitter.emit(EventConstants.Game.UpdateResourceCount, this.resources.get(teamNumber));
-                this.eventEmitter.emit(EventConstants.Input.BuildEngineer, teamNumber);
+                entity.requestBuild();
+                this.eventEmitter.emit(EventConstants.Game.UpdateResourceCount, this.resources.get(teamNumber), teamNumber);
             }
         });
-        this.eventEmitter.on(EventConstants.Input.RequestCancelEngineer, (teamNumber) => {
+        this.eventEmitter.on(EventConstants.Input.CancelEngineer, (entity: BuildUnitsEntity, teamNumber) => {
             this.resources.set(teamNumber,this.resources.get(teamNumber) + 100);
-            this.eventEmitter.emit(EventConstants.Input.Cancel, teamNumber);
-            this.eventEmitter.emit(EventConstants.Game.UpdateResourceCount, this.resources.get(teamNumber));
+            entity.requestCancel();
+            this.eventEmitter.emit(EventConstants.Game.UpdateResourceCount, this.resources.get(teamNumber), teamNumber);
         });
-        this.eventEmitter.on(EventConstants.Input.RequestBuildGlider, (teamNumber) => {
+        this.eventEmitter.on(EventConstants.Input.BuildGlider, (entity: BuildUnitsEntity, teamNumber) => {
             if (this.resources.get(teamNumber) >= 300) {
                 this.resources.set(teamNumber,this.resources.get(teamNumber) - 300);
-                this.eventEmitter.emit(EventConstants.Game.UpdateResourceCount, this.resources.get(teamNumber));
-                this.eventEmitter.emit(EventConstants.Input.BuildGlider, teamNumber);
+                entity.requestBuild();
+                this.eventEmitter.emit(EventConstants.Game.UpdateResourceCount, this.resources.get(teamNumber), teamNumber);
             }
         });
-        this.eventEmitter.on(EventConstants.Input.RequestCancelGlider, (teamNumber) => {
+        this.eventEmitter.on(EventConstants.Input.CancelGlider, (entity: BuildUnitsEntity, teamNumber) => {
             this.resources.set(teamNumber,this.resources.get(teamNumber) + 300);
-            this.eventEmitter.emit(EventConstants.Input.Cancel, teamNumber);
-            this.eventEmitter.emit(EventConstants.Game.UpdateResourceCount, this.resources.get(teamNumber));
+            entity.requestCancel();
+            this.eventEmitter.emit(EventConstants.Game.UpdateResourceCount, this.resources.get(teamNumber), teamNumber);
         });
 
     }

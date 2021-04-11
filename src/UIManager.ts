@@ -37,6 +37,10 @@ class UIManager
         this.eventEmitter.on(EventConstants.Input.RequestBuildBase,()=>{this.eventEmitter.emit(EventConstants.Input.RequestBuildScaffold,this.selectedEntity,BuildingEntityID.Base,  TeamNumbers.Player)});
         this.eventEmitter.on(EventConstants.Input.RequestBuildFactory,()=>{this.eventEmitter.emit(EventConstants.Input.RequestBuildScaffold,this.selectedEntity,BuildingEntityID.Factory, TeamNumbers.Player)});
         this.eventEmitter.on(EventConstants.Input.RequestBuildTurret,()=>{this.eventEmitter.emit(EventConstants.Input.RequestBuildScaffold,this.selectedEntity,BuildingEntityID.Turret,  TeamNumbers.Player)});
+        this.eventEmitter.on(EventConstants.Input.RequestBuildGlider,()=>{this.eventEmitter.emit(EventConstants.Input.BuildGlider, this.selectedEntity,  TeamNumbers.Player)});
+        this.eventEmitter.on(EventConstants.Input.RequestBuildEngineer,()=>{this.eventEmitter.emit(EventConstants.Input.BuildEngineer, this.selectedEntity, TeamNumbers.Player)});
+        this.eventEmitter.on(EventConstants.Input.RequestCancelGlider,()=>{this.eventEmitter.emit(EventConstants.Input.CancelGlider, this.selectedEntity,  TeamNumbers.Player)});
+        this.eventEmitter.on(EventConstants.Input.RequestCancelEngineer,()=>{this.eventEmitter.emit(EventConstants.Input.CancelEngineer, this.selectedEntity, TeamNumbers.Player)});
         this.entityScene=entityScene;
 
         this.MiniMapOverlay = new Phaser.GameObjects.Rectangle(scene, 200, 75, 110, 66, 0xffffff, 0x0).setDepth(251).setStrokeStyle(1, 0xffffff);

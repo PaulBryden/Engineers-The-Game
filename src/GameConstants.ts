@@ -80,8 +80,10 @@ namespace EventConstants {
     public static readonly BuildGlider: string = "BuildGlider";
     public static readonly RequestBuildEngineer: string = "RequestBuildEngineer";
     public static readonly RequestCancelEngineer: string = "RequestCancelEngineer";
+    public static readonly CancelEngineer: string = "CancelEngineer";
     public static readonly RequestBuildGlider: string = "RequestBuildGlider";
     public static readonly RequestCancelGlider: string = "RequestCancelGlider";
+    public static readonly CancelGlider: string = "CancelGlider";
     public static readonly RequestBuildBase: string = "RequestBuildBase";
     public static readonly RequestBuildScaffold: string = "RequestBuildScaffold";
     public static readonly RequestBuildFactory: string = "RequestBuildFactory";
