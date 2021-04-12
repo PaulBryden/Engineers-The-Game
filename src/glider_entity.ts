@@ -163,7 +163,15 @@ class GliderEntity extends MovingEntity {
                 }
             }
         }
-    }catch{}
+    }catch{
+        if(this.health>0)
+        {
+            try
+            {
+            this.gliderFSM.go(State.Idle);
+            }catch{}
+        }
+    }
 
     }
 
