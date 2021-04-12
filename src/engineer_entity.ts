@@ -154,8 +154,8 @@ class EngineerEntity extends MovingEntity {
             }
         });
         try {
-            
-            this.team==TeamNumbers.Player?AudioEffectsSingleton.getInstance(this.scene).Blocked.play():{};
+
+            this.team == TeamNumbers.Player ? AudioEffectsSingleton.getInstance(this.scene).Blocked.play() : {};
             this.pathFinder.calculate();
         }
         catch { }
@@ -173,7 +173,7 @@ class EngineerEntity extends MovingEntity {
                 this.path = path;
                 this.path.shift();
                 this.MoveToBuilding();
-                this.team==TeamNumbers.Player?AudioEffectsSingleton.getInstance(this.scene).Blocked.play():{};
+                this.team == TeamNumbers.Player ? AudioEffectsSingleton.getInstance(this.scene).Blocked.play() : {};
             }
             else {
                 this.engineerFSM.go(State.Idle);
@@ -195,42 +195,52 @@ class EngineerEntity extends MovingEntity {
         fsm.from(MiningState.InBase).to(MiningState.GoingToMine);
 
         fsm.on(MiningState.GoingToMine, (from: MiningState) => {
-            var PlayerPos = Phaser.Tilemaps.Components.IsometricWorldToTileXY(this.x, this.y, true, PlayerPos, this.scene.cameras.main, this.mapReference.layer);
-            var minePos = Phaser.Tilemaps.Components.IsometricWorldToTileXY(this.targetMine.x, this.targetMine.y, true, minePos, this.scene.cameras.main, this.mapReference.layer);
+            try {
+                var PlayerPos = Phaser.Tilemaps.Components.IsometricWorldToTileXY(this.x, this.y, true, PlayerPos, this.scene.cameras.main, this.mapReference.layer);
+                var minePos = Phaser.Tilemaps.Components.IsometricWorldToTileXY(this.targetMine.x, this.targetMine.y, true, minePos, this.scene.cameras.main, this.mapReference.layer);
 
-            this.pathFinder.findPath(PlayerPos.x - 1, PlayerPos.y, minePos.x - 3, minePos.y, (path) => {
+                this.pathFinder.findPath(PlayerPos.x - 1, PlayerPos.y, minePos.x - 3, minePos.y, (path) => {
 
-                if (path != null && path.length > 0) {
-                    this.path = path;
-                    this.path.shift();
-                    this.MoveToMine();
-                }
-                else {
+                    if (path != null && path.length > 0) {
+                        this.path = path;
+                        this.path.shift();
+                        this.MoveToMine();
+                    }
+                    else {
+                        try {
+                            this.engineerFSM.go(State.Idle);
+                        } catch { }
+                    }
+                });
+                this.pathFinder.calculate();
+            } catch {
+                try {
                     this.engineerFSM.go(State.Idle);
-                }
-            });
-            this.pathFinder.calculate();
+                } catch { }
+            }
         });
 
         fsm.on(MiningState.GoingToBase, (from: MiningState) => {
-            var PlayerPos = Phaser.Tilemaps.Components.IsometricWorldToTileXY(this.x, this.y, true, PlayerPos, this.scene.cameras.main, this.mapReference.layer);
-            var basePos = this.nearestBase.GetTileLocation();
+            try {
+                var PlayerPos = Phaser.Tilemaps.Components.IsometricWorldToTileXY(this.x, this.y, true, PlayerPos, this.scene.cameras.main, this.mapReference.layer);
+                var basePos = this.nearestBase.GetTileLocation();
 
-            this.pathFinder.findPath(PlayerPos.x - 1, PlayerPos.y, basePos.x, basePos.y - 1, (path) => {
+                this.pathFinder.findPath(PlayerPos.x - 1, PlayerPos.y, basePos.x, basePos.y - 1, (path) => {
 
-                if (path != null && path.length > 0) {
-                    this.path = path;
-                    this.path.shift();
-                    this.MoveToBase();
-                }
-                else {
-                    try {
-                        this.engineerFSM.go(State.Idle);
+                    if (path != null && path.length > 0) {
+                        this.path = path;
+                        this.path.shift();
+                        this.MoveToBase();
                     }
-                    catch { }
-                }
-            });
-            this.pathFinder.calculate();
+                    else {
+                        try {
+                            this.engineerFSM.go(State.Idle);
+                        }
+                        catch { }
+                    }
+                });
+                this.pathFinder.calculate();
+            } catch { }
         });
         fsm.on(MiningState.InMine, (from: MiningState) => {
             this.MoveInsideMine();
@@ -244,13 +254,12 @@ class EngineerEntity extends MovingEntity {
     requestMine(mine: MineEntity) {
 
         if (this.targetMine != mine || !this.engineerFSM.is(State.Mining)) {
-            this.team==TeamNumbers.Player?AudioEffectsSingleton.getInstance(this.scene).EngineerMining.play():{};
+            this.team == TeamNumbers.Player ? AudioEffectsSingleton.getInstance(this.scene).EngineerMining.play() : {};
             this.targetMine = mine;
             this.miningFSM.is(MiningState.GoingToMine) ? this.updatePathToMine() : this.miningFSM.canGo(MiningState.GoingToMine) ? this.miningFSM.go(MiningState.GoingToMine) : {};
-            try
-            {
-            !this.engineerFSM.is(State.Mining) ? this.engineerFSM.go(State.Mining) : {};
-            }catch{}
+            try {
+                !this.engineerFSM.is(State.Mining) ? this.engineerFSM.go(State.Mining) : {};
+            } catch { }
         }
     }
 
@@ -266,8 +275,7 @@ class EngineerEntity extends MovingEntity {
     Mine() {
     }
     MoveInsideMineExit() {
-        if(this.health>0)
-        {
+        if (this.health > 0 && (this.miningFSM.is(MiningState.InMine))) {
             var tweens = [];
             tweens.push({
                 targets: this,
@@ -283,7 +291,7 @@ class EngineerEntity extends MovingEntity {
             this.scene.tweens.timeline({
                 tweens: tweens
             });
-    }
+        }
 
     }
     MoveInsideMine() {
@@ -304,28 +312,27 @@ class EngineerEntity extends MovingEntity {
     }
 
     MoveInsideBaseExit() {
-        if(this.health>0)
-        {
-        var tweens = [];
-        tweens.push({
-            targets: this,
-            alpha: { value: 1, duration: 1000 },
-            x: { value: (this.x - (this.mapReference.layer.tileWidth)), duration: 1000 },
-            onComplete: () => {
-                this.eventEmitter.emit(EventConstants.Game.AddResources, (25), this.team);
-                this.team==TeamNumbers.Player?AudioEffectsSingleton.getInstance(this.scene).AddResource.play():{};
-                if (this.miningFSM.is(MiningState.InBase)) { this.miningFSM.go(MiningState.GoingToMine); }
-            }
+        if (this.health > 0 && (this.miningFSM.is(MiningState.InBase))) {
+            var tweens = [];
+            tweens.push({
+                targets: this,
+                alpha: { value: 1, duration: 1000 },
+                x: { value: (this.x - (this.mapReference.layer.tileWidth)), duration: 1000 },
+                onComplete: () => {
+                    this.eventEmitter.emit(EventConstants.Game.AddResources, (25), this.team);
+                    this.team == TeamNumbers.Player ? AudioEffectsSingleton.getInstance(this.scene).AddResource.play() : {};
+                    if (this.miningFSM.is(MiningState.InBase)) { this.miningFSM.go(MiningState.GoingToMine); }
+                }
 
-        });
-        this.currentAnimation = AnimationState.Default;
-        this.updateAngle(Phaser.Math.Angle.Between(this.x, this.y, (this.x - (this.mapReference.layer.tileWidth)), this.y));
+            });
+            this.currentAnimation = AnimationState.Default;
+            this.updateAngle(Phaser.Math.Angle.Between(this.x, this.y, (this.x - (this.mapReference.layer.tileWidth)), this.y));
 
 
-        this.scene.tweens.timeline({
-            tweens: tweens
-        });
-    }
+            this.scene.tweens.timeline({
+                tweens: tweens
+            });
+        }
 
     }
     MoveInsideBase() {
@@ -364,7 +371,7 @@ class EngineerEntity extends MovingEntity {
                 targets: this,
                 NOTHING: { value: 0, duration: 1000 },
                 onComplete: () => {
-                    if (this.targetBuilding.getHealth()<=0 || this.targetBuilding.increaseBuildingCompletionProgress()) {
+                    if (this.targetBuilding.getHealth() <= 0 || this.targetBuilding.increaseBuildingCompletionProgress()) {
                         try {
                             this.buildingFSM.go(BuildingState.Initial);
                             this.engineerFSM.go(State.Idle);
@@ -387,7 +394,11 @@ class EngineerEntity extends MovingEntity {
 
             this.movingEventEmitter.once(EventConstants.EntityMovingUpdates.FinishedMoving, () => {
                 if (this.buildingFSM.is(BuildingState.GoingToBuilding)) {
-                    this.buildingFSM.go(BuildingState.Building);
+                    try {
+                        this.buildingFSM.go(BuildingState.Building);
+                    } catch {
+
+                    }
                 }
             });
         }
@@ -413,14 +424,14 @@ class EngineerEntity extends MovingEntity {
             if (path != null && path.length > 0) {
                 this.path = path;
                 this.path.shift(); //first move is current position
-                this.team==TeamNumbers.Player? Math.random() > 0.5 ? AudioEffectsSingleton.getInstance(this.scene).EngineerMoving1.play() : AudioEffectsSingleton.getInstance(this.scene).EngineerMoving2.play():{};
-                try{
-                this.engineerFSM.go(State.Moving);
-                }catch{}
+                this.team == TeamNumbers.Player ? Math.random() > 0.5 ? AudioEffectsSingleton.getInstance(this.scene).EngineerMoving1.play() : AudioEffectsSingleton.getInstance(this.scene).EngineerMoving2.play() : {};
+                try {
+                    this.engineerFSM.go(State.Moving);
+                } catch { }
             }
             else {
                 try {
-                    this.team==TeamNumbers.Player?AudioEffectsSingleton.getInstance(this.scene).Blocked.play():{};
+                    this.team == TeamNumbers.Player ? AudioEffectsSingleton.getInstance(this.scene).Blocked.play() : {};
                     this.engineerFSM.go(State.Idle);
                 } catch { }
             }
@@ -467,7 +478,7 @@ class EngineerEntity extends MovingEntity {
 
         var tweens = [];
         let awaitTime: number = 500;
-        if (this.engineerFSM.is(State.Moving) && this.path != null && this.path.length > 0 && this.health>0) {
+        if (this.engineerFSM.is(State.Moving) && this.path != null && this.path.length > 0 && this.health > 0) {
 
             tweens.push({
                 targets: this,
@@ -475,8 +486,7 @@ class EngineerEntity extends MovingEntity {
                 onComplete: () => { this.Move() }
             });
 
-            if(this.scene!=undefined)
-            {
+            if (this.scene != undefined) {
                 this.scene.tweens.timeline({
                     tweens: tweens
                 });
@@ -498,10 +508,8 @@ class EngineerEntity extends MovingEntity {
     getStatus() {
         return this.engineerFSM.currentState.toString();
     }
-    damage(amount:number)
-    {
-        if(this.health-amount<=0)
-        {
+    damage(amount: number) {
+        if (this.health - amount <= 0) {
             this.engineerFSM.reset();
             this.miningFSM.reset();
             this.buildingFSM.reset();
