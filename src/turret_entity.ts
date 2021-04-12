@@ -5,7 +5,7 @@ import { EasyStarGroundLevelSingleton, Path } from './EasyStarSingleton';
 import { BuildingEntity } from './building_entity';
 import { AudioEffectsSingleton } from './AudioEffectsSingleton';
 
-class TurretEntity extends Entity
+class TurretEntity extends BuildingEntity
 {
     targetEntity: Entity;
     entitiesToBeDamaged: Entity[];
@@ -13,7 +13,8 @@ class TurretEntity extends Entity
     {
         super(map,"turret"+"-"+team,"Turret",scene,x,y,"turret"+"-"+team,team);
         this.y+=this.mapReference.layer.tileWidth/4;
-        EasyStarGroundLevelSingleton.getInstance().avoidAdditionalPoint(x-1,y);
+        this.blockedTiles.push(new Phaser.Math.Vector2(x-1,y));
+        this.avoidAdditionalPoints();
         this.status="Operating";
         this.anims.play('turret' + "-" + this.team, true);
         this.setScale(1.3);
