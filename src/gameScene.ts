@@ -7,8 +7,9 @@ import { EasyStarFlightLevelSingleton, EasyStarGroundLevelSingleton } from './Ea
 import { EntityManager } from './EntityManager'
 import { MineEntity } from './mine_entity';
 import  EasyStar from 'easystarjs'
-import { BuildingEntityID, EventConstants } from './GameConstants';
+import { BuildingEntityID, EventConstants, TeamNumbers } from './GameConstants';
 import { EventEmitterSingleton } from './EventEmitterSingleton';
+import { AIPlayer } from './AIPlayer';
 export default class GameScene extends Phaser.Scene {
     finder: EasyStarGroundLevelSingleton;
     map: Phaser.Tilemaps.Tilemap;
@@ -21,6 +22,7 @@ export default class GameScene extends Phaser.Scene {
     minimap: Phaser.Cameras.Scene2D.Camera;
     eventEmitterSingleton: EventEmitterSingleton;
     fogOfWar: Phaser.GameObjects.RenderTexture;
+    AIPlayer: AIPlayer;
     constructor() {
         super('GameScene');
 
@@ -614,6 +616,7 @@ export default class GameScene extends Phaser.Scene {
 
         //this.addDepthsToTiles(sprites);
 
+        this.AIPlayer = new AIPlayer(this.entityManager,TeamNumbers.Enemy, TeamNumbers.Player);
 
     }
 

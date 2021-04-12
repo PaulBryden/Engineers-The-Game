@@ -4,6 +4,7 @@ import { EasyStarFlightLevelSingleton, EasyStarGroundLevelSingleton, Path } from
 import EasyStar from 'easystarjs'
 import { MovingEntity } from './MovingEntity';
 import { AudioEffectsSingleton } from './AudioEffectsSingleton';
+import { TeamNumbers } from './GameConstants';
 
 enum State {
     Idle = "Idle",
@@ -16,6 +17,7 @@ class GliderEntity extends MovingEntity {
     targetDestination: Phaser.Math.Vector2;
     targetEntity: Entity;
     tweenManager: Phaser.Tweens.TweenManager;
+    entitiesToBeDamaged: Entity[];
 
     constructor(map: Phaser.Tilemaps.Tilemap, scene: Phaser.Scene, x: number, y: number, team: number) {
         super(map, "gliderPortrait" + "-" + team, "Glider", scene, x, y, "glider" + "-" + team, team);
@@ -26,7 +28,8 @@ class GliderEntity extends MovingEntity {
         this.gliderFSM = this.createFSM();
         this.anims.play('glider' + "-" + this.team + "-NW", true);
         this.tweenManager = new Phaser.Tweens.TweenManager(scene);
-        this.centerToTileOffset = 16
+        this.centerToTileOffset = 16;
+        this.entitiesToBeDamaged=[];
     }
 
     createFSM(): typestate.FiniteStateMachine<State> {
@@ -58,11 +61,11 @@ class GliderEntity extends MovingEntity {
     }
 
     destroyBullet(bullet: Phaser.GameObjects.PointLight, enemy: Entity) {
-        enemy.damage(5);
         bullet.destroy();
+        this.entitiesToBeDamaged.push(enemy);
     }
 
-    async CreateBullet() {
+    CreateBullet() {
         var tweens = [];
         let bullet: Phaser.GameObjects.PointLight = new Phaser.GameObjects.PointLight(this.scene, this.x, this.y, 0x0000f0, 7, 0.5, 0.3);
         bullet.setDepth(this.targetEntity.GetTileLocation().x + this.targetEntity.GetTileLocation().y);
@@ -81,6 +84,8 @@ class GliderEntity extends MovingEntity {
     }
 
     Attack() {
+        try
+        {
         var tweens = [];
         let awaitTime: number = 500;
         let maxDistanceToTarget: number = 7;
@@ -94,6 +99,10 @@ class GliderEntity extends MovingEntity {
             if (this.targetEntity.GetTileLocation().distance(playerPos) < maxDistanceToTarget) {
                 this.CreateBullet();
                 this.updateAngle(Phaser.Math.Angle.Between(this.x, this.y, this.targetEntity.x, this.targetEntity.y));
+                if(Math.random() > 0.7 )
+                {
+                    this.path=[];
+                }
             }
             if (this.gliderFSM.is(State.Attacking) && this.path != null && (this.path.length > 0) && (this.targetEntity.GetTileLocation().distance(playerPos) > minDistanceToTarget)) {
                 var ex = this.path[0].x;
@@ -154,6 +163,7 @@ class GliderEntity extends MovingEntity {
                 }
             }
         }
+    }catch{}
 
     }
 
@@ -161,7 +171,7 @@ class GliderEntity extends MovingEntity {
 
         var tweens = [];
         let awaitTime: number = 500;
-        if (this.gliderFSM.is(State.Moving) && this.path != null && this.path.length > 0) {
+        if (this.gliderFSM.is(State.Moving) && this.path != null && this.path.length > 0 && this.health>0) {
             var ex = this.path[0].x;
             var ey = this.path[0].y;
             var testCoords;
@@ -257,7 +267,7 @@ class GliderEntity extends MovingEntity {
             if (path != null && path.length > 0) {
                 this.path = path;
                 this.path.shift(); //first move is current position
-                Math.random() > 0.5 ? AudioEffectsSingleton.getInstance(this.scene).EngineerMoving1.play() : AudioEffectsSingleton.getInstance(this.scene).EngineerMoving2.play();
+                this.team==TeamNumbers.Player?Math.random() > 0.5 ? AudioEffectsSingleton.getInstance(this.scene).EngineerMoving1.play() : AudioEffectsSingleton.getInstance(this.scene).EngineerMoving2.play():{};
                 try
                 {
                 this.gliderFSM.go(State.Moving);
@@ -279,7 +289,7 @@ class GliderEntity extends MovingEntity {
             if (path != null && path.length > 0) {
                 this.path = path;
                 this.path.shift(); //first move is current position
-                Math.random() > 0.5 ? AudioEffectsSingleton.getInstance(this.scene).EngineerAttacking.play() : AudioEffectsSingleton.getInstance(this.scene).EngineerAttacking.play();
+                this.team==TeamNumbers.Player?Math.random() > 0.5 ? AudioEffectsSingleton.getInstance(this.scene).EngineerAttacking.play() : AudioEffectsSingleton.getInstance(this.scene).EngineerAttacking.play():{};
                 try
                 {
                 this.gliderFSM.go(State.Attacking);
@@ -299,11 +309,24 @@ class GliderEntity extends MovingEntity {
         catch{}
     }
     update(delta) {
+        if(this.entitiesToBeDamaged.length>0)
+        {
+            this.entitiesToBeDamaged.forEach(entity => {entity.damage(5)});
+            this.entitiesToBeDamaged=[];
+        }
         super.update(delta);
     }
 
     GetTileLocation() {
         return Phaser.Tilemaps.Components.IsometricWorldToTileXY(this.x, this.y + this.centerToTileOffset, true, new Phaser.Math.Vector2, this.scene.cameras.main, this.mapReference.layer);
+    }
+    damage(amount:number)
+    {
+        if(this.health-amount<=0)
+        {
+            this.gliderFSM.reset();
+        }
+        super.damage(amount);
     }
 
 }

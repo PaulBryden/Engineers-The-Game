@@ -12,6 +12,9 @@ import { FactoryEntity } from './factory_entity'
 import { ScaffoldEntity } from './scaffold'
 import { Vector } from 'matter'
 import { BuildUnitsEntity } from './build_units_entity'
+import { EasyStarGroundLevelSingleton } from './EasyStarSingleton'
+import { BuildingEntity } from './building_entity'
+import { AudioEffectsSingleton } from './AudioEffectsSingleton'
 class EntityManager {
     scene: Phaser.Scene;
     entityList: Entity[]
@@ -37,6 +40,29 @@ class EntityManager {
         this.eventEmitter.on(EventConstants.EntityBuild.DestroyScaffold, (scaffold) => { this.deleteEntity(scaffold); });
         this.eventEmitter.on(EventConstants.EntityBuild.CreateBuilding, (x, y, entityName, teamNumber) => { this.createEntity(x, y, entityName, teamNumber) });
         this.eventEmitter.on(EventConstants.Input.RequestBuildScaffold, (entity, buildingID, teamNumber) => {
+            let continueWithBuild: boolean = true;
+            let buildLocationsEasyStar: Phaser.Math.Vector2[] =[new Phaser.Math.Vector2(entity.GetTileLocation().x-1,entity.GetTileLocation().y),new Phaser.Math.Vector2(entity.GetTileLocation().x-2,entity.GetTileLocation().y),new Phaser.Math.Vector2(entity.GetTileLocation().x-1,entity.GetTileLocation().y-1),new Phaser.Math.Vector2(entity.GetTileLocation().x-2,entity.GetTileLocation().y-2)];
+            this.entityList.forEach(element => {
+                if (element instanceof BuildingEntity)
+                {
+                    (<BuildingEntity>element).blockedTiles.forEach(tile =>{
+                        buildLocationsEasyStar.forEach(buildTile =>{
+                        if(tile.equals(buildTile))
+                        {
+                            continueWithBuild=false;
+                            if(teamNumber==TeamNumbers.Player)
+                            {
+                                AudioEffectsSingleton.getInstance(this.scene).Blocked.play();
+                            }
+                            return
+                        }
+                    });
+                });
+            }});
+            if(!continueWithBuild)
+            {
+                return
+            }
             if (buildingID == BuildingEntityID.Base) {
                 if (this.resources.get(teamNumber) >= 500) {
                     this.resources.set(teamNumber,this.resources.get(teamNumber) - 500);
@@ -199,12 +225,21 @@ class EntityManager {
         if(entity.selected)
         {
             entity.selected=false;
+            entity.health=0;
             this.eventEmitter.emit(EventConstants.EntityActions.Selected, undefined );
         }
         entity.destroy();
         if (index !== -1) {
             this.entityList.splice(index, 1);
         }
+    }
+
+    getAllEntitiesByTypeAndTeam(name: string, team: number)
+    {
+        let listOfEntities: Entity[];
+        listOfEntities = [];
+        this.entityList.forEach(element => {if(element.name==name && element.team==team){listOfEntities.push(element)}});
+        return listOfEntities;
     }
 
     update(delta) {

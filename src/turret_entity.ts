@@ -8,6 +8,7 @@ import { AudioEffectsSingleton } from './AudioEffectsSingleton';
 class TurretEntity extends Entity
 {
     targetEntity: Entity;
+    entitiesToBeDamaged: Entity[];
     constructor(map: Phaser.Tilemaps.Tilemap, scene: Phaser.Scene, x: number, y: number, team:number)
     {
         super(map,"turret"+"-"+team,"Turret",scene,x,y,"turret"+"-"+team,team);
@@ -19,15 +20,18 @@ class TurretEntity extends Entity
         this.selectedRectangle.displayWidth= this.selectedRectangle.displayWidth*2/3;
         this.selectedRectangle.setVisible(false);
         this.AttackRoutine();
+        this.entitiesToBeDamaged=[];
     }
 
     
     destroyBullet(bullet: Phaser.GameObjects.PointLight, enemy: Entity) {
-        enemy.damage(5);
+        this.entitiesToBeDamaged.push(enemy);
         bullet.destroy();
     }
 
-    async CreateBullet(targetEntity: Entity) {
+    CreateBullet(targetEntity: Entity) {
+        try
+        {
         var tweens = [];
         let bullet: Phaser.GameObjects.PointLight = new Phaser.GameObjects.PointLight(this.scene, this.x, this.y, 0x0000f0, 7, 0.5, 0.3);
         bullet.setDepth(targetEntity.GetTileLocation().x + targetEntity.GetTileLocation().y);
@@ -43,24 +47,50 @@ class TurretEntity extends Entity
         });
         this.scene.add.existing(bullet);
         AudioEffectsSingleton.getInstance(this.scene).Laser.play();
+    }catch{}
     }
 
-    async AttackRoutine()
+    AttackRoutine()
     {
-        if(this.targetEntity!=undefined && this.targetEntity.getHealth()>0)
+        if(this.targetEntity!=undefined && this.targetEntity.getHealth()>0 && this.getHealth()>0)
         {
             this.CreateBullet(this.targetEntity);
+        }
+        else if (this.getHealth()<=0)
+        {
+            return;
         }
         else
         {
             this.targetEntity=undefined;
         }
-        await this.delay(400);
-        this.AttackRoutine();
+        var tweens = [];
+       
+        tweens.push({
+            targets:{},
+            NOTHING: { value: 0, duration:800 },
+            onComplete: () => { 
+                this.AttackRoutine() }
+        });
+
+        this.scene.tweens.timeline({
+            tweens: tweens
+        });
     }
     
     delay(ms: number) {
         return new Promise(resolve => setTimeout(resolve, ms));
+    }
+
+    update(delta)
+    {
+        
+        if(this.entitiesToBeDamaged.length>0)
+        {
+            this.entitiesToBeDamaged.forEach(entity => {entity.damage(5)});
+            this.entitiesToBeDamaged=[];
+        }
+        super.update(delta);
     }
 
 

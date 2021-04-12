@@ -7,7 +7,7 @@ import { EasyStarGroundLevelSingleton, Path } from './EasyStarSingleton';
 import { AudioEffectsSingleton } from './AudioEffectsSingleton';
 import { MineEntity } from './mine_entity';
 import { BaseEntity } from './base_entity';
-import { EventConstants } from './GameConstants'
+import { EventConstants, TeamNumbers } from './GameConstants'
 import { MovingEntity } from './MovingEntity';
 import { ScaffoldEntity } from './scaffold';
 
@@ -155,7 +155,7 @@ class EngineerEntity extends MovingEntity {
         });
         try {
             
-            AudioEffectsSingleton.getInstance(this.scene).Blocked.play();
+            this.team==TeamNumbers.Player?AudioEffectsSingleton.getInstance(this.scene).Blocked.play():{};
             this.pathFinder.calculate();
         }
         catch { }
@@ -173,13 +173,13 @@ class EngineerEntity extends MovingEntity {
                 this.path = path;
                 this.path.shift();
                 this.MoveToBuilding();
+                this.team==TeamNumbers.Player?AudioEffectsSingleton.getInstance(this.scene).Blocked.play():{};
             }
             else {
                 this.engineerFSM.go(State.Idle);
             }
         });
         try {
-            AudioEffectsSingleton.getInstance(this.scene).Blocked.play();
             this.pathFinder.calculate();
         }
         catch { }
@@ -244,10 +244,13 @@ class EngineerEntity extends MovingEntity {
     requestMine(mine: MineEntity) {
 
         if (this.targetMine != mine || !this.engineerFSM.is(State.Mining)) {
-            AudioEffectsSingleton.getInstance(this.scene).EngineerMining.play();
+            this.team==TeamNumbers.Player?AudioEffectsSingleton.getInstance(this.scene).EngineerMining.play():{};
             this.targetMine = mine;
             this.miningFSM.is(MiningState.GoingToMine) ? this.updatePathToMine() : this.miningFSM.canGo(MiningState.GoingToMine) ? this.miningFSM.go(MiningState.GoingToMine) : {};
+            try
+            {
             !this.engineerFSM.is(State.Mining) ? this.engineerFSM.go(State.Mining) : {};
+            }catch{}
         }
     }
 
@@ -263,22 +266,24 @@ class EngineerEntity extends MovingEntity {
     Mine() {
     }
     MoveInsideMineExit() {
-        var tweens = [];
-        tweens.push({
-            targets: this,
-            alpha: { value: 1, duration: 500 },
-            x: { value: (this.x + (this.mapReference.layer.tileWidth * 3 / 2)), duration: 1500 },
-            onComplete: () => { if (this.miningFSM.is(MiningState.InMine)) { this.miningFSM.go(MiningState.GoingToBase); } }
+        if(this.health>0)
+        {
+            var tweens = [];
+            tweens.push({
+                targets: this,
+                alpha: { value: 1, duration: 500 },
+                x: { value: (this.x + (this.mapReference.layer.tileWidth * 3 / 2)), duration: 1500 },
+                onComplete: () => { if (this.miningFSM.is(MiningState.InMine)) { this.miningFSM.go(MiningState.GoingToBase); } }
 
-        });
-        this.currentAnimation = AnimationState.Mining;
-        this.updateAngle(Phaser.Math.Angle.Between(this.x, this.y, (this.x + (this.mapReference.layer.tileWidth * 3 / 2)), this.y));
+            });
+            this.currentAnimation = AnimationState.Mining;
+            this.updateAngle(Phaser.Math.Angle.Between(this.x, this.y, (this.x + (this.mapReference.layer.tileWidth * 3 / 2)), this.y));
 
 
-        this.scene.tweens.timeline({
-            tweens: tweens
-        });
-
+            this.scene.tweens.timeline({
+                tweens: tweens
+            });
+    }
 
     }
     MoveInsideMine() {
@@ -299,6 +304,8 @@ class EngineerEntity extends MovingEntity {
     }
 
     MoveInsideBaseExit() {
+        if(this.health>0)
+        {
         var tweens = [];
         tweens.push({
             targets: this,
@@ -306,7 +313,7 @@ class EngineerEntity extends MovingEntity {
             x: { value: (this.x - (this.mapReference.layer.tileWidth)), duration: 1000 },
             onComplete: () => {
                 this.eventEmitter.emit(EventConstants.Game.AddResources, (25), this.team);
-                AudioEffectsSingleton.getInstance(this.scene).AddResource.play();
+                this.team==TeamNumbers.Player?AudioEffectsSingleton.getInstance(this.scene).AddResource.play():{};
                 if (this.miningFSM.is(MiningState.InBase)) { this.miningFSM.go(MiningState.GoingToMine); }
             }
 
@@ -318,6 +325,7 @@ class EngineerEntity extends MovingEntity {
         this.scene.tweens.timeline({
             tweens: tweens
         });
+    }
 
     }
     MoveInsideBase() {
@@ -405,14 +413,14 @@ class EngineerEntity extends MovingEntity {
             if (path != null && path.length > 0) {
                 this.path = path;
                 this.path.shift(); //first move is current position
-                Math.random() > 0.5 ? AudioEffectsSingleton.getInstance(this.scene).EngineerMoving1.play() : AudioEffectsSingleton.getInstance(this.scene).EngineerMoving2.play();
+                this.team==TeamNumbers.Player? Math.random() > 0.5 ? AudioEffectsSingleton.getInstance(this.scene).EngineerMoving1.play() : AudioEffectsSingleton.getInstance(this.scene).EngineerMoving2.play():{};
                 try{
                 this.engineerFSM.go(State.Moving);
                 }catch{}
             }
             else {
                 try {
-                    AudioEffectsSingleton.getInstance(this.scene).Blocked.play();
+                    this.team==TeamNumbers.Player?AudioEffectsSingleton.getInstance(this.scene).Blocked.play():{};
                     this.engineerFSM.go(State.Idle);
                 } catch { }
             }
@@ -459,7 +467,7 @@ class EngineerEntity extends MovingEntity {
 
         var tweens = [];
         let awaitTime: number = 500;
-        if (this.engineerFSM.is(State.Moving) && this.path != null && this.path.length > 0) {
+        if (this.engineerFSM.is(State.Moving) && this.path != null && this.path.length > 0 && this.health>0) {
 
             tweens.push({
                 targets: this,
@@ -489,6 +497,16 @@ class EngineerEntity extends MovingEntity {
 
     getStatus() {
         return this.engineerFSM.currentState.toString();
+    }
+    damage(amount:number)
+    {
+        if(this.health-amount<=0)
+        {
+            this.engineerFSM.reset();
+            this.miningFSM.reset();
+            this.buildingFSM.reset();
+        }
+        super.damage(amount);
     }
 
 }
