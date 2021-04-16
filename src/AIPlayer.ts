@@ -121,6 +121,33 @@ class AIPlayer
                    
                 return}});
             }
+            else
+            {
+                Gliders.forEach(async glider => { if(glider.getStatus()=="Attacking"){ 
+                    if(enemyTurrets.length>=1)
+                    {
+                        (<GliderEntity>glider).requestAttack(this.getNearestToEntity(glider,enemyTurrets));
+                    }
+                    else if(enemyGliders.length>=1)
+                    {
+                        (<GliderEntity>glider).requestAttack(enemyGliders[0]);
+
+                    }else if(enemyEngineers.length>=1)
+                    {
+                        (<GliderEntity>glider).requestAttack(enemyEngineers[0]);
+
+                    }else if(enemyBases.length>=1)
+                    {
+                        (<GliderEntity>glider).requestAttack(enemyBases[0]);
+
+                    }else if(enemyFactories.length>=1)
+                    {
+                        (<GliderEntity>glider).requestAttack(enemyFactories[0]);
+
+                    }
+                   
+                return}});
+            }
         }
         //...        
         var tweens = [];

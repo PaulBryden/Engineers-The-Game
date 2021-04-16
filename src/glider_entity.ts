@@ -16,8 +16,8 @@ class GliderEntity extends MovingEntity {
     pathFinder: EasyStar.js;
     targetDestination: Phaser.Math.Vector2;
     targetEntity: Entity;
-    tweenManager: Phaser.Tweens.TweenManager;
     entitiesToBeDamaged: Entity[];
+    bulletTween: Phaser.Tweens.Tween;
 
     constructor(map: Phaser.Tilemaps.Tilemap, scene: Phaser.Scene, x: number, y: number, team: number) {
         super(map, "gliderPortrait" + "-" + team, "Glider", scene, x, y, "glider" + "-" + team, team);
@@ -27,7 +27,6 @@ class GliderEntity extends MovingEntity {
         this.pathFinder = EasyStarFlightLevelSingleton.getInstance();
         this.gliderFSM = this.createFSM();
         this.anims.play('glider' + "-" + this.team + "-NW", true);
-        this.tweenManager = new Phaser.Tweens.TweenManager(scene);
         this.centerToTileOffset = 16;
         this.entitiesToBeDamaged=[];
     }
@@ -66,27 +65,20 @@ class GliderEntity extends MovingEntity {
     }
 
     CreateBullet() {
-        var tweens = [];
         let bullet: Phaser.GameObjects.PointLight = new Phaser.GameObjects.PointLight(this.scene, this.x, this.y, 0x0000f0, 7, 0.5, 0.3);
         bullet.setDepth(this.targetEntity.GetTileLocation().x + this.targetEntity.GetTileLocation().y);
-        tweens.push({
+        this.addBulletTween({
             targets: bullet,
             x: { value: this.targetEntity.x, duration: 200 },
             y: { value: this.targetEntity.y, duration: 200 },
             onComplete: () => { this.destroyBullet(bullet, this.targetEntity); }
         });
 
-        this.scene.tweens.timeline({
-            tweens: tweens
-        });
         this.scene.add.existing(bullet);
         AudioEffectsSingleton.getInstance(this.scene).Laser.play();
     }
 
     Attack() {
-        try
-        {
-        var tweens = [];
         let awaitTime: number = 500;
         let maxDistanceToTarget: number = 7;
         let minDistanceToTarget: number = 4;
@@ -95,7 +87,7 @@ class GliderEntity extends MovingEntity {
             return;
         }
         let playerPos: Phaser.Math.Vector2 = this.GetTileLocation();
-        if (this.targetEntity && this.targetEntity.health > 0 && this.gliderFSM.is(State.Attacking)) {
+        if (this.targetEntity && this.scene.children.exists(this.targetEntity) && this.gliderFSM.is(State.Attacking)) {
             if (this.targetEntity.GetTileLocation().distance(playerPos) < maxDistanceToTarget) {
                 this.CreateBullet();
                 this.updateAngle(Phaser.Math.Angle.Between(this.x, this.y, this.targetEntity.x, this.targetEntity.y));
@@ -113,24 +105,18 @@ class GliderEntity extends MovingEntity {
                 {
                     awaitTime += awaitTime * 0.3
                 }
-                tweens.push({
+                this.AddTween({
                     targets: this,
                     NOTHING: { value: 0, duration: awaitTime },
                     onComplete: () => { this.Attack(); }
                 });
 
-                this.scene.tweens.timeline({
-                    tweens: tweens
-                });
             }
             else if (this.gliderFSM.is(State.Attacking)) {
-                tweens.push({
+                this.AddTween({
                     targets: this,
                     NOTHING: { value: 0, duration: awaitTime },
                     onComplete: () => { this.Attack(); }
-                });
-                this.scene.tweens.timeline({
-                    tweens: tweens
                 });
                 this.path = [];
                 //Not Moving but still firing Delay 500ms
@@ -163,21 +149,11 @@ class GliderEntity extends MovingEntity {
                 }
             }
         }
-    }catch{
-        if(this.health>0)
-        {
-            try
-            {
-            this.gliderFSM.go(State.Idle);
-            }catch{}
-        }
     }
 
-    }
 
     Move() {
 
-        var tweens = [];
         let awaitTime: number = 500;
         if (this.gliderFSM.is(State.Moving) && this.path != null && this.path.length > 0 && this.health>0) {
             var ex = this.path[0].x;
@@ -189,17 +165,11 @@ class GliderEntity extends MovingEntity {
             {
                 awaitTime += awaitTime * 0.3
             }
-            tweens.push({
+            this.AddTween({
                 targets: this,
                 NOTHING: { value: 0, duration: awaitTime },
                 onComplete: () => { this.Move() }
             });
-            if(this.scene!=undefined)
-            {
-                this.scene.tweens.timeline({
-                    tweens: tweens
-                });
-            }
         }
         else if (this.gliderFSM.is(State.Moving)){
             try
@@ -335,6 +305,20 @@ class GliderEntity extends MovingEntity {
             this.gliderFSM.reset();
         }
         super.damage(amount);
+    }
+
+    addBulletTween(config:Object)
+    {   
+        if(this.scene)
+        {
+            if(this.bulletTween)
+            {
+                this.RemoveTween(this.bulletTween);
+            }
+            this.bulletTween=this.scene.tweens.create(config);
+            this.bulletTween.play();
+        }
+
     }
 
 }

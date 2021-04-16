@@ -17,6 +17,8 @@ class Entity extends Phaser.GameObjects.Sprite implements IStatePublisher {
     subscribers: IStateSubscriber[];
     team:number;
     fogOfWarMask: Phaser.GameObjects.Image;
+    currentlyRunningTween: Phaser.Tweens.Tween;
+
     constructor(map: Phaser.Tilemaps.Tilemap, icon: string, name: string, scene: Phaser.Scene, x: number, y: number, texture: string | Phaser.Textures.Texture, team:number, frame?: string | number) {
         let vector: Phaser.Math.Vector2 = Phaser.Tilemaps.Components.IsometricTileToWorldXY(x, y, new Phaser.Math.Vector2(), scene.cameras.main, map.getLayer('Tile Layer 1'));
         super(scene, vector.x, vector.y, texture, frame);
@@ -142,11 +144,37 @@ class Entity extends Phaser.GameObjects.Sprite implements IStatePublisher {
 
     destroy()
     {
+        this.RemoveTween(this.currentlyRunningTween);
         this.selectedRectangle.destroy();
         this.healthBackgroundRectangle.destroy();
         this.healthForegroundRectangle.destroy();
         this.fogOfWarMask.destroy();
         super.destroy();
+    }
+
+    AddTween(config: Object)
+    {
+        if(this.scene)
+        {
+            if(this.currentlyRunningTween)
+            {
+                this.RemoveTween(this.currentlyRunningTween);
+            }
+            this.currentlyRunningTween=this.scene.tweens.create(config);
+            this.currentlyRunningTween.play();
+        }
+
+    }
+
+    RemoveTween(tween:Phaser.Tweens.Tween)
+    {
+        if(this.scene)
+        {
+            try{
+            this.scene.tweens.remove(tween);
+            }catch{}
+
+        }
     }
 
     updateSelected(selected: boolean) {

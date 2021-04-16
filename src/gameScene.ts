@@ -129,7 +129,6 @@ export default class GameScene extends Phaser.Scene {
         this.add.rectangle(1400,15,2100,1800,0xffffff,0x0).setInteractive().setScrollFactor(0).setDepth(1).on('pointerup', (pointer, gameObject)=>{ var x = this.cameras.main.scrollX + pointer.x;
             var y = this.cameras.main.scrollY + pointer.y;
             this.eventEmitterSingleton.emit(EventConstants.EntityActions.Move,new Phaser.Math.Vector2(this.getTileLocation(x,y)));
-
             });
         //N,NE,E,SE,S,SW,W,NW,N
         this.anims.create({

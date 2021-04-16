@@ -54,8 +54,7 @@ class BuildUnitsEntity extends BuildingEntity {
 
      Build() {
 
-        var tweens = [];
-        tweens.push({
+        this.AddTween({
             targets: {},
             NOTHING: { value: 1, duration: 500 },
             onComplete: () => {
@@ -73,10 +72,6 @@ class BuildUnitsEntity extends BuildingEntity {
                 }
             }
 
-        });
-      
-        this.scene.tweens.timeline({
-            tweens: tweens
         });
 
     }
