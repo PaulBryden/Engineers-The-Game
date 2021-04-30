@@ -245,6 +245,7 @@ class EngineerEntity extends MovingEntity {
                 {
                     try {
                         this.engineerFSM.go(State.Idle);
+                        this.miningFSM.reset();
                     }
                     catch { }
                 }

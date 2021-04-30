@@ -39,12 +39,25 @@ class BuildUnitsEntity extends BuildingEntity {
     }
 
     requestBuild() {
+        try
+        {
         this.buildingFSM.go(EventConstants.BuildingStates.Building);
+        }
+        catch
+        {
+
+        }
 
     }
     requestCancel() {
         this.buildCounter = 0;
+        try{
         this.buildingFSM.go(EventConstants.BuildingStates.Idle);
+    }
+    catch
+    {
+
+    }
 
     }
 
@@ -66,7 +79,10 @@ class BuildUnitsEntity extends BuildingEntity {
                     else {
                         this.buildCounter = 0;
                         this.eventEmitter.emit(this.createEntityEvent, Phaser.Tilemaps.Components.IsometricWorldToTileXY(this.x - 32, this.y - 32, true, new Phaser.Math.Vector2(), this.scene.cameras.main, this.mapReference.layer), this.team);
+                        try
+                        {
                         this.buildingFSM.go(EventConstants.BuildingStates.Idle);
+                        }catch{}
         
                     }
                 }
@@ -77,6 +93,13 @@ class BuildUnitsEntity extends BuildingEntity {
     }
     delay(ms: number) {
         return new Promise(resolve => setTimeout(resolve, ms));
+    }
+
+    destroy()
+    {
+        this.requestCancel();
+        this.health=-1;
+        super.destroy();
     }
 
 

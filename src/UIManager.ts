@@ -126,6 +126,7 @@ class UIManager
             }
             else if(selectedEntity.team==TeamNumbers.Enemy && this.selectedEntity instanceof GliderEntity)
             {
+                Math.random() > 0.5 ? AudioEffectsSingleton.getInstance(this.selectedEntity.scene).EngineerAttacking.play() : AudioEffectsSingleton.getInstance(this.selectedEntity.scene).EngineerAttacking.play();
                 this.selectedEntity.requestAttack(selectedEntity);
             }
 

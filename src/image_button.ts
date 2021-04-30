@@ -9,7 +9,11 @@ class ImageButton extends Phaser.GameObjects.Container
     constructor(scene:Phaser.Scene, background_unpressed: string, background_pressed: string, icon: string, cost?:string)
     {
         let backgroundButton:Phaser.GameObjects.Image = scene.add.image(2,2,background_unpressed);
+        backgroundButton.displayWidth=150;
+        backgroundButton.displayHeight=150;
         let buttonPressed:Phaser.GameObjects.Image = scene.add.image(0,0,background_pressed);
+        buttonPressed.displayWidth=150;
+        buttonPressed.displayHeight=150;
         let iconImage:Phaser.GameObjects.Image = scene.add.image(0,0,icon);
         let scaleRatio:number = backgroundButton.displayWidth/iconImage.displayWidth;
         iconImage.displayWidth=backgroundButton.displayWidth;
@@ -18,10 +22,10 @@ class ImageButton extends Phaser.GameObjects.Container
         this.setDepth(251);
         this.setScrollFactor(0,0,true);
         if(cost){
-            this.add(scene.add.image(0,23,"resource").setScale(0.3));
-            this.add(new Phaser.GameObjects.Text(scene, 5, 18, cost,{ fontFamily: 'Courier', fontSize: '14px', color: '#ffffff' } ))};
+            this.add(scene.add.image(10,50,"resource").setScale(0.5));
+            this.add(new Phaser.GameObjects.Text(scene, 25, 32, cost,{ fontFamily: 'monogram', fontSize: '36px', color: '#ffffff' } ))};
         scene.add.existing(this);
-        this.setSize(72,72);
+        this.setSize(150,150);
           this.setInteractive().on('pointerdown', function(pointer, localX, localY, event){
             this.list[1].x+=2;
             this.list[2].x+=2;

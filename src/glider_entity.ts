@@ -95,45 +95,16 @@ class GliderEntity extends MovingEntity {
                 {
                     this.path=[];
                 }
-            }
-            if (this.gliderFSM.is(State.Attacking) && this.path != null && (this.path.length > 0) && (this.targetEntity.GetTileLocation().distance(playerPos) > minDistanceToTarget)) {
-                var ex = this.path[0].x;
-                var ey = this.path[0].y;
-                var testCoords;
-                var xyPos = Phaser.Tilemaps.Components.IsometricTileToWorldXY(ex, ey, testCoords, this.scene.cameras.main, this.mapReference.layer);
-                if ((playerPos.y - (xyPos.y + this.mapReference.layer.tileWidth / 2) > -2) && (playerPos.y - (xyPos.y + this.mapReference.layer.tileWidth / 2) < 2)) //Horizontal moves are a greater distance. As such, ensure we treat it that way.
-                {
-                    awaitTime += awaitTime * 0.3
+            }else if (this.targetEntity.GetTileLocation().distance(playerPos) > minDistanceToTarget) {
+                    this.requestAttack(this.targetEntity);
                 }
+            if (this.gliderFSM.is(State.Attacking)) {
                 this.AddTween({
                     targets: this,
                     NOTHING: { value: 0, duration: awaitTime },
                     onComplete: () => { this.Attack(); }
                 });
-
-            }
-            else if (this.gliderFSM.is(State.Attacking)) {
-                this.AddTween({
-                    targets: this,
-                    NOTHING: { value: 0, duration: awaitTime },
-                    onComplete: () => { this.Attack(); }
-                });
-                this.path = [];
                 //Not Moving but still firing Delay 500ms
-            }
-            else if (!this.gliderFSM.is(State.Attacking)) {
-                try
-                {
-                this.gliderFSM.go(State.Idle);
-                }
-                catch
-                {
-
-                }
-            }
-
-            if (this.path != null && this.path.length > 0 && this.targetEntity.GetTileLocation().distance(new Phaser.Math.Vector2(this.path[this.path.length - 1].x, this.path[this.path.length - 1].y)) > maxDistanceToTarget) {
-                this.requestAttack(this.targetEntity);
             }
 
         }
@@ -267,7 +238,6 @@ class GliderEntity extends MovingEntity {
             if (path != null && path.length > 0) {
                 this.path = path;
                 this.path.shift(); //first move is current position
-                this.team==TeamNumbers.Player?Math.random() > 0.5 ? AudioEffectsSingleton.getInstance(this.scene).EngineerAttacking.play() : AudioEffectsSingleton.getInstance(this.scene).EngineerAttacking.play():{};
                 try
                 {
                 this.gliderFSM.go(State.Attacking);

@@ -13,6 +13,7 @@ class AIPlayer
     teamNumber: number;
     engineerCount: number;
     enemyTeam: number;
+    running: boolean;
 
     
     constructor(entityManager: EntityManager, teamNumber: number, enemyTeamNumber) {
@@ -20,6 +21,7 @@ class AIPlayer
         this.teamNumber = teamNumber;
         this.enemyTeam = enemyTeamNumber;
         this.engineerCount =  Math.floor(Math.random()*10)+6;
+        this.running = true;
         this.MiningFSM();
 
         this.BuildingFSM();
@@ -30,6 +32,8 @@ class AIPlayer
 
      BuildingFSM()
     {
+        if(this.running)
+        {
         var Engineers = this.entityManager.getAllEntitiesByTypeAndTeam(EntityID.Engineer, this.teamNumber);
         var Bases = this.entityManager.getAllEntitiesByTypeAndTeam(BuildingEntityID.Base, this.teamNumber);
         var Factories = this.entityManager.getAllEntitiesByTypeAndTeam(BuildingEntityID.Factory, this.teamNumber);
@@ -80,11 +84,15 @@ class AIPlayer
         this.entityManager.scene.tweens.timeline({
             tweens: tweens
         });
+            
+    }
     }
 
     AttackingFSM()
     {
 
+        if(this.running)
+        {
 
         var Gliders = this.entityManager.getAllEntitiesByTypeAndTeam(EntityID.Glider, this.teamNumber);
         var enemyTurrets = this.entityManager.getAllEntitiesByTypeAndTeam(BuildingEntityID.Turret, this.enemyTeam);
@@ -162,10 +170,13 @@ class AIPlayer
         this.entityManager.scene.tweens.timeline({
             tweens: tweens
         });
+        }
     }
 
     MiningFSM()
     {
+        if(this.running)
+        {
         var Engineers = this.entityManager.getAllEntitiesByTypeAndTeam(EntityID.Engineer, this.teamNumber);
         var Mines = this.entityManager.getAllEntitiesByTypeAndTeam(BuildingEntityID.Mine, TeamNumbers.Neutral);
         Engineers.forEach(element => {
@@ -197,6 +208,8 @@ class AIPlayer
         this.entityManager.scene.tweens.timeline({
             tweens: tweens
         });
+            
+    }
     }
 
     getNearestToEntity(entity1: Entity, entityList: Entity[])

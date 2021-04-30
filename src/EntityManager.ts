@@ -34,6 +34,7 @@ class EntityManager {
         this.eventEmitter.on(EventConstants.Game.DestroyEntity, (entity) => { this.deleteEntity(entity); });
         this.resources.set(TeamNumbers.Enemy, StartOfGame.resourceCount);
         this.resources.set(TeamNumbers.Player, StartOfGame.resourceCount);
+
         this.fogOfWar = fogOfWar;
         this.fogOfWarMasks = this.scene.make.container({ x: 0, y: 0 }, false);
 
@@ -100,7 +101,7 @@ class EntityManager {
         this.eventEmitter.on(EventConstants.Game.AddResources, (resources, teamNumber) => {  this.resources.set(teamNumber,this.resources.get(teamNumber) + resources); this.eventEmitter.emit(EventConstants.Game.UpdateResourceCount, (this.resources.get(TeamNumbers.Player)),TeamNumbers.Player); });
         this.eventEmitter.on(EventConstants.Game.RemoveResources, (resources, teamNumber) => { this.resources.set(teamNumber,this.resources.get(teamNumber) - resources); this.eventEmitter.emit(EventConstants.Game.UpdateResourceCount, (this.resources.get(TeamNumbers.Player)),TeamNumbers.Player); });
         this.eventEmitter.on(EventConstants.Input.BuildEngineer, (entity: BuildUnitsEntity, teamNumber) => {
-            if (this.resources.get(teamNumber) >= 100) {
+            if (this.resources.get(teamNumber) >= 100 && !(entity instanceof ScaffoldEntity)) {
                 this.resources.set(teamNumber,this.resources.get(teamNumber) - 100);
                 entity.requestBuild();
                 this.eventEmitter.emit(EventConstants.Game.UpdateResourceCount, this.resources.get(teamNumber), teamNumber);
@@ -112,7 +113,7 @@ class EntityManager {
             this.eventEmitter.emit(EventConstants.Game.UpdateResourceCount, this.resources.get(teamNumber), teamNumber);
         });
         this.eventEmitter.on(EventConstants.Input.BuildGlider, (entity: BuildUnitsEntity, teamNumber) => {
-            if (this.resources.get(teamNumber) >= 300) {
+            if (this.resources.get(teamNumber) >= 300 && !(entity instanceof ScaffoldEntity)) {
                 this.resources.set(teamNumber,this.resources.get(teamNumber) - 300);
                 entity.requestBuild();
                 this.eventEmitter.emit(EventConstants.Game.UpdateResourceCount, this.resources.get(teamNumber), teamNumber);
@@ -240,6 +241,13 @@ class EntityManager {
         listOfEntities = [];
         this.entityList.forEach(element => {if(element.name==name && element.team==team){listOfEntities.push(element)}});
         return listOfEntities;
+    }
+
+    deleteAllEntities()
+    {
+        this.entityList.forEach(element => {element.destroy();});
+        this.entityList=[];
+
     }
 
     update(delta) {

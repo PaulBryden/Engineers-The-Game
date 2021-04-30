@@ -17,14 +17,14 @@ class UIButtonLayout extends Phaser.GameObjects.Container implements IStateSubsc
         let i:number = 0;
         for (let button of buttons) 
         {
-            i%2!=0?button.x=100:button.x=0;
-            button.y=0+(100*Math.floor(i/2));
+            i%2!=0?button.x=160:button.x=0;
+            button.y=0+(160*Math.floor(i/2));
             i++;
         }
         super(scene,x,y,buttons);
         publisher.subscribe(this);
         this.publisher=publisher;
-        this.setScrollFactor(0).setDepth(251).setScale(1.5);
+        this.setScrollFactor(0).setDepth(251);
         scene.add.existing(this);
 
     }

@@ -10,7 +10,7 @@ class UIResources extends Phaser.GameObjects.Container
     {
         super(scene,1360,35,[]);
         this.resourceCountString=StartOfGame.resourceCount.toString();
-        this.resourceCount = new Phaser.GameObjects.Text(scene, 65, 0, this.resourceCountString,{ fontFamily: 'Courier', fontSize: '18px', color: '#ffffff' } );
+        this.resourceCount = new Phaser.GameObjects.Text(scene, 50, -6, this.resourceCountString,{ fontFamily: 'monogram', fontSize: '32px', color: '#ffffff' } );
         this.add(this.resourceCount);
         this.add(scene.add.image(0,0,"resource"));
         this.setDepth(251);
