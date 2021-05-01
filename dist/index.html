@@ -8,11 +8,35 @@
       }
 </style>  
 <style media='screen' type='text/css'>
-  .game{
-  background-color: #1a1a1a !important;
-  }
+
 body {
   background-color: #1a1a1a !important;
+}
+#SinglePlayer{
+    font-family: "monogram";
+    font-size: 76px !important;
+}
+#Tutorial{
+    font-family: "monogram";
+    font-size: 76px !important;
+}
+#credits{
+    font-family: "monogram";
+    font-size: 40px !important;
+}
+h1{
+    font-family: "monogram";
+    font-size: 120px !important;
+    color:whitesmoke;
+}
+h1 p{
+    font-family: "monogram";
+    font-size: 60px !important;
+}
+#copyrightNotice
+{
+    font-family: "monogram";
+    font-size: 40px !important;
 }
 </style>
     <meta charset="utf-8">
@@ -27,5 +51,43 @@ body {
     <link rel="manifest" href="/manifest.json">
     <div style="font-family:'monogram'; display: none;">monogram</div>
     <div id="game"></div>
+      
+  <!-- Modal -->
+  <div class="modal fade " id="tutorialModal" tabindex="-1" aria-labelledby="tutorialModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Tutorial</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          ...
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+          <button type="button" class="btn btn-primary">Save changes</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Modal -->
+  <div class="modal fade " id="creditsModal" tabindex="-1" aria-labelledby="creditsModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Credits</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          ...
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+          <button type="button" class="btn btn-primary">Save changes</button>
+        </div>
+      </div>
+    </div>
+  </div>
   </body>
 </html>
