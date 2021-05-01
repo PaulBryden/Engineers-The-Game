@@ -63,7 +63,7 @@ export default class UI extends Phaser.Scene {
         this.minimap.setBackgroundColor(0x002244);
 
         this.uiManager = new UIManager(this,this.gameScene,null);
-
+        this.add.existing(this.uiManager);
     }
 
 

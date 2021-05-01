@@ -4,7 +4,7 @@ import {Entity} from './entity'
 import {EngineerEntity} from './engineer_entity'
 import {EventEmitterSingleton} from './EventEmitterSingleton'
 import {AudioEffectsSingleton} from './AudioEffectsSingleton'
-import {BuildingEntityID, EntityConstants, EventConstants, TeamNumbers, Zoom} from './GameConstants'
+import {BuildingEntityID, EntityConstants, EventConstants, GameStatus, TeamNumbers, Zoom} from './GameConstants'
 import { MineEntity } from './mine_entity'
 import { UIResources } from './ui_resources'
 import GameScene from './gameScene'
@@ -13,7 +13,7 @@ import { ScaffoldEntity } from './scaffold'
 import { GliderEntity } from './glider_entity'
 import { UI } from './uIScene'
 import { Menu } from './menuScene'
-class UIManager
+class UIManager extends Phaser.GameObjects.GameObject
 {
     uiLayout:UIParentLayout;
     resourceLayout: UIResources;
@@ -33,8 +33,10 @@ class UIManager
     ZoomOut: boolean
     zoomInDown: boolean
     zoomOutDown: boolean
+    GameStatusText: Phaser.GameObjects.Text
     constructor(scene:UI, entityScene:GameScene, initialEntity?: Entity)
     {
+        super(scene, "UIManager");
         this.uiFactory = new UIFactory();
         this.eventEmitter = EventEmitterSingleton.getInstance();
         this.eventEmitter.on(EventConstants.EntityActions.Selected,this.updateSelected, this );
@@ -91,25 +93,21 @@ class UIManager
             this.RightArrowDown=false;
         }).on('pointerout', function (pointer, event) { 
             this.RightArrowDown=false;},this);
-            scene.add.image(1450,580,"Plus_Button").setScrollFactor(0).setScale(2.5).setAlpha(0.45).setDepth(250).setInteractive().on('pointerdown', (pointer, localX, localY, event)=>{
+            scene.add.image(1450,580,"Plus_Button").setScrollFactor(0).setScale(3).setAlpha(0.45).setDepth(250).setInteractive().on('pointerdown', (pointer, localX, localY, event)=>{
                 this.zoomInDown=true;
             }).on('pointerup', (pointer, localX, localY, event)=>{
                 this.zoomInDown=false;
             }).on('pointerout', function (pointer, event) { 
                 this.zoomInDown=false;},this);
-                scene.add.image(1450,470,"Minus_Button").setScrollFactor(0).setScale(2.5).setAlpha(0.45).setDepth(250).setInteractive().on('pointerdown', (pointer, localX, localY, event)=>{
+                scene.add.image(1450,450,"Minus_Button").setScrollFactor(0).setScale(3).setAlpha(0.45).setDepth(250).setInteractive().on('pointerdown', (pointer, localX, localY, event)=>{
                     this.zoomOutDown=true;
                 }).on('pointerup', (pointer, localX, localY, event)=>{
                     this.zoomOutDown=false;
                 }).on('pointerout', function (pointer, event) { 
                     this.zoomOutDown=false;},this);
-                    scene.add.image(1450,200,"Close_Button").setScrollFactor(0).setScale(2.5).setAlpha(0.45).setDepth(250).setInteractive().on('pointerdown', (pointer, localX, localY, event)=>{
-                        this.entityScene.setup(false);
-                        this.entityScene.cameras.remove(this.uiScene.minimap);
-                        this.entityScene.scene.moveUp("Menu");
-                        (<Menu>this.entityScene.scene.get('Menu')).makeVisible();
-                        (this.uiScene.scene.stop());
+                    scene.add.image(1520,115,"Close_Button").setScrollFactor(0).setScale(2.5).setAlpha(0.45).setDepth(250).setInteractive().on('pointerdown', (pointer, localX, localY, event)=>{
 
+                        this.closeAndReturnToMenu();
  
                     });
         this.eventEmitter.on(EventConstants.EntityActions.Move,this.handleMovement,this);
@@ -122,8 +120,38 @@ class UIManager
         }
         this.uiScene=scene;
         this.resourceLayout= new UIResources(this.uiScene);
+        this.GameStatusText=  new Phaser.GameObjects.Text(scene, 500, 340, "",{ fontFamily: 'monogram', fontSize: '96px', color: '#ffffff' } );
+        this.GameStatusText.setDepth(251);
+        this.GameStatusText.setScrollFactor(0,0);
+        scene.add.existing(this.GameStatusText);
+        EventEmitterSingleton.getInstance().on(EventConstants.Game.Winner, ()=>{
+            this.scene.tweens.add({
+                targets: {},
+                NOTHING: { value: 1, duration: 3500 },
+                onComplete: () => {this.closeAndReturnToMenu();
+            }});
+            this.GameStatusText.setText("You have won! Congratulations!");
+        
+        });
+        EventEmitterSingleton.getInstance().on(EventConstants.Game.Loser, ()=>{
+            this.scene.tweens.add({
+                targets: {},
+                NOTHING: { value: 1, duration: 3500 },
+                onComplete: () => {this.closeAndReturnToMenu();
+            }});
+            this.GameStatusText.setText("You have been eliminated...")});
+
+
     }
 
+    closeAndReturnToMenu()
+    {
+        this.entityScene.setup(false);
+        this.entityScene.cameras.remove(this.uiScene.minimap);
+        this.entityScene.scene.moveUp("Menu");
+        (<Menu>this.entityScene.scene.get('Menu')).makeVisible();
+        (this.uiScene.scene.stop());
+    }
     moveSelected(coords:Phaser.Math.Vector2)
     {
         if(this.selectedEntity instanceof MovingEntity)
@@ -153,7 +181,7 @@ class UIManager
             }
             else if(selectedEntity.team==TeamNumbers.Enemy && this.selectedEntity instanceof GliderEntity)
             {
-                Math.random() > 0.5 ? AudioEffectsSingleton.getInstance(this.selectedEntity.scene).EngineerAttacking.play() : AudioEffectsSingleton.getInstance(this.selectedEntity.scene).EngineerAttacking.play();
+                Math.random() > 0.5 && GameStatus.ActiveGame ? AudioEffectsSingleton.getInstance(this.selectedEntity.scene).EngineerAttacking.play() : AudioEffectsSingleton.getInstance(this.selectedEntity.scene).EngineerAttacking.play();
                 this.selectedEntity.requestAttack(selectedEntity);
             }
 
@@ -256,6 +284,22 @@ class UIManager
             }
         }
 
+    }
+    destroy()
+    {
+        this.eventEmitter.removeListener(EventConstants.EntityActions.Move,this.handleMovement,this);
+        this.eventEmitter.removeListener(EventConstants.EntityActions.Selected,this.updateSelected, this );
+        this.eventEmitter.removeListener(EventConstants.Input.RequestBuildBase,()=>{this.eventEmitter.emit(EventConstants.Input.RequestBuildScaffold,this.selectedEntity,BuildingEntityID.Base,  TeamNumbers.Player)});
+        this.eventEmitter.removeListener(EventConstants.Input.RequestBuildFactory,()=>{this.eventEmitter.emit(EventConstants.Input.RequestBuildScaffold,this.selectedEntity,BuildingEntityID.Factory, TeamNumbers.Player)});
+        this.eventEmitter.removeListener(EventConstants.Input.RequestBuildTurret,()=>{this.eventEmitter.emit(EventConstants.Input.RequestBuildScaffold,this.selectedEntity,BuildingEntityID.Turret,  TeamNumbers.Player)});
+        this.eventEmitter.removeListener(EventConstants.Input.RequestBuildGlider,()=>{this.eventEmitter.emit(EventConstants.Input.BuildGlider, this.selectedEntity,  TeamNumbers.Player)});
+        this.eventEmitter.removeListener(EventConstants.Input.RequestBuildEngineer,()=>{this.eventEmitter.emit(EventConstants.Input.BuildEngineer, this.selectedEntity, TeamNumbers.Player)});
+        this.eventEmitter.removeListener(EventConstants.Input.RequestCancelGlider,()=>{this.eventEmitter.emit(EventConstants.Input.CancelGlider, this.selectedEntity,  TeamNumbers.Player)});
+        this.eventEmitter.removeListener(EventConstants.Input.RequestCancelEngineer,()=>{this.eventEmitter.emit(EventConstants.Input.CancelEngineer, this.selectedEntity, TeamNumbers.Player)});
+        
+        EventEmitterSingleton.getInstance().removeListener(EventConstants.Game.Winner, ()=>{this.GameStatusText.setText("Winner!")});
+        EventEmitterSingleton.getInstance().removeListener(EventConstants.Game.Loser, ()=>{this.GameStatusText.setText("Loser!")});
+        this.uiLayout.destroy();
     }
 } 
 export {UIManager};

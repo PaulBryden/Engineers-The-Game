@@ -4,7 +4,7 @@ import { EasyStarFlightLevelSingleton, EasyStarGroundLevelSingleton, Path } from
 import EasyStar from 'easystarjs'
 import { MovingEntity } from './MovingEntity';
 import { AudioEffectsSingleton } from './AudioEffectsSingleton';
-import { TeamNumbers } from './GameConstants';
+import { GameStatus, TeamNumbers } from './GameConstants';
 
 enum State {
     Idle = "Idle",
@@ -216,7 +216,7 @@ class GliderEntity extends MovingEntity {
             if (path != null && path.length > 0) {
                 this.path = path;
                 this.path.shift(); //first move is current position
-                this.team==TeamNumbers.Player?Math.random() > 0.5 ? AudioEffectsSingleton.getInstance(this.scene).EngineerMoving1.play() : AudioEffectsSingleton.getInstance(this.scene).EngineerMoving2.play():{};
+                this.team==TeamNumbers.Player && GameStatus.ActiveGame ?Math.random() > 0.5 ? AudioEffectsSingleton.getInstance(this.scene).EngineerMoving1.play() : AudioEffectsSingleton.getInstance(this.scene).EngineerMoving2.play():{};
                 try
                 {
                 this.gliderFSM.go(State.Moving);

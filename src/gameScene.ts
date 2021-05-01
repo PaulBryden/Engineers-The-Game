@@ -7,7 +7,7 @@ import { EasyStarFlightLevelSingleton, EasyStarGroundLevelSingleton } from './Ea
 import { EntityManager } from './EntityManager'
 import { MineEntity } from './mine_entity';
 import  EasyStar from 'easystarjs'
-import { BuildingEntityID, EventConstants, StartOfGame, TeamNumbers, Zoom } from './GameConstants';
+import { BuildingEntityID, EventConstants, GameStatus, StartOfGame, TeamNumbers, Zoom } from './GameConstants';
 import { EventEmitterSingleton } from './EventEmitterSingleton';
 import { AIPlayer } from './AIPlayer';
 export default class GameScene extends Phaser.Scene {
@@ -24,6 +24,8 @@ export default class GameScene extends Phaser.Scene {
     fogOfWar: Phaser.GameObjects.RenderTexture;
     AIPlayer: AIPlayer;
     AIPlayer2: AIPlayer;
+    ClickableOverlay: Phaser.GameObjects.Rectangle;
+    music: Phaser.Sound.BaseSound;
     constructor() {
         super('GameScene');
 
@@ -90,12 +92,16 @@ export default class GameScene extends Phaser.Scene {
 
     resetGame()
     {
+        EventEmitterSingleton.getInstance().removeAllListeners();
+        
+        this.music.stop();
+        this.music.play();
         if(this.entityManager)
         {
             this.entityManager.deleteAllEntities();
-            this.entityManager.resources.set(TeamNumbers.Enemy, StartOfGame.resourceCount);
-            this.entityManager.resources.set(TeamNumbers.Player, StartOfGame.resourceCount);
+            delete this.entityManager;
         }
+        
         if(this.AIPlayer)
         {
             this.AIPlayer.running=false;
@@ -106,26 +112,13 @@ export default class GameScene extends Phaser.Scene {
             this.AIPlayer2.running=false;
             this.AIPlayer2=null;
         }
+       
     }
 
     setup(isGame: boolean)
     { 
+        this.resetGame();
         Zoom.ZoomLevel=1.2;        
-        this.add.rectangle(1400,15,2100,1800,0xffffff,0x0).setInteractive().setScrollFactor(0).setDepth(1).on('pointerup', (pointer, gameObject)=>{ 
-            
-            var x = this.cameras.main.scrollX + pointer.x;
-            var y = this.cameras.main.scrollY + pointer.y;
-            const camCenterX = this.cameras.main.worldView.centerX;
-            const camCenterY = this.cameras.main.worldView.centerY;
-            // The extra x and y, which we need to add to endX and endY, so that the final position is indeed 800 and 600.
-            // We take the distance between endX and the center of the camera and multiply it by a transformation constant which depends on the camera
-
-            const extraX = (x - camCenterX) *((1/Zoom.ZoomLevel)-1); // another way of writing this is (1-zoom)/zoom
-            const extraY = (y-camCenterY)*((1/Zoom.ZoomLevel)-1);
-            x+=extraX;
-            y+=extraY
-            this.eventEmitterSingleton.emit(EventConstants.EntityActions.Move,new Phaser.Math.Vector2(this.getTileLocation(x,y)));
-            });
         isGame? this.scene.launch("UI"):()=>{};
         isGame?this.scene.moveUp("UI"):{};
         isGame?(this.scene.get('UI')).events.on('create', ()=>{
@@ -136,7 +129,6 @@ export default class GameScene extends Phaser.Scene {
                     EventEmitterSingleton.getInstance().emit(EventConstants.Game.UpdateResourceCount, this.entityManager.resources.get(TeamNumbers.Player), TeamNumbers.Player);
                     EventEmitterSingleton.getInstance().emit(EventConstants.Game.UpdateResourceCount, this.entityManager.resources.get(TeamNumbers.Enemy), TeamNumbers.Enemy);}
                     } )}):{};
-        this.resetGame();
         if(!this.eventEmitterSingleton)
         {
             this.eventEmitterSingleton = EventEmitterSingleton.getInstance();
@@ -168,6 +160,8 @@ export default class GameScene extends Phaser.Scene {
             // set a dark blue tint
             this.fogOfWar.setTint(0x0a2948);
         }
+        
+        GameStatus.ActiveGame=isGame;
         if(!this.entityManager)
         {
             this.entityManager = new EntityManager(this, this.map, this.fogOfWar);
@@ -206,13 +200,33 @@ export default class GameScene extends Phaser.Scene {
             this.AIPlayer = new AIPlayer(this.entityManager,TeamNumbers.Enemy, TeamNumbers.Player);
             !isGame?this.AIPlayer2 = new AIPlayer(this.entityManager,TeamNumbers.Player, TeamNumbers.Enemy):()=>{}
 
+            if(this.ClickableOverlay!=null)
+            {
+                this.ClickableOverlay.removeInteractive();
+                this.ClickableOverlay.destroy();
+            }
+                this.ClickableOverlay=this.add.rectangle(1400,15,2100,1800,0xffffff,0x0).setInteractive().setScrollFactor(0).setDepth(1).on('pointerup', (pointer, gameObject)=>{ 
+                    
+                    var x = this.cameras.main.scrollX + pointer.x;
+                    var y = this.cameras.main.scrollY + pointer.y;
+                    const camCenterX = this.cameras.main.worldView.centerX;
+                    const camCenterY = this.cameras.main.worldView.centerY;
+                    // The extra x and y, which we need to add to endX and endY, so that the final position is indeed 800 and 600.
+                    // We take the distance between endX and the center of the camera and multiply it by a transformation constant which depends on the camera
+        
+                    const extraX = (x - camCenterX) *((1/Zoom.ZoomLevel)-1); // another way of writing this is (1-zoom)/zoom
+                    const extraY = (y-camCenterY)*((1/Zoom.ZoomLevel)-1);
+                    x+=extraX;
+                    y+=extraY
+                    this.eventEmitterSingleton.emit(EventConstants.EntityActions.Move,new Phaser.Math.Vector2(this.getTileLocation(x,y)));
+                    });
     }
 
     create() {
       
         this.input.setGlobalTopOnly(true);
         this.input.setTopOnly(true);
-        var music = this.sound.add('background_music', {
+        this.music = this.sound.add('background_music', {
             mute: false,
             volume: 0.5,
             rate: 1,
@@ -221,7 +235,6 @@ export default class GameScene extends Phaser.Scene {
             loop: true,
             delay: 0
         });
-        music.play();
 
         //N,NE,E,SE,S,SW,W,NW,N
         this.anims.create({

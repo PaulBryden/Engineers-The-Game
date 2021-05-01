@@ -18,6 +18,7 @@ class Entity extends Phaser.GameObjects.Sprite implements IStatePublisher {
     team:number;
     fogOfWarMask: Phaser.GameObjects.Image;
     currentlyRunningTween: Phaser.Tweens.Tween;
+    clickableArea: Phaser.Geom.Circle;
 
     constructor(map: Phaser.Tilemaps.Tilemap, icon: string, name: string, scene: Phaser.Scene, x: number, y: number, texture: string | Phaser.Textures.Texture, team:number, frame?: string | number) {
         let vector: Phaser.Math.Vector2 = Phaser.Tilemaps.Components.IsometricTileToWorldXY(x, y, new Phaser.Math.Vector2(), scene.cameras.main, map.getLayer('Tile Layer 1'));
@@ -32,7 +33,8 @@ class Entity extends Phaser.GameObjects.Sprite implements IStatePublisher {
         this.eventEmitter = EventEmitterSingleton.getInstance();
         this.setDepth(x + y);
         this.subscribers = [];
-        this.setInteractive(new Phaser.Geom.Circle(this.width / 2, this.height / 2, this.width / 3), this.handler);
+        this.clickableArea= new Phaser.Geom.Circle(this.width / 2, this.height / 2, this.width / 3);
+        this.setInteractive(this.clickableArea, this.handler);
         this.on('pointerup', (pointer, localX, localY, event)=>{this.emitSelected(pointer,localX,localY,event)}, this);
         this.mapReference = map;
         scene.add.existing(this);

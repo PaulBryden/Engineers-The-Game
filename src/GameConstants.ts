@@ -56,6 +56,10 @@ export class Zoom
 {
   public static ZoomLevel: number;
 }
+export class GameStatus
+{
+  public static ActiveGame: boolean;
+}
 
 namespace EventConstants {
   export class EntityActions {
@@ -100,6 +104,8 @@ namespace EventConstants {
     public static readonly AddResources: string = "AddResources";
     public static readonly RemoveResources: string = "RemoveResources";
     public static readonly DestroyEntity: string = "DestroyEntity";
+    public static readonly Winner: string = "Winner";
+    public static readonly Loser: string = "Loser";
   }
 }
 

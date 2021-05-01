@@ -99,6 +99,7 @@ class BuildUnitsEntity extends BuildingEntity {
     {
         this.requestCancel();
         this.health=-1;
+        
         super.destroy();
     }
 

@@ -7,7 +7,7 @@ import { EasyStarGroundLevelSingleton, Path } from './EasyStarSingleton';
 import { AudioEffectsSingleton } from './AudioEffectsSingleton';
 import { MineEntity } from './mine_entity';
 import { BaseEntity } from './base_entity';
-import { EventConstants, TeamNumbers } from './GameConstants'
+import { EventConstants, GameStatus, TeamNumbers } from './GameConstants'
 import { MovingEntity } from './MovingEntity';
 import { ScaffoldEntity } from './scaffold';
 
@@ -263,7 +263,7 @@ class EngineerEntity extends MovingEntity {
     requestMine(mine: MineEntity) {
 
         if (this.targetMine != mine || !this.engineerFSM.is(State.Mining)) {
-            this.team == TeamNumbers.Player ? AudioEffectsSingleton.getInstance(this.scene).EngineerMining.play() : {};
+            this.team == TeamNumbers.Player && GameStatus.ActiveGame ? AudioEffectsSingleton.getInstance(this.scene).EngineerMining.play() : {};
             this.targetMine = mine;
             this.miningFSM.is(MiningState.GoingToMine) ? this.updatePathToMine() : this.miningFSM.canGo(MiningState.GoingToMine) ? this.miningFSM.go(MiningState.GoingToMine) : {};
             try {
@@ -417,7 +417,7 @@ class EngineerEntity extends MovingEntity {
             if (path != null && path.length > 0) {
                 this.path = path;
                 this.path.shift(); //first move is current position
-                this.team == TeamNumbers.Player ? Math.random() > 0.5 ? AudioEffectsSingleton.getInstance(this.scene).EngineerMoving1.play() : AudioEffectsSingleton.getInstance(this.scene).EngineerMoving2.play() : {};
+                this.team == TeamNumbers.Player && GameStatus.ActiveGame ? Math.random() > 0.5 ? AudioEffectsSingleton.getInstance(this.scene).EngineerMoving1.play() : AudioEffectsSingleton.getInstance(this.scene).EngineerMoving2.play() : {};
                 try {
                     this.engineerFSM.go(State.Moving);
                 } catch { }
