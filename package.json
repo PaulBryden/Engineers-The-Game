@@ -17,7 +17,10 @@
     "dependencies": {
         "easystarts": "^0.4.5",
         "phaser-navmesh": "^2.0.6",
+        "phaser3-react": "^1.2.6",
         "phaser3-rex-plugins": "^1.1.39",
+        "react": "^17.0.1",
+        "react-dom": "^17.0.1",
         "rollup-plugin-javascript-obfuscator": "^1.0.4",
         "rollup-plugin-uglify": "^6.0.4",
         "typestate": "^1.0.6",
