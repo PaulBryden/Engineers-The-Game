@@ -7,7 +7,7 @@ import { EasyStarFlightLevelSingleton, EasyStarGroundLevelSingleton } from './Ea
 import { EntityManager } from './EntityManager'
 import { MineEntity } from './mine_entity';
 import  EasyStar from 'easystarjs'
-import { BuildingEntityID, EventConstants, StartOfGame, TeamNumbers } from './GameConstants';
+import { BuildingEntityID, EventConstants, StartOfGame, TeamNumbers, Zoom } from './GameConstants';
 import { EventEmitterSingleton } from './EventEmitterSingleton';
 import { AIPlayer } from './AIPlayer';
 export default class GameScene extends Phaser.Scene {
@@ -30,7 +30,62 @@ export default class GameScene extends Phaser.Scene {
     }
 
     preload() {
-
+        this.load.image('tileset', 'assets/tileset.png');
+        this.load.spritesheet('tileset_spritesheet', 'assets/tileset.png', { frameWidth: 64, frameHeight: 64 });
+        this.load.image('home_base-1', 'assets/home_base.png');
+        this.load.image('portrait_base', 'assets/Portrait_Base.png');
+        this.load.image('factory-1', 'assets/Factory.png');
+        this.load.image('scaffold', 'assets/scaffold.png');
+        this.load.image('mine', 'assets/mine.png');
+        this.load.tilemapTiledJSON('map', 'assets/tiledmap3.json');
+        this.load.spritesheet('player-1', 'assets/spritesheet.png', { frameWidth: 64, frameHeight: 64 });
+        this.load.spritesheet('player-rock-1', 'assets/spritesheet_rock.png', { frameWidth: 64, frameHeight: 64 });
+        this.load.spritesheet('player-action-1', 'assets/spritesheet_build.png', { frameWidth: 64, frameHeight: 64 });
+        this.load.spritesheet('turret-1', 'assets/turret-test-spritesheet-cropped.png', { frameWidth: 64, frameHeight: 32 });
+        this.load.spritesheet('turret-2', 'assets/turret-test-spritesheet-2-cropped.png', { frameWidth: 64, frameHeight: 32 });
+        this.load.spritesheet('glider-1', 'assets/glider_spritesheet.png', { frameWidth: 64, frameHeight: 96 });
+        this.load.spritesheet('gliderPortrait-1', 'assets/glider_portrait.png', { frameWidth: 64, frameHeight: 96 });
+        this.load.image('home_base-2', 'assets/home_base-2.png');
+        this.load.image('factory-2', 'assets/Factory-2.png');
+        this.load.spritesheet('player-2', 'assets/spritesheet-2.png', { frameWidth: 64, frameHeight: 64 });
+        this.load.spritesheet('player-rock-2', 'assets/spritesheet_rock-2.png', { frameWidth: 64, frameHeight: 64 });
+        this.load.spritesheet('player-action-2', 'assets/spritesheet_build-2.png', { frameWidth: 64, frameHeight: 64 });
+        this.load.spritesheet('turret-2', 'assets/turret_spritesheet-2.png', { frameWidth: 64, frameHeight: 64 });
+        this.load.spritesheet('glider-2', 'assets/glider_spritesheet-2.png', { frameWidth: 64, frameHeight: 96 });
+        this.load.image('ui_button', 'assets/ui_button.png');
+        this.load.image('ui_button_Attack', 'assets/ui_button_Attack.png');
+        this.load.image('ui_button_Build', 'assets/ui_button_Build.png');
+        this.load.image('ui_button_Cancel', 'assets/ui_button_Cancel.png');
+        this.load.image('ui_button_Gather', 'assets/ui_button_Gather.png');
+        this.load.image('Portrait_Engineer', 'assets/engineer_portrait.png');
+        this.load.image('ui_button_not_pressed', 'assets/ui_button_not_pressed.png');
+        this.load.image('ui_button_Attack_No_Background', 'assets/ui_button_Attack_No_Background.png');
+        this.load.image('resource', 'assets/resource.png');
+        this.load.image('ui_button_Build_No_Background', 'assets/ui_button_Build_No_Background.png');
+        this.load.image('ui_button_Gather_No_Background', 'assets/ui_button_Gather_No_Background.png');
+        this.load.image('ui_button_Cancel_No_Background', 'assets/ui_button_Cancel_No_Background.png');
+        this.load.image('ui_button_Build_Engineer_No_Background', 'assets/ui_button_Engineer_Build_No_Background.png');
+        this.load.audio('background_music', 'assets/background_music.mp3');  // urls: an array of file url
+        this.load.audio('Engineer_Attacking', 'assets/Engineer_Attacking.mp3');  // urls: an array of file url
+        this.load.audio('Engineer_Idle_Selected_1', 'assets/Engineer_Idle_Selected_1.mp3');  // urls: an array of file url
+        this.load.audio('Engineer_Idle_Selected_2', 'assets/Engineer_Idle_Selected_2.mp3');  // urls: an array of file url
+        this.load.audio('Engineer_Mining', 'assets/Engineer_Mining.mp3');  // urls: an array of file url
+        this.load.audio('Engineer_Moving_1', 'assets/Engineer_Moving_1.mp3');  // urls: an array of file url
+        this.load.audio('Engineer_Moving_2', 'assets/Engineer_Moving_2.mp3');  // urls: an array of file url
+        this.load.audio('laser', 'assets/laser.mp3');  // urls: an array of file url
+        this.load.audio('explosion', 'assets/destroyed.mp3');  // urls: an array of file url
+        this.load.audio('blocked', 'assets/blocked.mp3');  // urls: an array of file url
+        this.load.audio('addResource', 'assets/resource_add.mp3');  // urls: an array of file url
+        this.load.image('Portrait', 'assets/portrait.png');  // urls: an array of file url
+        this.load.image('vision', 'assets/mask.png');  // urls: an array of file url this.load.image('tileset', 'assets/tileset.png');
+        this.load.spritesheet('tileset_spritesheet', 'assets/tileset.png', { frameWidth: 64, frameHeight: 64 });
+        this.load.image('portrait_base', 'assets/Portrait_Base.png');
+        this.load.image('mine', 'assets/mine.png');
+        this.load.scenePlugin({
+            key: 'rexuiplugin',
+            url: 'https://raw.githubusercontent.com/rexrainbow/phaser3-rex-notes/master/dist/rexuiplugin.min.js',
+            sceneKey: 'rexUI'
+        });
     }
 
     resetGame()
@@ -40,8 +95,6 @@ export default class GameScene extends Phaser.Scene {
             this.entityManager.deleteAllEntities();
             this.entityManager.resources.set(TeamNumbers.Enemy, StartOfGame.resourceCount);
             this.entityManager.resources.set(TeamNumbers.Player, StartOfGame.resourceCount);
-            EventEmitterSingleton.getInstance().emit(EventConstants.Game.UpdateResourceCount, this.entityManager.resources.get(TeamNumbers.Player), TeamNumbers.Player);
-            EventEmitterSingleton.getInstance().emit(EventConstants.Game.UpdateResourceCount, this.entityManager.resources.get(TeamNumbers.Enemy), TeamNumbers.Enemy);
         }
         if(this.AIPlayer)
         {
@@ -57,7 +110,17 @@ export default class GameScene extends Phaser.Scene {
 
     setup(isGame: boolean)
     { 
+        Zoom.ZoomLevel=1.2;
         isGame? this.scene.launch("UI"):()=>{};
+        isGame?this.scene.moveUp("UI"):{};
+        isGame?(this.scene.get('UI')).events.on('create', ()=>{
+            this.tweens.add({
+                targets: this,
+                NOTHING: { value: 0, duration: 100 },
+                onComplete: () => {
+                    EventEmitterSingleton.getInstance().emit(EventConstants.Game.UpdateResourceCount, this.entityManager.resources.get(TeamNumbers.Player), TeamNumbers.Player);
+                    EventEmitterSingleton.getInstance().emit(EventConstants.Game.UpdateResourceCount, this.entityManager.resources.get(TeamNumbers.Enemy), TeamNumbers.Enemy);}
+                    } )}):{};
         this.resetGame();
         if(!this.eventEmitterSingleton)
         {
@@ -74,9 +137,9 @@ export default class GameScene extends Phaser.Scene {
         if(!this.fogOfWar)
         {
             this.fogOfWar = this.make.renderTexture({
-                width:3300,
+                width:3400,
                 height: 1900,
-                x:-1600,
+                x:-1700,
                 y:-200
             }, true)
         
@@ -84,8 +147,8 @@ export default class GameScene extends Phaser.Scene {
             this.fogOfWar.fill(0x424242, 1)
             this.fogOfWar.setDepth(101);
             // draw the floorLayer into it
-            this.fogOfWar.draw(this.layer2,1600,200)
-            this.fogOfWar.draw(this.layer1,1600,200)
+            this.fogOfWar.draw(this.layer2,1700,200)
+            this.fogOfWar.draw(this.layer1,1700,200)
     
             // set a dark blue tint
             this.fogOfWar.setTint(0x0a2948);
@@ -95,10 +158,22 @@ export default class GameScene extends Phaser.Scene {
             this.entityManager = new EntityManager(this, this.map, this.fogOfWar);
         }
 
-        this.cameras.main.setZoom(1.0);
-        this.cameras.main.setScroll(-800,0);
-        this.add.rectangle(1400,15,2100,1800,0xffffff,0x0).setInteractive().setScrollFactor(0).setDepth(1).on('pointerup', (pointer, gameObject)=>{ var x = this.cameras.main.scrollX + pointer.x;
+        this.cameras.main.setZoom(Zoom.ZoomLevel);
+        this.cameras.main.setScroll(-900,-40);
+        this.cameras.main.setBackgroundColor(0x002244);
+        this.add.rectangle(1400,15,2100,1800,0xffffff,0x0).setInteractive().setScrollFactor(0).setDepth(1).on('pointerup', (pointer, gameObject)=>{ 
+            
+            var x = this.cameras.main.scrollX + pointer.x;
             var y = this.cameras.main.scrollY + pointer.y;
+            const camCenterX = this.cameras.main.worldView.centerX;
+            const camCenterY = this.cameras.main.worldView.centerY;
+            // The extra x and y, which we need to add to endX and endY, so that the final position is indeed 800 and 600.
+            // We take the distance between endX and the center of the camera and multiply it by a transformation constant which depends on the camera
+
+            const extraX = (x - camCenterX) *((1/Zoom.ZoomLevel)-1); // another way of writing this is (1-zoom)/zoom
+            const extraY = (y-camCenterY)*((1/Zoom.ZoomLevel)-1);
+            x+=extraX;
+            y+=extraY
             this.eventEmitterSingleton.emit(EventConstants.EntityActions.Move,new Phaser.Math.Vector2(this.getTileLocation(x,y)));
             });
             
@@ -129,6 +204,7 @@ export default class GameScene extends Phaser.Scene {
     
             this.AIPlayer = new AIPlayer(this.entityManager,TeamNumbers.Enemy, TeamNumbers.Player);
             !isGame?this.AIPlayer2 = new AIPlayer(this.entityManager,TeamNumbers.Player, TeamNumbers.Enemy):()=>{}
+
     }
 
     create() {

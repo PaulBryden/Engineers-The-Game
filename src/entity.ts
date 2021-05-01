@@ -22,7 +22,7 @@ class Entity extends Phaser.GameObjects.Sprite implements IStatePublisher {
     constructor(map: Phaser.Tilemaps.Tilemap, icon: string, name: string, scene: Phaser.Scene, x: number, y: number, texture: string | Phaser.Textures.Texture, team:number, frame?: string | number) {
         let vector: Phaser.Math.Vector2 = Phaser.Tilemaps.Components.IsometricTileToWorldXY(x, y, new Phaser.Math.Vector2(), scene.cameras.main, map.getLayer('Tile Layer 1'));
         super(scene, vector.x, vector.y, texture, frame);
-        this.selectedRectangle = new Phaser.GameObjects.Rectangle(scene, this.x, this.y, this.width, this.height, 0xffffff, 0x0).setStrokeStyle(1, 0xffffff);
+        this.selectedRectangle = new Phaser.GameObjects.Rectangle(scene, this.x, this.y, this.width, this.height, 0xffffff, 0x0).setStrokeStyle(2, 0xffffff);
         this.healthBackgroundRectangle = new Phaser.GameObjects.Rectangle(scene, this.x, this.y-(10+(this.displayHeight/2)), 40, 5, 0xffffff, 1);
         this.healthForegroundRectangle = new Phaser.GameObjects.Rectangle(scene, this.x, this.y-(10+(this.displayHeight/2)), 38, 3, 0x064f13, 1);
         scene.add.existing(this.selectedRectangle);
@@ -49,7 +49,7 @@ class Entity extends Phaser.GameObjects.Sprite implements IStatePublisher {
             key: 'vision',
             add: false
         })
-        this.fogOfWarMask.scale = 1.5
+        this.fogOfWarMask.scale = 1.5;
     }
     
     GetFogOfWarMask()

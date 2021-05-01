@@ -34,6 +34,8 @@ class EntityManager {
         this.eventEmitter.on(EventConstants.Game.DestroyEntity, (entity) => { this.deleteEntity(entity); });
         this.resources.set(TeamNumbers.Enemy, StartOfGame.resourceCount);
         this.resources.set(TeamNumbers.Player, StartOfGame.resourceCount);
+        EventEmitterSingleton.getInstance().emit(EventConstants.Game.UpdateResourceCount, this.resources.get(TeamNumbers.Player), TeamNumbers.Player);
+        EventEmitterSingleton.getInstance().emit(EventConstants.Game.UpdateResourceCount, this.resources.get(TeamNumbers.Enemy), TeamNumbers.Enemy);
 
         this.fogOfWar = fogOfWar;
         this.fogOfWarMasks = this.scene.make.container({ x: 0, y: 0 }, false);

@@ -24,10 +24,7 @@ export default class UI extends Phaser.Scene {
     }
 
     preload() {
-        this.load.image('tileset', 'assets/tileset.png');
-        this.load.spritesheet('tileset_spritesheet', 'assets/tileset.png', { frameWidth: 64, frameHeight: 64 });
-        this.load.image('portrait_base', 'assets/Portrait_Base.png');
-        this.load.image('mine', 'assets/mine.png');
+       
         this.load.image('ui_overlay', 'assets/ui_overlay_2.png');
         this.load.image('ui_button', 'assets/ui_button.png');
         this.load.image('ui_button_Attack', 'assets/ui_button_Attack.png');
@@ -47,6 +44,9 @@ export default class UI extends Phaser.Scene {
         this.load.image('Down_Button', 'assets/UI_Bottom_Button.png');  // urls: an array of file url
         this.load.image('Left_Button', 'assets/UI_Left_Button.png');  // urls: an array of file url
         this.load.image('Right_Button', 'assets/UI_Right_Button.png');  // urls: an array of file url
+        this.load.image('Plus_Button','assets/plus.png');
+        this.load.image('Minus_Button','assets/minus.png');
+        this.load.image('Close_Button','assets/cross.png');
 
     }
 
@@ -71,8 +71,6 @@ export default class UI extends Phaser.Scene {
         this.uiManager.update(delta);
 
     }
-
-
 
 
 

@@ -13,9 +13,13 @@ const config = {
     dom: {
         createContainer: true
     },
-    backgroundColor: '#125555',
-    width: 1600,
-    height: 900,
+    scale: {
+      width: 1600,
+      height: 900,
+      autoCenter: Phaser.Scale.CENTER_BOTH,
+      mode: Phaser.Scale.FIT,
+    },
+    backgroundColor: '#002244',
     scene: [Menu,GameScene,UI],
     antialias: true,
     plugins: {

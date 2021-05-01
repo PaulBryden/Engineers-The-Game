@@ -20,10 +20,10 @@ class ImageButton extends Phaser.GameObjects.Container
         iconImage.displayHeight=iconImage.displayHeight*scaleRatio;
         super(scene,0,0,[backgroundButton, buttonPressed, iconImage]);
         this.setDepth(251);
-        this.setScrollFactor(0,0,true);
+        this.setScrollFactor(0,0);
         if(cost){
-            this.add(scene.add.image(10,50,"resource").setScale(0.5));
-            this.add(new Phaser.GameObjects.Text(scene, 25, 32, cost,{ fontFamily: 'monogram', fontSize: '36px', color: '#ffffff' } ))};
+            this.add(scene.add.image(0,50,"resource").setScale(0.5));
+            this.add(new Phaser.GameObjects.Text(scene, 16, 24, cost,{ fontFamily: 'monogram', fontSize: '42px', color: '#ffffff' } ))};
         scene.add.existing(this);
         this.setSize(150,150);
           this.setInteractive().on('pointerdown', function(pointer, localX, localY, event){
@@ -31,12 +31,26 @@ class ImageButton extends Phaser.GameObjects.Container
             this.list[2].x+=2;
             this.list[1].y+=2;
             this.list[2].y+=2;
+            if(this.list[3] && this.list[4])
+            {
+                this.list[3].x+=2;
+                this.list[4].x+=2;
+                this.list[3].y+=2;
+                this.list[4].y+=2;
+            }
         });
         this.setInteractive().on('pointerup', function(pointer, localX, localY, event){
             this.list[1].x-=2;
             this.list[2].x-=2;
             this.list[1].y-=2;
             this.list[2].y-=2;
+            if(this.list[3] && this.list[4])
+            {
+                this.list[3].x-=2;
+                this.list[4].x-=2;
+                this.list[3].y-=2;
+                this.list[4].y-=2;
+            }
         });
     }
 }

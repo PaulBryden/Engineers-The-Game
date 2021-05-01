@@ -52,6 +52,11 @@ export class BuildingEntityID {
   public static readonly Scaffold: string = "Scaffold";
 }
 
+export class Zoom
+{
+  public static ZoomLevel: number;
+}
+
 namespace EventConstants {
   export class EntityActions {
     public static readonly Selected: string = "Select";
