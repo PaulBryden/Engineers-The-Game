@@ -126,23 +126,23 @@ class UIButtonLayoutFactory
     {
         if(entity instanceof BaseEntity)
         {
-            return new BaseUIButtonLayout(<EventConstants.BuildingStates>entity.getStatus(),entity,entity.scene,this.x,this.y);
+            return new BaseUIButtonLayout(<EventConstants.BuildingStates>entity.getStatus(),entity,scene,this.x,this.y);
         }
         if(entity instanceof FactoryEntity)
         {
-            return new FactoryUIButtonLayout(<EventConstants.BuildingStates>entity.getStatus(),entity,entity.scene,this.x,this.y);
+            return new FactoryUIButtonLayout(<EventConstants.BuildingStates>entity.getStatus(),entity,scene,this.x,this.y);
         }
         else if(entity instanceof EngineerEntity)
         {
-            return new EngineerUIButtonLayout(entity,entity.scene,this.x,this.y);
+            return new EngineerUIButtonLayout(entity,scene,this.x,this.y);
         }
         else if(entity instanceof MineEntity)
         {
-            return new UIButtonLayout(entity,entity.scene,[],this.x,this.y);
+            return new UIButtonLayout(entity,scene,[],this.x,this.y);
         }
         else
         {
-            return new UIButtonLayout(entity,entity.scene,[],this.x,this.y);
+            return new UIButtonLayout(entity,scene,[],this.x,this.y);
         }
     }
 

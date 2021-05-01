@@ -110,7 +110,22 @@ export default class GameScene extends Phaser.Scene {
 
     setup(isGame: boolean)
     { 
-        Zoom.ZoomLevel=1.2;
+        Zoom.ZoomLevel=1.2;        
+        this.add.rectangle(1400,15,2100,1800,0xffffff,0x0).setInteractive().setScrollFactor(0).setDepth(1).on('pointerup', (pointer, gameObject)=>{ 
+            
+            var x = this.cameras.main.scrollX + pointer.x;
+            var y = this.cameras.main.scrollY + pointer.y;
+            const camCenterX = this.cameras.main.worldView.centerX;
+            const camCenterY = this.cameras.main.worldView.centerY;
+            // The extra x and y, which we need to add to endX and endY, so that the final position is indeed 800 and 600.
+            // We take the distance between endX and the center of the camera and multiply it by a transformation constant which depends on the camera
+
+            const extraX = (x - camCenterX) *((1/Zoom.ZoomLevel)-1); // another way of writing this is (1-zoom)/zoom
+            const extraY = (y-camCenterY)*((1/Zoom.ZoomLevel)-1);
+            x+=extraX;
+            y+=extraY
+            this.eventEmitterSingleton.emit(EventConstants.EntityActions.Move,new Phaser.Math.Vector2(this.getTileLocation(x,y)));
+            });
         isGame? this.scene.launch("UI"):()=>{};
         isGame?this.scene.moveUp("UI"):{};
         isGame?(this.scene.get('UI')).events.on('create', ()=>{
@@ -161,21 +176,7 @@ export default class GameScene extends Phaser.Scene {
         this.cameras.main.setZoom(Zoom.ZoomLevel);
         this.cameras.main.setScroll(-900,-40);
         this.cameras.main.setBackgroundColor(0x002244);
-        this.add.rectangle(1400,15,2100,1800,0xffffff,0x0).setInteractive().setScrollFactor(0).setDepth(1).on('pointerup', (pointer, gameObject)=>{ 
-            
-            var x = this.cameras.main.scrollX + pointer.x;
-            var y = this.cameras.main.scrollY + pointer.y;
-            const camCenterX = this.cameras.main.worldView.centerX;
-            const camCenterY = this.cameras.main.worldView.centerY;
-            // The extra x and y, which we need to add to endX and endY, so that the final position is indeed 800 and 600.
-            // We take the distance between endX and the center of the camera and multiply it by a transformation constant which depends on the camera
 
-            const extraX = (x - camCenterX) *((1/Zoom.ZoomLevel)-1); // another way of writing this is (1-zoom)/zoom
-            const extraY = (y-camCenterY)*((1/Zoom.ZoomLevel)-1);
-            x+=extraX;
-            y+=extraY
-            this.eventEmitterSingleton.emit(EventConstants.EntityActions.Move,new Phaser.Math.Vector2(this.getTileLocation(x,y)));
-            });
             
 
             this.mine = this.entityManager.createMineEntity(6, 6);
