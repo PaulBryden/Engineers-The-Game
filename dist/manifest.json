@@ -1,0 +1,14 @@
+{
+    "short_name": "Engineers",
+    "name": "EngineersTheGame",
+    "icons": [
+      {
+        "src": "dist/engineer_portrait.png",
+        "sizes": "70x70",
+        "type": "image/png"
+      }
+    ],
+    "start_url": "/index.html",
+    "display": "standalone",
+    "orientation": "landscape"
+  }
