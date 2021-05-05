@@ -58,6 +58,7 @@ class EngineerEntity extends MovingEntity {
         this.anims.play('engineer' + "-" + team + "-SW", true);
         this.currentAnimation = AnimationState.Default;
         this.speed = 80;
+        this.fogOfWarMask.scale = 2.5;
     }
 
     createBuildingFSM(): typestate.FiniteStateMachine<BuildingState> {
@@ -150,7 +151,9 @@ class EngineerEntity extends MovingEntity {
                 this.path.shift();
             }
             else {
+                try{
                 this.engineerFSM.go(State.Idle);
+                }catch{}
             }
         });
         try {
@@ -176,7 +179,9 @@ class EngineerEntity extends MovingEntity {
                 this.team == TeamNumbers.Player ? AudioEffectsSingleton.getInstance(this.scene).Blocked.play() : {};
             }
             else {
+                try{
                 this.engineerFSM.go(State.Idle);
+                }catch{}
             }
         });
         try {
@@ -244,8 +249,8 @@ class EngineerEntity extends MovingEntity {
                 }else
                 {
                     try {
-                        this.engineerFSM.go(State.Idle);
                         this.miningFSM.reset();
+                        this.engineerFSM.go(State.Idle);
                     }
                     catch { }
                 }
@@ -265,7 +270,10 @@ class EngineerEntity extends MovingEntity {
         if (this.targetMine != mine || !this.engineerFSM.is(State.Mining)) {
             this.team == TeamNumbers.Player && GameStatus.ActiveGame ? AudioEffectsSingleton.getInstance(this.scene).EngineerMining.play() : {};
             this.targetMine = mine;
+            try{
+                
             this.miningFSM.is(MiningState.GoingToMine) ? this.updatePathToMine() : this.miningFSM.canGo(MiningState.GoingToMine) ? this.miningFSM.go(MiningState.GoingToMine) : {};
+        }catch{}
             try {
                 !this.engineerFSM.is(State.Mining) ? this.engineerFSM.go(State.Mining) : {};
             } catch { }
@@ -276,8 +284,10 @@ class EngineerEntity extends MovingEntity {
 
         if (this.targetBuilding != building || !this.engineerFSM.is(State.Building)) {
             this.targetBuilding = building;
+            try{
             this.buildingFSM.is(BuildingState.GoingToBuilding) ? this.updatePathToBuilding() : this.buildingFSM.canGo(BuildingState.GoingToBuilding) ? this.buildingFSM.go(BuildingState.GoingToBuilding) : {};
             !this.engineerFSM.is(State.Building) ? this.engineerFSM.go(State.Building) : {};
+            }catch{console.log("Requested Build, but engineer is already building... An Error has Occured.")}
         }
     }
 
@@ -355,7 +365,9 @@ class EngineerEntity extends MovingEntity {
         if (this.miningFSM.is(MiningState.GoingToMine) && this.path != null && this.path.length > 0) {
             this.movingEventEmitter.once(EventConstants.EntityMovingUpdates.FinishedMoving, () => {
                 if (this.miningFSM.is(MiningState.GoingToMine)) {
+                    try{
                     this.miningFSM.go(MiningState.InMine);
+                    }catch{}
                 }
             });
         }
@@ -479,7 +491,10 @@ class EngineerEntity extends MovingEntity {
 
         }
         else if (this.engineerFSM.is(State.Moving)) {
-            this.engineerFSM.go(State.Idle);
+            try{
+                this.engineerFSM.go(State.Idle);
+
+            }catch{}
         }
 
     }
@@ -488,7 +503,9 @@ class EngineerEntity extends MovingEntity {
     }
 
     cancelMove() {
+        try{
         this.engineerFSM.go(State.Idle);
+        }catch{}
     }
 
     getStatus() {

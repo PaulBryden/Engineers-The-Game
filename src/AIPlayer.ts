@@ -104,7 +104,7 @@ class AIPlayer
         {
             if(Gliders.length>=2)
             {
-                Gliders.forEach(async glider => { if(glider.getStatus()!="Attacking"){ 
+                Gliders.forEach( glider => { if(glider.getStatus()!="Attacking"){ 
                     if(enemyTurrets.length>=1)
                     {
                         (<GliderEntity>glider).requestAttack(this.getNearestToEntity(glider,enemyTurrets));
@@ -131,7 +131,7 @@ class AIPlayer
             }
             else
             {
-                Gliders.forEach(async glider => { if(glider.getStatus()=="Attacking"){ 
+                Gliders.forEach(glider => { if(glider.getStatus()=="Attacking"){ 
                     if(enemyTurrets.length>=1)
                     {
                         (<GliderEntity>glider).requestAttack(this.getNearestToEntity(glider,enemyTurrets));

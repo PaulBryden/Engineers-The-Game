@@ -167,6 +167,11 @@ class EntityManager {
 
     addToFogOfWarMasks(image: Phaser.GameObjects.Image) {
         this.fogOfWarMasks.add(image);
+        if(this.fogOfWar.mask)
+        {
+            this.fogOfWar.mask.destroy();
+            this.fogOfWar.clearMask(true);
+        }
         this.fogOfWar.mask = new Phaser.Display.Masks.BitmapMask(this.scene, this.fogOfWarMasks);
         this.fogOfWar.mask.invertAlpha = true;
     }
@@ -266,6 +271,7 @@ class EntityManager {
             entity.health = 0;
             this.eventEmitter.emit(EventConstants.EntityActions.Selected, undefined);
         }
+        this.fogOfWarMasks.remove(entity.GetFogOfWarMask());
         entity.destroy();
         if (index !== -1) {
             this.entityList.splice(index, 1);
@@ -280,7 +286,9 @@ class EntityManager {
     }
 
     deleteAllEntities() {
-        this.entityList.forEach(element => { element.removeInteractive(); element.destroy(); });
+        this.entityList.forEach(element => { 
+            this.fogOfWarMasks.remove(element.GetFogOfWarMask());
+        element.destroy(); });
         this.entityList = [];
 
     }
