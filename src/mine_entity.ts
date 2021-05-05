@@ -18,6 +18,7 @@ class MineEntity extends BuildingEntity
         this.blockedTiles.push(new Phaser.Math.Vector2(x-1,y-1));
         this.blockedTiles.push(new Phaser.Math.Vector2(x-2,y-1));
         this.avoidAdditionalPoints();
+        this.blockedTiles.push(new Phaser.Math.Vector2(x-3,y));
     }
 
 }

@@ -10,9 +10,6 @@ import {Menu} from './menuScene'
 const config = {
     type: Phaser.AUTO,
     parent:'game',
-    audio: {
-      disableWebAudio: true
-    },
     dom: {
         createContainer: true
     },

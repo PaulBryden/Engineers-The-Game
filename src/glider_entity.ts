@@ -159,7 +159,9 @@ class GliderEntity extends MovingEntity {
     }
 
     cancelMove() {
+        try{
         this.gliderFSM.go(State.Idle);
+        }catch{}
     }
 
     getStatus() {
