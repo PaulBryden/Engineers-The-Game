@@ -58,7 +58,6 @@ class EngineerEntity extends MovingEntity {
         this.anims.play('engineer' + "-" + team + "-SW", true);
         this.currentAnimation = AnimationState.Default;
         this.speed = 80;
-        this.fogOfWarMask.scale = 2.5;
     }
 
     createBuildingFSM(): typestate.FiniteStateMachine<BuildingState> {

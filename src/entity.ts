@@ -51,7 +51,7 @@ class Entity extends Phaser.GameObjects.Sprite implements IStatePublisher {
             key: 'vision',
             add: false
         })
-        this.fogOfWarMask.scale = 2.0;
+        this.fogOfWarMask.scale = 2;
     }
     
     GetFogOfWarMask()

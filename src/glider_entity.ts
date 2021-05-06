@@ -29,6 +29,7 @@ class GliderEntity extends MovingEntity {
         this.anims.play('glider' + "-" + this.team + "-NW", true);
         this.centerToTileOffset = 16;
         this.entitiesToBeDamaged=[];
+        this.fogOfWarMask.scale = 2.8;
     }
 
     createFSM(): typestate.FiniteStateMachine<State> {

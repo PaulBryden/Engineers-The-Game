@@ -7,7 +7,7 @@ class BuildingEntity extends Entity
     constructor(map: Phaser.Tilemaps.Tilemap, icon: string, name:string, scene: Phaser.Scene, x: number, y: number, texture: string | Phaser.Textures.Texture, team:number, frame?: string | number)
     {
         super(map,icon,name,scene,x,y,texture,team);
-        this.fogOfWarMask.scale = 2.0;
+        this.fogOfWarMask.scale = 3.0;
         this.blockedTiles=[];
     }
 
