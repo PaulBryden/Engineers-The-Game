@@ -65,6 +65,16 @@ h1 p{
     font-family: "monogram";
     font-size: 40px !important;
 }
+/* Stop select highlighting on iOS*/
+*:not(input), *:focus:not(input) {
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  outline-style:none;/*IE*/
+}
 </style>
     <meta charset="utf-8">
     <meta name="mobile-web-app-capable" content="yes">
