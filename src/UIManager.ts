@@ -49,7 +49,7 @@ class UIManager extends Phaser.GameObjects.GameObject
         this.eventEmitter.on(EventConstants.Input.RequestCancelEngineer,()=>{this.eventEmitter.emit(EventConstants.Input.CancelEngineer, this.selectedEntity, TeamNumbers.Player)});
         this.entityScene=entityScene;
 
-        this.MiniMapOverlay = new Phaser.GameObjects.Rectangle(scene, 190, 72, 110/Zoom.ZoomLevel, 66/Zoom.ZoomLevel, 0xffffff, 0x0).setDepth(251).setStrokeStyle(2, 0xffffff);
+        this.MiniMapOverlay = new Phaser.GameObjects.Rectangle(scene, 188, 74, 110/Zoom.ZoomLevel, 76/Zoom.ZoomLevel, 0xffffff, 0x0).setDepth(251).setStrokeStyle(2, 0xffffff);
         scene.add.existing(this.MiniMapOverlay);
         this.LeftArrowDown=false;
         this.RightArrowDown=false;
@@ -234,10 +234,10 @@ class UIManager extends Phaser.GameObjects.GameObject
     {
         if(this.zoomInDown)
         {
-            if(Zoom.ZoomLevel<1.3)
+            if(Zoom.ZoomLevel<1.7)
             {
                 Zoom.ZoomLevel+=(0.3*(delta/1000));
-                this.MiniMapOverlay.setDisplaySize(110/Zoom.ZoomLevel,66/Zoom.ZoomLevel);
+                this.MiniMapOverlay.setDisplaySize(110/Zoom.ZoomLevel,76/Zoom.ZoomLevel);
                 this.entityScene.cameras.main.setZoom(Zoom.ZoomLevel);
             }
         }else if(this.zoomOutDown)
@@ -245,42 +245,42 @@ class UIManager extends Phaser.GameObjects.GameObject
             if(Zoom.ZoomLevel>1.0)
             {
                 Zoom.ZoomLevel-=(0.3*(delta/1000));
-                this.MiniMapOverlay.setDisplaySize(110/Zoom.ZoomLevel,66/Zoom.ZoomLevel);
+                this.MiniMapOverlay.setDisplaySize(110/Zoom.ZoomLevel,76/Zoom.ZoomLevel);
                 this.entityScene.cameras.main.setZoom(Zoom.ZoomLevel);
             }
 
         }
         if(this.UpArrowDown)
         {
-            if(this.entityScene.cameras.main.scrollY>this.calculateLimitY(-90,true))
+            if(this.entityScene.cameras.main.scrollY-(this.entityScene.cameras.main.displayHeight/2)>-480) //450+50
             {
                 this.entityScene.cameras.main.setScroll(this.entityScene.cameras.main.scrollX,this.entityScene.cameras.main.scrollY-(500*(delta/1000)));
-                this.MiniMapOverlay.setY(this.MiniMapOverlay.y-(58*(delta/1000)));
+                this.MiniMapOverlay.setY(this.MiniMapOverlay.y-(55*(delta/1000)));
             }
         }
         if(this.BottomArrowDown)
         {
-            if(this.entityScene.cameras.main.scrollY<this.calculateLimitY(760,false))
+            if(this.entityScene.cameras.main.scrollY+(this.entityScene.cameras.main.displayHeight/2)<1200) 
             {
                 this.entityScene.cameras.main.setScroll(this.entityScene.cameras.main.scrollX,this.entityScene.cameras.main.scrollY+(500*(delta/1000)));
-                this.MiniMapOverlay.setY(this.MiniMapOverlay.y+(58*(delta/1000)));
+                this.MiniMapOverlay.setY(this.MiniMapOverlay.y+(55*(delta/1000)));
             }
         }
         if(this.RightArrowDown)
         {
-            if(this.entityScene.cameras.main.scrollX<this.calculateLimitX(20, false))
+            if(this.entityScene.cameras.main.scrollX+(this.entityScene.cameras.main.displayWidth/2)<860)
             {
                 this.entityScene.cameras.main.setScroll(this.entityScene.cameras.main.scrollX+(500*(delta/1000)),this.entityScene.cameras.main.scrollY);
-                this.MiniMapOverlay.setX(this.MiniMapOverlay.x+(52*(delta/1000)));
+                this.MiniMapOverlay.setX(this.MiniMapOverlay.x+(49*(delta/1000)));
             }
 
         }
         if(this.LeftArrowDown)
         {
-            if(this.entityScene.cameras.main.scrollX>this.calculateLimitX(-1920,true))
+            if(this.entityScene.cameras.main.scrollX-(this.entityScene.cameras.main.displayWidth/2)>-2720)
             {
                 this.entityScene.cameras.main.setScroll(this.entityScene.cameras.main.scrollX-(500*(delta/1000)),this.entityScene.cameras.main.scrollY);
-                this.MiniMapOverlay.setX(this.MiniMapOverlay.x-(52*(delta/1000)));
+                this.MiniMapOverlay.setX(this.MiniMapOverlay.x-(49*(delta/1000)));
             }
         }
 

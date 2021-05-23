@@ -14,7 +14,7 @@ class TurretEntity extends BuildingEntity {
         this.y += this.mapReference.layer.tileWidth / 4;
         this.blockedTiles.push(new Phaser.Math.Vector2(x - 1, y));
         this.avoidAdditionalPoints();
-        this.status = "Operating";
+        this.status = "Active";
         this.anims.play('turret' + "-" + this.team, true);
         this.setScale(1.3);
         this.selectedRectangle.displayWidth = this.selectedRectangle.displayWidth * 2 / 3;

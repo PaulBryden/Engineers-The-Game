@@ -138,9 +138,9 @@ export default class GameScene extends Phaser.Scene {
         if(!this.fogOfWar)
         {
             this.fogOfWar = this.make.renderTexture({
-                width:3400,
+                width:3900,
                 height: 1900,
-                x:-1700,
+                x:-1950,
                 y:-200
             }, true)
         
@@ -148,8 +148,8 @@ export default class GameScene extends Phaser.Scene {
             this.fogOfWar.fill(0x424242, 1)
             this.fogOfWar.setDepth(101);
             // draw the floorLayer into it
-            this.fogOfWar.draw(this.layer2,1700,200)
-            this.fogOfWar.draw(this.layer1,1700,200)
+            this.fogOfWar.draw(this.layer2,1950,200)
+            this.fogOfWar.draw(this.layer1,1950,200)
     
             // set a dark blue tint
             this.fogOfWar.setTint(0x0a2948);

@@ -51,6 +51,9 @@ class EngineerEntity extends MovingEntity {
     targetBuilding: ScaffoldEntity;
     constructor(map: Phaser.Tilemaps.Tilemap, scene: Phaser.Scene, x: number, y: number, team: number) {
         super(map, "Portrait_Engineer", "Engineer", scene, x, y, "player" + "-" + team, team);
+        this.removeInteractive();
+        this.clickableArea= new Phaser.Geom.Circle(this.width / 2, this.height / 2, this.width / 2.3);
+        this.setInteractive(this.clickableArea, this.handler);
         this.engineerFSM = this.createFSM();
         this.miningFSM = this.createMiningFSM();
         this.buildingFSM = this.createBuildingFSM();
