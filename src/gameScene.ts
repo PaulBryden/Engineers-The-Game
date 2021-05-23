@@ -92,8 +92,9 @@ export default class GameScene extends Phaser.Scene {
 
     resetGame()
     {
-        EventEmitterSingleton.getInstance().removeAllListeners();
-        this.tweens.getAllTweens().forEach(element => {element.stop()});
+        EventEmitterSingleton.getInstance().removeAllListeners(); //Cleanup Event Listeners
+        this.tweens.getAllTweens().forEach(element => {element.stop()}); //Cleanup Tweens
+        this.children.getAll().forEach(element=>{ if(element instanceof Phaser.GameObjects.PointLight){element.destroy()}}); //Cleanup bullets
         
         this.music.stop();
         this.music.play();

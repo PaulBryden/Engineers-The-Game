@@ -10,7 +10,9 @@ class MineEntity extends BuildingEntity
     {
         super(map,"mine","Mine",scene,x,y,"mine",0);
         this.status="Operating";
-        
+        this.removeInteractive();
+        this.clickableArea= new Phaser.Geom.Circle(this.width / 2, this.height / 2, this.width / 2.6);
+        this.setInteractive(this.clickableArea, this.handler);
         this.healthForegroundRectangle.setVisible(false);
         this.healthBackgroundRectangle.setVisible(false);
         this.blockedTiles.push(new Phaser.Math.Vector2(x-1,y));
