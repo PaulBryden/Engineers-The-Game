@@ -1,5 +1,5 @@
-import {Entity} from './entity'
-import { EasyStarGroundLevelSingleton, Path } from './EasyStarSingleton';
+import {Entity} from './Entity'
+import { EasyStarGroundLevelSingleton, Path } from '../logic/EasyStarSingleton';
 
 class BuildingEntity extends Entity
 {

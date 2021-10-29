@@ -1,9 +1,9 @@
-import { Entity } from './entity'
+import { Entity } from './Entity'
 import { typestate } from 'typestate';
-import { EventConstants } from './GameConstants'
-import { EasyStarGroundLevelSingleton, Path } from './EasyStarSingleton';
-import { BuildingEntity } from './building_entity';
-import { AudioEffectsSingleton } from './AudioEffectsSingleton';
+import { EventConstants } from '../logic/GameConstants'
+import { EasyStarGroundLevelSingleton, Path } from '../logic/EasyStarSingleton';
+import { BuildingEntity } from './BuildingEntity';
+import { AudioEffectsSingleton } from '../audio/AudioEffectsSingleton';
 
 class TurretEntity extends BuildingEntity {
     targetEntity: Entity;

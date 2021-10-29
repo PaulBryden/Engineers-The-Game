@@ -1,5 +1,5 @@
 import 'phaser'
-import {SoundConstants} from './GameConstants'
+import {SoundConstants} from '../logic/GameConstants'
 class AudioEffectsSingleton extends Phaser.Events.EventEmitter {
     private static instance: AudioEffectsSingleton;
     public IdleEngineerSelected1:Phaser.Sound.BaseSound;

@@ -1,8 +1,8 @@
-import {Entity} from './entity'
+import {Entity} from './Entity'
 import { typestate } from 'typestate';
-import {EventConstants} from './GameConstants'
-import {BuildingEntity} from './building_entity'
-import { BuildUnitsEntity } from './build_units_entity';
+import {EventConstants} from '../logic/GameConstants'
+import {BuildingEntity} from './BuildingEntity'
+import { BuildUnitsEntity } from './BuildUnitsEntity';
 
 class BaseEntity extends BuildUnitsEntity
 {

@@ -1,7 +1,7 @@
 import 'phaser';
-import {UIButtonLayout, UIButtonLayoutFactory } from './ui_button_layout'
-import {UIPortraitLayout} from './ui_portrait_layout'
-import {Entity} from './entity'
+import {UIButtonLayout, UIButtonLayoutFactory } from './UIButtonLayout'
+import {UIPortraitLayout} from './UIPortraitLayout'
+import {Entity} from '../units/Entity'
 class UIParentLayout extends Phaser.GameObjects.Container
 {
     constructor(scene:Phaser.Scene, uiButtonLayout:UIButtonLayout, uiPortraitLayout:UIPortraitLayout, x:number, y:number)

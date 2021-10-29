@@ -1,11 +1,11 @@
-import { BaseEntity } from "./base_entity";
-import { EngineerEntity } from "./engineer_entity";
-import { Entity } from "./entity";
+import { BaseEntity } from "../units/BaseEntity";
+import { EngineerEntity } from "../units/EngineerEntity";
+import { Entity } from "../units/Entity";
 import { EntityManager } from "./EntityManager"
 import { EventEmitterSingleton } from "./EventEmitterSingleton";
-import { FactoryEntity } from "./factory_entity";
+import { FactoryEntity } from "../units/FactoryEntity";
 import { BuildingEntityID, EntityID, EventConstants, TeamNumbers } from "./GameConstants";
-import { GliderEntity } from "./glider_entity";
+import { GliderEntity } from "../units/GliderEntity";
 
 class AIPlayer 
 {

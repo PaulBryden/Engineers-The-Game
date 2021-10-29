@@ -1,7 +1,7 @@
-import { AudioEffectsSingleton } from './AudioEffectsSingleton';
-import { EventEmitterSingleton } from './EventEmitterSingleton'
-import { EventConstants } from './GameConstants'
-import { IStatePublisher, IStateSubscriber } from './stateful';
+import { AudioEffectsSingleton } from '../audio/AudioEffectsSingleton';
+import { EventEmitterSingleton } from '../logic/EventEmitterSingleton'
+import { EventConstants } from '../logic/GameConstants'
+import { IStatePublisher, IStateSubscriber } from '../logic/IStatePublisher';
 
 class Entity extends Phaser.GameObjects.Sprite implements IStatePublisher {
     icon: string;

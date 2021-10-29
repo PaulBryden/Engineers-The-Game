@@ -1,4 +1,4 @@
-import { GameScene } from "./gameScene";
+import { GameScene } from "./GameScene";
 
 export default class Menu extends Phaser.Scene {
     

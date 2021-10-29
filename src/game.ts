@@ -1,9 +1,9 @@
 
 
 import 'phaser';
-import {GameScene} from './gameScene'
-import {UI} from './uIScene'
-import {Menu} from './menuScene'
+import {GameScene} from './scenes/GameScene'
+import {UI} from './ui/UIScene'
+import {Menu} from './scenes/MenuScene'
 
 
 

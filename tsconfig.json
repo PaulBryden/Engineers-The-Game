@@ -10,5 +10,5 @@
     },
     "include": [
          "./src/*","./node_modules/easystarjs/*"
-    ]
+, "src/scenes/*", "src/ui/*", "src/logic/*", "src/audio/*", "src/units/*"]
 }

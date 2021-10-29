@@ -1,19 +1,19 @@
 import UIPlugin from 'phaser3-rex-plugins/templates/ui/ui-plugin.js';
 import { GridTable } from 'phaser3-rex-plugins/templates/ui/ui-components.js';
-import { AttackButton, GatherButton, BuildButton, CancelButton } from './image_button';
-import { UIButtonLayout, EngineerUIButtonLayout } from './ui_button_layout';
-import { Entity } from './entity'
-import { UIPortraitLayout } from './ui_portrait_layout';
-import { UIParentLayout, UIFactory } from './ui_parent_layout';
-import { EngineerEntity } from './engineer_entity'
-import { BaseEntity } from './base_entity'
-import { EventEmitterSingleton } from './EventEmitterSingleton'
+import { AttackButton, GatherButton, BuildButton, CancelButton } from './ImageButton';
+import { UIButtonLayout, EngineerUIButtonLayout } from './UIButtonLayout';
+import { Entity } from '../units/Entity'
+import { UIPortraitLayout } from './UIPortraitLayout';
+import { UIParentLayout, UIFactory } from './UIParentLayout';
+import { EngineerEntity } from '../units/EngineerEntity'
+import { BaseEntity } from '../units/BaseEntity'
+import { EventEmitterSingleton } from '../logic/EventEmitterSingleton'
 import { UIManager } from './UIManager';
-import { EasyStarFlightLevelSingleton, EasyStarGroundLevelSingleton } from './EasyStarSingleton';
-import { EntityManager } from './EntityManager'
-import { MineEntity } from './mine_entity';
+import { EasyStarFlightLevelSingleton, EasyStarGroundLevelSingleton } from '../logic/EasyStarSingleton';
+import { EntityManager } from '../logic/EntityManager'
+import { MineEntity } from '../units/MineEntity';
 import  EasyStar from 'easystarjs'
-import GameScene from './gameScene';
+import GameScene from '../scenes/GameScene';
 
 export default class UI extends Phaser.Scene {
     uiManager: UIManager;

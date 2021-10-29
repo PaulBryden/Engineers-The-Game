@@ -1,6 +1,6 @@
 import { typestate } from 'typestate';
-import {EventConstants} from './GameConstants'
-import { BuildUnitsEntity } from './build_units_entity';
+import {EventConstants} from '../logic/GameConstants'
+import { BuildUnitsEntity } from './BuildUnitsEntity';
 
 class FactoryEntity extends BuildUnitsEntity
 {

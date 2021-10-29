@@ -1,13 +1,13 @@
 import 'phaser';
-import {ImageButton, AttackButton, GatherButton, BuildButton, CancelButton, BuildEngineerButton, BuildGliderButton, BuildBaseButton, BuildFactoryButton, BuildTurretButton } from './image_button'
-import {BaseEntity} from './base_entity'
-import {EngineerEntity} from './engineer_entity'
-import {Entity} from './entity'
-import { MineEntity } from './mine_entity';
+import {ImageButton, AttackButton, GatherButton, BuildButton, CancelButton, BuildEngineerButton, BuildGliderButton, BuildBaseButton, BuildFactoryButton, BuildTurretButton } from './ImageButton'
+import {BaseEntity} from '../units/BaseEntity'
+import {EngineerEntity} from '../units/EngineerEntity'
+import {Entity} from '../units/Entity'
+import { MineEntity } from '../units/MineEntity';
 import { typestate } from 'typestate';
-import { IStatePublisher, IStateSubscriber } from './stateful';
-import { EventConstants } from './GameConstants';
-import { FactoryEntity } from './factory_entity';
+import { IStatePublisher, IStateSubscriber } from '../logic/IStatePublisher';
+import { EventConstants } from '../logic/GameConstants';
+import { FactoryEntity } from '../units/FactoryEntity';
 
 class UIButtonLayout extends Phaser.GameObjects.Container implements IStateSubscriber
 {

@@ -1,7 +1,7 @@
-import { Entity } from './entity'
+import { Entity } from './Entity'
 import { typestate } from 'typestate';
-import { EventConstants } from './GameConstants'
-import { BuildingEntity } from './building_entity'
+import { EventConstants } from '../logic/GameConstants'
+import { BuildingEntity } from './BuildingEntity'
 
 class BuildUnitsEntity extends BuildingEntity {
     buildingFSM: typestate.FiniteStateMachine<EventConstants.BuildingStates>;

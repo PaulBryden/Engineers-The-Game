@@ -1,7 +1,7 @@
-import { Entity } from "./entity";
+import { Entity } from "./Entity";
 import EasyStar from 'easystarjs'
-import { Path } from "./EasyStarSingleton";
-import { EventConstants } from "./GameConstants";
+import { Path } from "../logic/EasyStarSingleton";
+import { EventConstants } from "../logic/GameConstants";
 class MovingEntity extends Entity {
 
     path: Path;

@@ -1,6 +1,6 @@
 import 'phaser';
-import {EventEmitterSingleton} from './EventEmitterSingleton'
-import {EventConstants, TeamNumbers} from './GameConstants'
+import {EventEmitterSingleton} from '../logic/EventEmitterSingleton'
+import {EventConstants, TeamNumbers} from '../logic/GameConstants'
 class ImageButton extends Phaser.GameObjects.Container
 {
     backgroundUnpressed:Phaser.GameObjects.Image;

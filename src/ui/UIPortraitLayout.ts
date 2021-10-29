@@ -1,6 +1,6 @@
 import 'phaser';
-import {Entity} from './entity'
-import { IStatePublisher, IStateSubscriber } from './stateful';
+import {Entity} from '../units/Entity'
+import { IStatePublisher, IStateSubscriber } from '../logic/IStatePublisher';
 class UIPortraitLayout extends Phaser.GameObjects.Container implements IStateSubscriber
 {
     EntityStatus: Phaser.GameObjects.Text;

@@ -1,10 +1,10 @@
-import { Entity } from './entity'
+import { Entity } from './Entity'
 import { typestate } from 'typestate';
-import { EasyStarFlightLevelSingleton, EasyStarGroundLevelSingleton, Path } from './EasyStarSingleton';
+import { EasyStarFlightLevelSingleton, EasyStarGroundLevelSingleton, Path } from '../logic/EasyStarSingleton';
 import EasyStar from 'easystarjs'
 import { MovingEntity } from './MovingEntity';
-import { AudioEffectsSingleton } from './AudioEffectsSingleton';
-import { GameStatus, TeamNumbers } from './GameConstants';
+import { AudioEffectsSingleton } from '../audio/AudioEffectsSingleton';
+import { GameStatus, TeamNumbers } from '../logic/GameConstants';
 
 enum State {
     Idle = "Idle",

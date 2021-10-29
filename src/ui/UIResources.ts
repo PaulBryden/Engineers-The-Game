@@ -1,6 +1,6 @@
 import 'phaser';
-import {EventEmitterSingleton} from './EventEmitterSingleton'
-import {EventConstants, StartOfGame, TeamNumbers} from './GameConstants'
+import {EventEmitterSingleton} from '../logic/EventEmitterSingleton'
+import {EventConstants, StartOfGame, TeamNumbers} from '../logic/GameConstants'
 class UIResources extends Phaser.GameObjects.Container
 {
     resourceCount:Phaser.GameObjects.Text;

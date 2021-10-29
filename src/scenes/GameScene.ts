@@ -1,15 +1,15 @@
 import 'phaser';
 
-import { EngineerEntity } from './engineer_entity'
-import { BaseEntity } from './base_entity'
-import { UIManager } from './UIManager';
-import { EasyStarFlightLevelSingleton, EasyStarGroundLevelSingleton } from './EasyStarSingleton';
-import { EntityManager } from './EntityManager'
-import { MineEntity } from './mine_entity';
+import { EngineerEntity } from '../units/EngineerEntity'
+import { BaseEntity } from '../units/BaseEntity'
+import { UIManager } from '../ui/UIManager';
+import { EasyStarFlightLevelSingleton, EasyStarGroundLevelSingleton } from '../logic/EasyStarSingleton';
+import { EntityManager } from '../logic/EntityManager'
+import { MineEntity } from '../units/MineEntity';
 import  EasyStar from 'easystarjs'
-import { BuildingEntityID, EventConstants, GameStatus, StartOfGame, TeamNumbers, Zoom } from './GameConstants';
-import { EventEmitterSingleton } from './EventEmitterSingleton';
-import { AIPlayer } from './AIPlayer';
+import { BuildingEntityID, EventConstants, GameStatus, StartOfGame, TeamNumbers, Zoom } from '../logic/GameConstants';
+import { EventEmitterSingleton } from '../logic/EventEmitterSingleton';
+import { AIPlayer } from '../logic/AIPlayer';
 export default class GameScene extends Phaser.Scene {
     finder: EasyStarGroundLevelSingleton;
     map: Phaser.Tilemaps.Tilemap;

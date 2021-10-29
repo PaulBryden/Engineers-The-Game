@@ -1,9 +1,9 @@
-import {Entity} from './entity'
+import {Entity} from './Entity'
 import { typestate } from 'typestate';
-import {BuildingEntityID, EventConstants} from './GameConstants'
-import { EasyStarGroundLevelSingleton, Path } from './EasyStarSingleton';
-import { BuildingEntity } from './building_entity';
-import { EngineerEntity } from './engineer_entity';
+import {BuildingEntityID, EventConstants} from '../logic/GameConstants'
+import { EasyStarGroundLevelSingleton, Path } from '../logic/EasyStarSingleton';
+import { BuildingEntity } from './BuildingEntity';
+import { EngineerEntity } from './EngineerEntity';
 
 class ScaffoldEntity extends BuildingEntity
 {

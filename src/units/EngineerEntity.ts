@@ -1,15 +1,15 @@
 import 'phaser'
-import { Entity } from './entity'
+import { Entity } from './Entity'
 import 'typestate';
 import EasyStar from 'easystarjs'
 import { typestate } from 'typestate';
-import { EasyStarGroundLevelSingleton, Path } from './EasyStarSingleton';
-import { AudioEffectsSingleton } from './AudioEffectsSingleton';
-import { MineEntity } from './mine_entity';
-import { BaseEntity } from './base_entity';
-import { EventConstants, GameStatus, TeamNumbers } from './GameConstants'
+import { EasyStarGroundLevelSingleton, Path } from '../logic/EasyStarSingleton';
+import { AudioEffectsSingleton } from '../audio/AudioEffectsSingleton';
+import { MineEntity } from './MineEntity';
+import { BaseEntity } from './BaseEntity';
+import { EventConstants, GameStatus, TeamNumbers } from '../logic/GameConstants'
 import { MovingEntity } from './MovingEntity';
-import { ScaffoldEntity } from './scaffold';
+import { ScaffoldEntity } from './ScaffoldEntity';
 
 enum State {
     Idle = "Idle",
