@@ -1,9 +1,9 @@
 
 
 import 'phaser';
-import {GameScene} from './gameScene'
-import {UI} from './uIScene'
-import {Menu} from './menuScene'
+import {GameScene} from './scenes/GameScene';
+import {UI} from './ui/UIScene';
+import {Menu} from './scenes/MenuScene';
 
 
 
@@ -14,10 +14,10 @@ const config = {
         createContainer: true
     },
     scale: {
-      width: 1600,
-      height: 900,
-      autoCenter: Phaser.Scale.CENTER_BOTH,
-      mode: Phaser.Scale.FIT,
+        width: 1600,
+        height: 900,
+        autoCenter: Phaser.Scale.CENTER_BOTH,
+        mode: Phaser.Scale.FIT,
     },
     backgroundColor: '#002244',
     scene: [Menu,GameScene,UI],
