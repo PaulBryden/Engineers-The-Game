@@ -16,7 +16,7 @@ jobs:
         uses: JamesIves/github-pages-deploy-action@4.0.0
         with:
           branch: main # The branch the action should deploy to.
-          folder: dist # The folder the action should deploy.
+          folder: _build # The folder the action should deploy.
           repository-name: PaulBryden/PaulBryden.github.io
           target-folder: .
           token: ${{ secrets.API_TOKEN_GITHUB }}

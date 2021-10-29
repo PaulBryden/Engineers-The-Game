@@ -9,7 +9,11 @@ module.exports = {
     },
     buildOptions: {
         out: "_build"
-    },
+    },    
     optimize: {
+        bundle: true,
+        minify: true,
+        sourcemap: false,
+        treeshake: true
     }
 };
