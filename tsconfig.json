@@ -1,14 +1,14 @@
 {
     "compilerOptions": {
-        "target": "ES2016",
+        "target": "ESNext",
         "moduleResolution": "node",
         "allowJs": true,
         "checkJs": false,
-      "sourceMap": true,
+        "noEmit": true,
+        "allowSyntheticDefaultImports": true,
       "noImplicitAny": false,
-      "esModuleInterop": true
+      "outDir": "dist",
     },
     "include": [
-         "./src/*","./node_modules/easystarjs/*"
-, "src/scenes/*", "src/ui/*", "src/logic/*", "src/audio/*", "src/units/*"]
+         "./src/**/*"]
 }

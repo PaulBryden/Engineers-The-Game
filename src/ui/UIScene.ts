@@ -1,18 +1,16 @@
-import UIPlugin from 'phaser3-rex-plugins/templates/ui/ui-plugin.js';
-import { GridTable } from 'phaser3-rex-plugins/templates/ui/ui-components.js';
 import { AttackButton, GatherButton, BuildButton, CancelButton } from './ImageButton';
 import { UIButtonLayout, EngineerUIButtonLayout } from './UIButtonLayout';
-import { Entity } from '../units/Entity'
+import { Entity } from '../units/Entity';
 import { UIPortraitLayout } from './UIPortraitLayout';
 import { UIParentLayout, UIFactory } from './UIParentLayout';
-import { EngineerEntity } from '../units/EngineerEntity'
-import { BaseEntity } from '../units/BaseEntity'
-import { EventEmitterSingleton } from '../logic/EventEmitterSingleton'
+import { EngineerEntity } from '../units/EngineerEntity';
+import { BaseEntity } from '../units/BaseEntity';
+import { EventEmitterSingleton } from '../logic/EventEmitterSingleton';
 import { UIManager } from './UIManager';
 import { EasyStarFlightLevelSingleton, EasyStarGroundLevelSingleton } from '../logic/EasyStarSingleton';
-import { EntityManager } from '../logic/EntityManager'
+import { EntityManager } from '../logic/EntityManager';
 import { MineEntity } from '../units/MineEntity';
-import  EasyStar from 'easystarjs'
+import  EasyStar from 'easystarjs';
 import GameScene from '../scenes/GameScene';
 
 export default class UI extends Phaser.Scene {
@@ -76,4 +74,4 @@ export default class UI extends Phaser.Scene {
 
 
 }
-export {UI}
+export {UI};

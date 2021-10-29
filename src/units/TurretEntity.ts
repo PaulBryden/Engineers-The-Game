@@ -1,6 +1,6 @@
-import { Entity } from './Entity'
+import { Entity } from './Entity';
 import { typestate } from 'typestate';
-import { EventConstants } from '../logic/GameConstants'
+import { EventConstants } from '../logic/GameConstants';
 import { EasyStarGroundLevelSingleton, Path } from '../logic/EasyStarSingleton';
 import { BuildingEntity } from './BuildingEntity';
 import { AudioEffectsSingleton } from '../audio/AudioEffectsSingleton';
@@ -10,12 +10,12 @@ class TurretEntity extends BuildingEntity {
     entitiesToBeDamaged: Entity[];
     bulletTween: Phaser.Tweens.Tween;
     constructor(map: Phaser.Tilemaps.Tilemap, scene: Phaser.Scene, x: number, y: number, team: number) {
-        super(map, "turret" + "-" + team, "Turret", scene, x, y, "turret" + "-" + team, team);
+        super(map, 'turret' + '-' + team, 'Turret', scene, x, y, 'turret' + '-' + team, team);
         this.y += this.mapReference.layer.tileWidth / 4;
         this.blockedTiles.push(new Phaser.Math.Vector2(x - 1, y));
         this.avoidAdditionalPoints();
-        this.status = "Active";
-        this.anims.play('turret' + "-" + this.team, true);
+        this.status = 'Active';
+        this.anims.play('turret' + '-' + this.team, true);
         this.setScale(1.3);
         this.selectedRectangle.displayWidth = this.selectedRectangle.displayWidth * 2 / 3;
         this.selectedRectangle.setVisible(false);
@@ -31,13 +31,15 @@ class TurretEntity extends BuildingEntity {
 
     CreateBullet(targetEntity: Entity) {
         if (this.scene.children.exists(this.targetEntity) ) {
-            let bullet: Phaser.GameObjects.PointLight = new Phaser.GameObjects.PointLight(this.scene, this.x, this.y, 0x0000f0, 7, 0.5, 0.3);
+            const bullet: Phaser.GameObjects.PointLight = new Phaser.GameObjects.PointLight(this.scene, this.x, this.y, 0x0000f0, 7, 0.5, 0.3);
             bullet.setDepth(targetEntity.GetTileLocation().x + targetEntity.GetTileLocation().y);
             this.addBulletTween({
                 targets: bullet,
                 x: { value: targetEntity.x, duration: 200 },
                 y: { value: targetEntity.y, duration: 200 },
-                onComplete: () => { this.destroyBullet(bullet, targetEntity); }
+                onComplete: () => {
+                    this.destroyBullet(bullet, targetEntity); 
+                }
             });
 
             this.scene.add.existing(bullet);
@@ -56,13 +58,13 @@ class TurretEntity extends BuildingEntity {
         else {
             this.targetEntity = undefined;
         }
-        var tweens = [];
+        const tweens = [];
 
         this.AddTween({
             targets: {},
             NOTHING: { value: 0, duration: 800 },
             onComplete: () => {
-                this.AttackRoutine()
+                this.AttackRoutine();
             }
         });
 
@@ -78,13 +80,15 @@ class TurretEntity extends BuildingEntity {
     update(delta) {
 
         if (this.entitiesToBeDamaged.length > 0) {
-            this.entitiesToBeDamaged.forEach(entity => { entity.damage(5) });
+            this.entitiesToBeDamaged.forEach(entity => {
+                entity.damage(5); 
+            });
             this.entitiesToBeDamaged = [];
         }
         super.update(delta);
     }
 
-    addBulletTween(config: Object) {
+    addBulletTween(config: Record<string, unknown>) {
         if (this.scene) {
             if (this.bulletTween) {
                 this.RemoveTween(this.bulletTween);

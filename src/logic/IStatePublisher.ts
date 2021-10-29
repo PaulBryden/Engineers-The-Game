@@ -9,4 +9,4 @@ interface  IStateSubscriber
      notify(state:string) : void;
 }
 
-export {IStatePublisher, IStateSubscriber}
+export {IStatePublisher, IStateSubscriber};

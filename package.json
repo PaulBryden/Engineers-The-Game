@@ -4,9 +4,12 @@
     "description": "Engineers The Game",
     "main": "src/game.ts",
     "scripts": {
-        "dev": "rollup --config rollup.config.dev.js",
-        "build": "rollup --config rollup.config.dist.js",
-        "watch": "rollup --watch --config rollup.config.dev.js"
+        "start": "snowpack dev",
+        "prebuild": "tsc && npm run lint",
+        "build": "snowpack build --verbose",
+        "lint": "eslint . --ext .ts",
+        "lint:fix": "eslint . --ext .ts --fix",
+        "test": "echo \"Error: no test specified\" && exit 1"
     },
     "repository": {
         "type": "git",
@@ -18,29 +21,17 @@
         "@capacitor/android": "^2.4.7",
         "@capacitor/cli": "^2.4.7",
         "@capacitor/core": "^2.4.7",
-        "easystarts": "^0.4.5",
-        "phaser-navmesh": "^2.0.6",
-        "phaser3-react": "^1.2.6",
-        "phaser3-rex-plugins": "^1.1.39",
-        "react": "^17.0.1",
-        "react-dom": "^17.0.1",
-        "rollup-plugin-javascript-obfuscator": "^1.0.4",
-        "rollup-plugin-uglify": "^6.0.4",
-        "typestate": "^1.0.6",
-        "webpack": "^5.17.0"
+        "@popperjs/core": "^2.10.2",
+        "typestate": "^1.0.6"
     },
     "devDependencies": {
-        "@rollup/plugin-node-resolve": "^11.1.0",
-        "@rollup/plugin-replace": "^2.3.4",
-        "easystarjs": "^0.4.3",
         "gh-pages": "^3.1.0",
+        "easystarjs": "^0.4.3",
         "phaser": "^3.54.0",
-        "rollup": "^2.38.0",
-        "rollup-plugin-commonjs": "^10.1.0",
-        "rollup-plugin-node-resolve": "^5.2.0",
-        "rollup-plugin-serve": "^1.1.0",
-        "rollup-plugin-terser": "^7.0.2",
-        "rollup-plugin-typescript2": "^0.29.0",
-        "typescript": "^4.1.3"
+        "typescript": "^4.2.4",
+        "@typescript-eslint/eslint-plugin": "^4.22.1",
+        "@typescript-eslint/parser": "^4.22.1",
+        "eslint": "^7.25.0",
+        "snowpack": "^3.3.7"
     }
 }

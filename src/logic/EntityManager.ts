@@ -1,20 +1,19 @@
-import 'phaser'
-import { EngineerEntity } from '../units/EngineerEntity'
-import { BaseEntity } from '../units/BaseEntity'
-import { Entity } from '../units/Entity'
-import { MineEntity } from '../units/MineEntity'
+import 'phaser';
+import { EngineerEntity } from '../units/EngineerEntity';
+import { BaseEntity } from '../units/BaseEntity';
+import { Entity } from '../units/Entity';
+import { MineEntity } from '../units/MineEntity';
 
-import { EventEmitterSingleton } from './EventEmitterSingleton'
-import { SoundConstants, EventConstants, CompassDirections, EntityConstants, StartOfGame, EntityID, BuildingEntityID, TeamNumbers, GameStatus } from './GameConstants'
-import { TurretEntity } from '../units/TurretEntity'
-import { GliderEntity } from '../units/GliderEntity'
-import { FactoryEntity } from '../units/FactoryEntity'
-import { ScaffoldEntity } from '../units/ScaffoldEntity'
-import { Vector } from 'matter'
-import { BuildUnitsEntity } from '../units/BuildUnitsEntity'
-import { EasyStarGroundLevelSingleton } from './EasyStarSingleton'
-import { BuildingEntity } from '../units/BuildingEntity'
-import { AudioEffectsSingleton } from '../audio/AudioEffectsSingleton'
+import { EventEmitterSingleton } from './EventEmitterSingleton';
+import { SoundConstants, EventConstants, CompassDirections, EntityConstants, StartOfGame, EntityID, BuildingEntityID, TeamNumbers, GameStatus } from './GameConstants';
+import { TurretEntity } from '../units/TurretEntity';
+import { GliderEntity } from '../units/GliderEntity';
+import { FactoryEntity } from '../units/FactoryEntity';
+import { ScaffoldEntity } from '../units/ScaffoldEntity';
+import { BuildUnitsEntity } from '../units/BuildUnitsEntity';
+import { EasyStarGroundLevelSingleton } from './EasyStarSingleton';
+import { BuildingEntity } from '../units/BuildingEntity';
+import { AudioEffectsSingleton } from '../audio/AudioEffectsSingleton';
 class EntityManager {
     scene: Phaser.Scene;
     entityList: Entity[]
@@ -26,12 +25,18 @@ class EntityManager {
     constructor(scene: Phaser.Scene, map: Phaser.Tilemaps.Tilemap, fogOfWar: Phaser.GameObjects.RenderTexture) {
         this.scene = scene;
         this.map = map;
-        this.entityList = new Array();
+        this.entityList = [];
         this.eventEmitter = EventEmitterSingleton.getInstance();
         this.resources = new Map();
-        this.eventEmitter.on(EventConstants.EntityBuild.CreateEngineer, (vector, teamNumber) => { this.createEngineerEntity(vector.x, vector.y, teamNumber) });
-        this.eventEmitter.on(EventConstants.EntityBuild.CreateGlider, (vector, teamNumber) => { this.createGliderEntity(vector.x, vector.y, teamNumber) });
-        this.eventEmitter.on(EventConstants.Game.DestroyEntity, (entity) => { this.deleteEntity(entity); });
+        this.eventEmitter.on(EventConstants.EntityBuild.CreateEngineer, (vector, teamNumber) => {
+            this.createEngineerEntity(vector.x, vector.y, teamNumber); 
+        });
+        this.eventEmitter.on(EventConstants.EntityBuild.CreateGlider, (vector, teamNumber) => {
+            this.createGliderEntity(vector.x, vector.y, teamNumber); 
+        });
+        this.eventEmitter.on(EventConstants.Game.DestroyEntity, (entity) => {
+            this.deleteEntity(entity); 
+        });
         this.resources.set(TeamNumbers.Enemy, StartOfGame.resourceCount);
         this.resources.set(TeamNumbers.Player, StartOfGame.resourceCount);
         EventEmitterSingleton.getInstance().emit(EventConstants.Game.UpdateResourceCount, this.resources.get(TeamNumbers.Player), TeamNumbers.Player);
@@ -40,11 +45,15 @@ class EntityManager {
         this.fogOfWar = fogOfWar;
         this.fogOfWarMasks = this.scene.make.container({ x: 0, y: 0 }, false);
 
-        this.eventEmitter.on(EventConstants.EntityBuild.DestroyScaffold, (scaffold) => { this.deleteEntity(scaffold); });
-        this.eventEmitter.on(EventConstants.EntityBuild.CreateBuilding, (x, y, entityName, teamNumber) => { this.createEntity(x, y, entityName, teamNumber) });
+        this.eventEmitter.on(EventConstants.EntityBuild.DestroyScaffold, (scaffold) => {
+            this.deleteEntity(scaffold); 
+        });
+        this.eventEmitter.on(EventConstants.EntityBuild.CreateBuilding, (x, y, entityName, teamNumber) => {
+            this.createEntity(x, y, entityName, teamNumber); 
+        });
         this.eventEmitter.on(EventConstants.Input.RequestBuildScaffold, (entity, buildingID, teamNumber) => {
-            let continueWithBuild: boolean = true;
-            let buildLocationsEasyStar: Phaser.Math.Vector2[] = [new Phaser.Math.Vector2(entity.GetTileLocation().x - 1, entity.GetTileLocation().y), new Phaser.Math.Vector2(entity.GetTileLocation().x - 2, entity.GetTileLocation().y), new Phaser.Math.Vector2(entity.GetTileLocation().x - 1, entity.GetTileLocation().y - 1), new Phaser.Math.Vector2(entity.GetTileLocation().x - 2, entity.GetTileLocation().y - 2)];
+            let continueWithBuild = true;
+            const buildLocationsEasyStar: Phaser.Math.Vector2[] = [new Phaser.Math.Vector2(entity.GetTileLocation().x - 1, entity.GetTileLocation().y), new Phaser.Math.Vector2(entity.GetTileLocation().x - 2, entity.GetTileLocation().y), new Phaser.Math.Vector2(entity.GetTileLocation().x - 1, entity.GetTileLocation().y - 1), new Phaser.Math.Vector2(entity.GetTileLocation().x - 2, entity.GetTileLocation().y - 2)];
             this.entityList.forEach(element => {
                 if (element instanceof BuildingEntity) {
                     (<BuildingEntity>element).blockedTiles.forEach(tile => {
@@ -54,14 +63,14 @@ class EntityManager {
                                 if (teamNumber == TeamNumbers.Player) {
                                     AudioEffectsSingleton.getInstance(this.scene).Blocked.play();
                                 }
-                                return
+                                return;
                             }
                         });
                     });
                 }
             });
             if (!continueWithBuild) {
-                return
+                return;
             }
             if (buildingID == BuildingEntityID.Base) {
                 if (this.resources.get(teamNumber) >= 500) {
@@ -93,12 +102,16 @@ class EntityManager {
                 }
 
             }
-            let scaffold: ScaffoldEntity = this.createScaffoldEntity(entity.GetTileLocation().x, entity.GetTileLocation().y, buildingID, teamNumber);
+            const scaffold: ScaffoldEntity = this.createScaffoldEntity(entity.GetTileLocation().x, entity.GetTileLocation().y, buildingID, teamNumber);
             entity.requestBuild(scaffold);
         });
 
-        this.eventEmitter.on(EventConstants.Game.AddResources, (resources, teamNumber) => { this.resources.set(teamNumber, this.resources.get(teamNumber) + resources); this.eventEmitter.emit(EventConstants.Game.UpdateResourceCount, (this.resources.get(TeamNumbers.Player)), TeamNumbers.Player); });
-        this.eventEmitter.on(EventConstants.Game.RemoveResources, (resources, teamNumber) => { this.resources.set(teamNumber, this.resources.get(teamNumber) - resources); this.eventEmitter.emit(EventConstants.Game.UpdateResourceCount, (this.resources.get(TeamNumbers.Player)), TeamNumbers.Player); });
+        this.eventEmitter.on(EventConstants.Game.AddResources, (resources, teamNumber) => {
+            this.resources.set(teamNumber, this.resources.get(teamNumber) + resources); this.eventEmitter.emit(EventConstants.Game.UpdateResourceCount, (this.resources.get(TeamNumbers.Player)), TeamNumbers.Player); 
+        });
+        this.eventEmitter.on(EventConstants.Game.RemoveResources, (resources, teamNumber) => {
+            this.resources.set(teamNumber, this.resources.get(teamNumber) - resources); this.eventEmitter.emit(EventConstants.Game.UpdateResourceCount, (this.resources.get(TeamNumbers.Player)), TeamNumbers.Player); 
+        });
         this.eventEmitter.on(EventConstants.Input.BuildEngineer, (entity: BuildUnitsEntity, teamNumber) => {
             if (this.resources.get(teamNumber) >= 100 && !(entity instanceof ScaffoldEntity)) {
                 this.resources.set(teamNumber, this.resources.get(teamNumber) - 100);
@@ -124,51 +137,52 @@ class EntityManager {
             this.eventEmitter.emit(EventConstants.Game.UpdateResourceCount, this.resources.get(teamNumber), teamNumber);
         });
 
-        if(GameStatus.ActiveGame)
-        {
-        this.scene.tweens.add({
-            targets: {},
-            NOTHING: { value: 1, duration: 1000 },
-            onComplete: () => {this.checkForWinnerTween();
-        }});
-    }
+        if(GameStatus.ActiveGame) {
+            this.scene.tweens.add({
+                targets: {},
+                NOTHING: { value: 1, duration: 1000 },
+                onComplete: () => {
+                    this.checkForWinnerTween();
+                }});
+        }
         
 
     }
 
-    checkForWinnerTween()
-    {
+    checkForWinnerTween() {
         let localBuildingCount: number;
         let enemyBuildingCount: number;
         localBuildingCount = 0;
         enemyBuildingCount = 0;
-        this.entityList.forEach(element => { if (element instanceof BuildingEntity && element.team == TeamNumbers.Player) {
-             localBuildingCount++; } 
-             else if (element instanceof BuildingEntity && element.team == TeamNumbers.Enemy) {
-                enemyBuildingCount++; } 
-            });
+        this.entityList.forEach(element => {
+            if (element instanceof BuildingEntity && element.team == TeamNumbers.Player) {
+                localBuildingCount++; 
+            } 
+            else if (element instanceof BuildingEntity && element.team == TeamNumbers.Enemy) {
+                enemyBuildingCount++; 
+            } 
+        });
         if (localBuildingCount == 0 && GameStatus.ActiveGame) {
             EventEmitterSingleton.getInstance().emit(EventConstants.Game.Loser);
         }
         else if (enemyBuildingCount == 0 && GameStatus.ActiveGame) {
             EventEmitterSingleton.getInstance().emit(EventConstants.Game.Winner);
         }
-        if(enemyBuildingCount!=0 || localBuildingCount!-0)
-        {
+        if(enemyBuildingCount!=0 || localBuildingCount!-0) {
             this.scene.tweens.add({
                 targets: {},
                 NOTHING: { value: 1, duration: 1000 },
-                onComplete: () => {this.checkForWinnerTween();
+                onComplete: () => {
+                    this.checkForWinnerTween();
     
-            }});
+                }});
         }
                 
     }
 
     addToFogOfWarMasks(image: Phaser.GameObjects.Image) {
         this.fogOfWarMasks.add(image);
-        if(this.fogOfWar.mask)
-        {
+        if(this.fogOfWar.mask) {
             this.fogOfWar.mask.destroy();
             this.fogOfWar.clearMask(true);
         }
@@ -178,11 +192,12 @@ class EntityManager {
 
     getNearestBaseToEntity(entity: Entity): BaseEntity {
         let nearestBase: BaseEntity;
-        for (let item of this.entityList) {
+        for (const item of this.entityList) {
             if (item instanceof BaseEntity) {
                 if (nearestBase == null) {
                     nearestBase = item;
-                } else {
+                }
+                else {
                     if ((new Phaser.Math.Vector2(nearestBase.x, nearestBase.y)).distance(new Phaser.Math.Vector2(entity.x, entity.y)) > (new Phaser.Math.Vector2(item.x, item.y)).distance(new Phaser.Math.Vector2(entity.x, entity.y))) {
                         nearestBase = item;
                     }
@@ -194,21 +209,20 @@ class EntityManager {
 
     createEntity(x: number, y: number, type: string, team: number) {
         switch (type) {
-            case BuildingEntityID.Base:
-                this.createBaseEntity(x, y, team);
-                break;
-            case BuildingEntityID.Factory:
-                this.createFactoryEntity(x, y, team);
-                break;
-            case BuildingEntityID.Turret:
-                this.createTurretEntity(x, y, team);
-                break;
+        case BuildingEntityID.Base:
+            this.createBaseEntity(x, y, team);
+            break;
+        case BuildingEntityID.Factory:
+            this.createFactoryEntity(x, y, team);
+            break;
+        case BuildingEntityID.Turret:
+            this.createTurretEntity(x, y, team);
+            break;
         }
     }
 
-    createEngineerEntity(x: number, y: number, team: number): EngineerEntity//tile coordinates 
-    {
-        let engineer: EngineerEntity = new EngineerEntity(this.map, this.scene, x, y, team);
+    createEngineerEntity(x: number, y: number, team: number): EngineerEntity { //tile coordinates
+        const engineer: EngineerEntity = new EngineerEntity(this.map, this.scene, x, y, team);
         this.entityList.push(engineer);
         engineer.updateNearestBase(this.getNearestBaseToEntity(engineer));
         team == TeamNumbers.Player ? this.addToFogOfWarMasks(engineer.GetFogOfWarMask()) : () => { };
@@ -216,48 +230,42 @@ class EntityManager {
 
     }
 
-    createBaseEntity(x: number, y: number, team: number): BaseEntity//tile coordinates 
-    {
-        let base: BaseEntity = new BaseEntity(this.map, this.scene, x, y, team);
+    createBaseEntity(x: number, y: number, team: number): BaseEntity {
+        const base: BaseEntity = new BaseEntity(this.map, this.scene, x, y, team);
         this.entityList.push(base);
         team == TeamNumbers.Player ? this.addToFogOfWarMasks(base.GetFogOfWarMask()) : () => { };
         return base;
 
     }
-    createMineEntity(x: number, y: number): MineEntity//tile coordinates 
-    {
-        let base: MineEntity = new MineEntity(this.map, this.scene, x, y);
+    createMineEntity(x: number, y: number): MineEntity {
+        const base: MineEntity = new MineEntity(this.map, this.scene, x, y);
         this.entityList.push(base);
         return base;
 
     }
-    createTurretEntity(x: number, y: number, team: number): TurretEntity//tile coordinates 
-    {
-        let base: TurretEntity = new TurretEntity(this.map, this.scene, x, y, team);
+    createTurretEntity(x: number, y: number, team: number): TurretEntity {
+        const base: TurretEntity = new TurretEntity(this.map, this.scene, x, y, team);
         this.entityList.push(base);
         team == TeamNumbers.Player ? this.addToFogOfWarMasks(base.GetFogOfWarMask()) : () => { };
         return base;
 
     }
-    createScaffoldEntity(x: number, y: number, targetBuilding: string, team: number): ScaffoldEntity//tile coordinates 
-    {
-        let base: ScaffoldEntity = new ScaffoldEntity(this.map, this.scene, x, y, targetBuilding, team);
+    createScaffoldEntity(x: number, y: number, targetBuilding: string, team: number): ScaffoldEntity {
+        const base: ScaffoldEntity = new ScaffoldEntity(this.map, this.scene, x, y, targetBuilding, team);
         this.entityList.push(base);
         team == TeamNumbers.Player ? this.addToFogOfWarMasks(base.GetFogOfWarMask()) : () => { };
         return base;
 
     }
-    createGliderEntity(x: number, y: number, team: number): GliderEntity//tile coordinates 
-    {
-        let base: GliderEntity = new GliderEntity(this.map, this.scene, x, y, team);
+    createGliderEntity(x: number, y: number, team: number): GliderEntity{
+        const base: GliderEntity = new GliderEntity(this.map, this.scene, x, y, team);
         this.entityList.push(base);
         team == TeamNumbers.Player ? this.addToFogOfWarMasks(base.GetFogOfWarMask()) : () => { };
         return base;
 
     }
-    createFactoryEntity(x: number, y: number, team: number): FactoryEntity//tile coordinates 
-    {
-        let base: FactoryEntity = new FactoryEntity(this.map, this.scene, x, y, team);
+    createFactoryEntity(x: number, y: number, team: number): FactoryEntity{
+        const base: FactoryEntity = new FactoryEntity(this.map, this.scene, x, y, team);
         this.entityList.push(base);
         team == TeamNumbers.Player ? this.addToFogOfWarMasks(base.GetFogOfWarMask()) : () => { };
         return base;
@@ -265,7 +273,7 @@ class EntityManager {
     }
 
     deleteEntity(entity: Entity) {
-        let index = this.entityList.indexOf(entity);
+        const index = this.entityList.indexOf(entity);
         if (entity.selected) {
             entity.selected = false;
             entity.health = 0;
@@ -279,16 +287,20 @@ class EntityManager {
     }
 
     getAllEntitiesByTypeAndTeam(name: string, team: number) {
-        let listOfEntities: Entity[];
-        listOfEntities = [];
-        this.entityList.forEach(element => { if (element.name == name && element.team == team) { listOfEntities.push(element) } });
+        const listOfEntities: Entity[] = [];
+        this.entityList.forEach(element => {
+            if (element.name == name && element.team == team) {
+                listOfEntities.push(element); 
+            } 
+        });
         return listOfEntities;
     }
 
     deleteAllEntities() {
         this.entityList.forEach(element => { 
             this.fogOfWarMasks.remove(element.GetFogOfWarMask());
-        element.destroy(); });
+            element.destroy(); 
+        });
         this.entityList = [];
 
     }
@@ -298,7 +310,7 @@ class EntityManager {
         this.entityList.forEach(element => {
             if (element instanceof TurretEntity) {
                 if (element.targetEntity != undefined && new Phaser.Math.Vector2(element.targetEntity.x, element.targetEntity.y).distance(new Phaser.Math.Vector2(element.x, element.y)) < 200) {
-                    return
+                    return;
                 }
                 else {
                     element.targetEntity = undefined;
@@ -306,7 +318,7 @@ class EntityManager {
                 this.entityList.forEach(target => {
                     this.entityList.forEach(target => {
                         if (target.team != element.team && target.team != TeamNumbers.Neutral) {
-                            let distanceBetween: number = new Phaser.Math.Vector2(target.x, target.y).distance(new Phaser.Math.Vector2(element.x, element.y));
+                            const distanceBetween: number = new Phaser.Math.Vector2(target.x, target.y).distance(new Phaser.Math.Vector2(element.x, element.y));
                             if ((distanceBetween < 200)) {
                                 element.targetEntity = target;
                                 return;
@@ -322,4 +334,4 @@ class EntityManager {
 }
 
 
-export { EntityManager }
+export { EntityManager };

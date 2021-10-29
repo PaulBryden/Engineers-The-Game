@@ -1,48 +1,47 @@
-import 'phaser'
-import { Entity } from './Entity'
+import 'phaser';
+import { Entity } from './Entity';
 import 'typestate';
-import EasyStar from 'easystarjs'
+import EasyStar from 'easystarjs';
 import { typestate } from 'typestate';
 import { EasyStarGroundLevelSingleton, Path } from '../logic/EasyStarSingleton';
 import { AudioEffectsSingleton } from '../audio/AudioEffectsSingleton';
 import { MineEntity } from './MineEntity';
 import { BaseEntity } from './BaseEntity';
-import { EventConstants, GameStatus, TeamNumbers } from '../logic/GameConstants'
+import { EventConstants, GameStatus, TeamNumbers } from '../logic/GameConstants';
 import { MovingEntity } from './MovingEntity';
 import { ScaffoldEntity } from './ScaffoldEntity';
 
 enum State {
-    Idle = "Idle",
-    Moving = "Moving",
-    Mining = "Mining",
-    Building = "Building"
+    Idle = 'Idle',
+    Moving = 'Moving',
+    Mining = 'Mining',
+    Building = 'Building'
 }
 
 enum MiningState {
-    Initial = "InitialMine",
-    GoingToMine = "GoingToMine",
-    InMine = "InMine",
-    GoingToBase = "GoingToBase",
-    InBase = "InBase"
+    Initial = 'InitialMine',
+    GoingToMine = 'GoingToMine',
+    InMine = 'InMine',
+    GoingToBase = 'GoingToBase',
+    InBase = 'InBase'
 }
 
 enum BuildingState {
-    Initial = "InitialBuilding",
-    GoingToBuilding = "GoingToBuilding",
-    Building = "Building",
+    Initial = 'InitialBuilding',
+    GoingToBuilding = 'GoingToBuilding',
+    Building = 'Building',
 }
 
 enum AnimationState {
-    Default = "",
-    Mining = "Mining",
-    Action = "Action"
+    Default = '',
+    Mining = 'Mining',
+    Action = 'Action'
 }
 
 class EngineerEntity extends MovingEntity {
     engineerFSM: typestate.FiniteStateMachine<State>;
     pathFinder: EasyStar.js;
     targetDestination: Phaser.Math.Vector2;
-    path: Path;
     targetMine: MineEntity;
     nearestBase: BaseEntity;
     miningFSM: typestate.FiniteStateMachine<MiningState>
@@ -50,7 +49,7 @@ class EngineerEntity extends MovingEntity {
     currentAnimation: AnimationState
     targetBuilding: ScaffoldEntity;
     constructor(map: Phaser.Tilemaps.Tilemap, scene: Phaser.Scene, x: number, y: number, team: number) {
-        super(map, "Portrait_Engineer", "Engineer", scene, x, y, "player" + "-" + team, team);
+        super(map, 'Portrait_Engineer', 'Engineer', scene, x, y, 'player' + '-' + team, team);
         this.removeInteractive();
         this.clickableArea= new Phaser.Geom.Circle(this.width / 2, this.height / 2, this.width / 2.3);
         this.setInteractive(this.clickableArea, this.handler);
@@ -58,13 +57,13 @@ class EngineerEntity extends MovingEntity {
         this.miningFSM = this.createMiningFSM();
         this.buildingFSM = this.createBuildingFSM();
         this.pathFinder = EasyStarGroundLevelSingleton.getInstance();
-        this.anims.play('engineer' + "-" + team + "-SW", true);
+        this.anims.play('engineer' + '-' + team + '-SW', true);
         this.currentAnimation = AnimationState.Default;
         this.speed = 80;
     }
 
     createBuildingFSM(): typestate.FiniteStateMachine<BuildingState> {
-        let fsm: typestate.FiniteStateMachine<BuildingState> = new typestate.FiniteStateMachine<BuildingState>(BuildingState.Initial);
+        const fsm: typestate.FiniteStateMachine<BuildingState> = new typestate.FiniteStateMachine<BuildingState>(BuildingState.Initial);
         fsm.from(BuildingState.Initial).to(BuildingState.GoingToBuilding);
         fsm.from(BuildingState.GoingToBuilding).to(BuildingState.Building);
         fsm.from(BuildingState.Building).to(BuildingState.Initial);
@@ -72,7 +71,7 @@ class EngineerEntity extends MovingEntity {
         fsm.on(BuildingState.Building, (from: BuildingState) => {
             this.currentAnimation = AnimationState.Action;
             this.updateAngle(-Math.PI / 2);
-            this.ProcessBuilding()
+            this.ProcessBuilding();
         });
         fsm.onExit(BuildingState.Building, (to: BuildingState) => {
             this.currentAnimation = AnimationState.Default;
@@ -88,7 +87,7 @@ class EngineerEntity extends MovingEntity {
     }
 
     createFSM(): typestate.FiniteStateMachine<State> {
-        let fsm: typestate.FiniteStateMachine<State> = new typestate.FiniteStateMachine<State>(State.Idle);
+        const fsm: typestate.FiniteStateMachine<State> = new typestate.FiniteStateMachine<State>(State.Idle);
         fsm.from(State.Idle).to(State.Moving);
         fsm.from(State.Idle).to(State.Mining);
         fsm.from(State.Idle).to(State.Building);
@@ -102,23 +101,23 @@ class EngineerEntity extends MovingEntity {
         fsm.from(State.Moving).to(State.Mining);
         fsm.from(State.Mining).to(State.Moving);
         fsm.on(State.Building, (from: State) => {
-            for (let sub of this.subscribers) {
+            for (const sub of this.subscribers) {
                 sub.notify(State.Building);
             }
         });
         fsm.on(State.Idle, (from: State) => {
-            for (let sub of this.subscribers) {
+            for (const sub of this.subscribers) {
                 sub.notify(State.Idle);
             }
         });
         fsm.on(State.Moving, (from: State) => {
-            for (let sub of this.subscribers) {
+            for (const sub of this.subscribers) {
                 sub.notify(State.Moving);
             }
             this.Move();
         });
         fsm.on(State.Mining, (from: State) => {
-            for (let sub of this.subscribers) {
+            for (const sub of this.subscribers) {
                 sub.notify(State.Mining);
             }
             this.Mine();
@@ -154,8 +153,9 @@ class EngineerEntity extends MovingEntity {
             }
             else {
                 try{
-                this.engineerFSM.go(State.Idle);
-                }catch{}
+                    this.engineerFSM.go(State.Idle);
+                }
+                catch{}
             }
         });
         try {
@@ -169,8 +169,8 @@ class EngineerEntity extends MovingEntity {
 
     updatePathToBuilding() {
         this.path = [];
-        var PlayerPos = this.GetTileLocation();
-        var buildingEngineerPos = new Phaser.Math.Vector2(this.targetBuilding.desiredBuildingCoordinates.x + 1, this.targetBuilding.desiredBuildingCoordinates.y + 1);
+        const PlayerPos = this.GetTileLocation();
+        const buildingEngineerPos = new Phaser.Math.Vector2(this.targetBuilding.desiredBuildingCoordinates.x + 1, this.targetBuilding.desiredBuildingCoordinates.y + 1);
 
         this.pathFinder.findPath(PlayerPos.x - 1, PlayerPos.y, buildingEngineerPos.x - 1, buildingEngineerPos.y, (path) => {
 
@@ -182,8 +182,9 @@ class EngineerEntity extends MovingEntity {
             }
             else {
                 try{
-                this.engineerFSM.go(State.Idle);
-                }catch{}
+                    this.engineerFSM.go(State.Idle);
+                }
+                catch{}
             }
         });
         try {
@@ -194,7 +195,7 @@ class EngineerEntity extends MovingEntity {
 
 
     createMiningFSM(): typestate.FiniteStateMachine<MiningState> {
-        let fsm: typestate.FiniteStateMachine<MiningState> = new typestate.FiniteStateMachine<MiningState>(MiningState.Initial);
+        const fsm: typestate.FiniteStateMachine<MiningState> = new typestate.FiniteStateMachine<MiningState>(MiningState.Initial);
         fsm.from(MiningState.Initial).to(MiningState.GoingToMine);
         fsm.from(MiningState.GoingToMine).to(MiningState.InMine);
         fsm.from(MiningState.InMine).to(MiningState.GoingToBase);
@@ -216,14 +217,17 @@ class EngineerEntity extends MovingEntity {
                     else {
                         try {
                             this.engineerFSM.go(State.Idle);
-                        } catch { }
+                        }
+                        catch { }
                     }
                 });
                 this.pathFinder.calculate();
-            } catch {
+            }
+            catch {
                 try {
                     this.engineerFSM.go(State.Idle);
-                } catch { }
+                }
+                catch { }
             }
         });
 
@@ -231,7 +235,7 @@ class EngineerEntity extends MovingEntity {
             try {
                 var PlayerPos = Phaser.Tilemaps.Components.IsometricWorldToTileXY(this.x, this.y, true, PlayerPos, this.scene.cameras.main, this.mapReference.layer);
                 if (this.scene.children.exists(this.nearestBase)) {
-                    var basePos = this.nearestBase.GetTileLocation();
+                    const basePos = this.nearestBase.GetTileLocation();
 
                     this.pathFinder.findPath(PlayerPos.x - 1, PlayerPos.y, basePos.x, basePos.y - 1, (path) => {
 
@@ -248,15 +252,16 @@ class EngineerEntity extends MovingEntity {
                         }
                     });
                     this.pathFinder.calculate();
-                }else
-                {
+                }
+                else {
                     try {
                         this.miningFSM.reset();
                         this.engineerFSM.go(State.Idle);
                     }
                     catch { }
                 }
-            } catch { }
+            }
+            catch { }
         });
         fsm.on(MiningState.InMine, (from: MiningState) => {
             this.MoveInsideMine();
@@ -274,11 +279,13 @@ class EngineerEntity extends MovingEntity {
             this.targetMine = mine;
             try{
                 
-            this.miningFSM.is(MiningState.GoingToMine) ? this.updatePathToMine() : this.miningFSM.canGo(MiningState.GoingToMine) ? this.miningFSM.go(MiningState.GoingToMine) : {};
-        }catch{}
+                this.miningFSM.is(MiningState.GoingToMine) ? this.updatePathToMine() : this.miningFSM.canGo(MiningState.GoingToMine) ? this.miningFSM.go(MiningState.GoingToMine) : {};
+            }
+            catch{}
             try {
                 !this.engineerFSM.is(State.Mining) ? this.engineerFSM.go(State.Mining) : {};
-            } catch { }
+            }
+            finally { }
         }
     }
 
@@ -287,9 +294,12 @@ class EngineerEntity extends MovingEntity {
         if (this.targetBuilding != building || !this.engineerFSM.is(State.Building)) {
             this.targetBuilding = building;
             try{
-            this.buildingFSM.is(BuildingState.GoingToBuilding) ? this.updatePathToBuilding() : this.buildingFSM.canGo(BuildingState.GoingToBuilding) ? this.buildingFSM.go(BuildingState.GoingToBuilding) : {};
-            !this.engineerFSM.is(State.Building) ? this.engineerFSM.go(State.Building) : {};
-            }catch{console.log("Requested Build, but engineer is already building... An Error has Occured.")}
+                this.buildingFSM.is(BuildingState.GoingToBuilding) ? this.updatePathToBuilding() : this.buildingFSM.canGo(BuildingState.GoingToBuilding) ? this.buildingFSM.go(BuildingState.GoingToBuilding) : {};
+                !this.engineerFSM.is(State.Building) ? this.engineerFSM.go(State.Building) : {};
+            }
+            finally{
+                //console.log('Requested Build, but engineer is already building... An Error has Occured.');
+            }
         }
     }
 
@@ -301,7 +311,11 @@ class EngineerEntity extends MovingEntity {
                 targets: this,
                 alpha: { value: 1, duration: 500 },
                 x: { value: (this.x + (this.mapReference.layer.tileWidth * 3 / 2)), duration: 1500 },
-                onComplete: () => { if (this.miningFSM.is(MiningState.InMine)) { this.miningFSM.go(MiningState.GoingToBase); } }
+                onComplete: () => {
+                    if (this.miningFSM.is(MiningState.InMine)) {
+                        this.miningFSM.go(MiningState.GoingToBase); 
+                    } 
+                }
 
             });
             this.currentAnimation = AnimationState.Mining;
@@ -314,7 +328,9 @@ class EngineerEntity extends MovingEntity {
             targets: this,
             alpha: { value: 0, duration: 500 },
             x: { value: (this.x + this.mapReference.layer.tileWidth), duration: 1000 },
-            onComplete: () => { this.MoveInsideMineExit(); }
+            onComplete: () => {
+                this.MoveInsideMineExit(); 
+            }
 
         });
         this.updateAngle(Phaser.Math.Angle.Between(this.x, this.y, this.x + this.mapReference.layer.tileWidth, this.y));
@@ -330,7 +346,9 @@ class EngineerEntity extends MovingEntity {
                 onComplete: () => {
                     this.eventEmitter.emit(EventConstants.Game.AddResources, (25), this.team);
                     this.team == TeamNumbers.Player ? AudioEffectsSingleton.getInstance(this.scene).AddResource.play() : {};
-                    if (this.miningFSM.is(MiningState.InBase)) { this.miningFSM.go(MiningState.GoingToMine); }
+                    if (this.miningFSM.is(MiningState.InBase)) {
+                        this.miningFSM.go(MiningState.GoingToMine); 
+                    }
                 }
 
             });
@@ -342,34 +360,36 @@ class EngineerEntity extends MovingEntity {
     MoveInsideBase() {
         if (this.scene.children.exists(this.nearestBase)) {
 
-        this.AddTween({
-            targets: this,
-            alpha: { value: 0, duration: 500 },
-            x: { value: (this.x - (this.mapReference.layer.tileWidth / 2)), duration: 1000 },
-            onComplete: () => { this.MoveInsideBaseExit() }
+            this.AddTween({
+                targets: this,
+                alpha: { value: 0, duration: 500 },
+                x: { value: (this.x - (this.mapReference.layer.tileWidth / 2)), duration: 1000 },
+                onComplete: () => {
+                    this.MoveInsideBaseExit(); 
+                }
 
-        });
-        this.updateAngle(Phaser.Math.Angle.Between(this.x, this.y, this.x - this.mapReference.layer.tileWidth, this.y));
-    }
-    else
-    {
-        try
-        {
-            this.miningFSM.reset();
-            this.engineerFSM.go(State.Idle);
-        }catch{}
+            });
+            this.updateAngle(Phaser.Math.Angle.Between(this.x, this.y, this.x - this.mapReference.layer.tileWidth, this.y));
+        }
+        else {
+            try {
+                this.miningFSM.reset();
+                this.engineerFSM.go(State.Idle);
+            }
+            catch{}
     
+        }
     }
-}
 
     MoveToMine() {
-        let awaitTime: number = 500;
+        const awaitTime = 500;
         if (this.miningFSM.is(MiningState.GoingToMine) && this.path != null && this.path.length > 0) {
             this.movingEventEmitter.once(EventConstants.EntityMovingUpdates.FinishedMoving, () => {
                 if (this.miningFSM.is(MiningState.GoingToMine)) {
                     try{
-                    this.miningFSM.go(MiningState.InMine);
-                    }catch{}
+                        this.miningFSM.go(MiningState.InMine);
+                    }
+                    catch{}
                 }
             });
         }
@@ -386,7 +406,8 @@ class EngineerEntity extends MovingEntity {
                         try {
                             this.buildingFSM.go(BuildingState.Initial);
                             this.engineerFSM.go(State.Idle);
-                        } catch { }
+                        }
+                        catch { }
                     }
                     else {
                         this.ProcessBuilding();
@@ -396,14 +417,15 @@ class EngineerEntity extends MovingEntity {
         }
     }
     MoveToBuilding() {
-        let awaitTime: number = 500;
+        const awaitTime = 500;
         if (this.buildingFSM.is(BuildingState.GoingToBuilding) && this.path != null && this.path.length > 0) {
 
             this.movingEventEmitter.once(EventConstants.EntityMovingUpdates.FinishedMoving, () => {
                 if (this.buildingFSM.is(BuildingState.GoingToBuilding)) {
                     try {
                         this.buildingFSM.go(BuildingState.Building);
-                    } catch {
+                    }
+                    catch {
 
                     }
                 }
@@ -423,7 +445,7 @@ class EngineerEntity extends MovingEntity {
 
 
     requestMove(coordinates: Phaser.Math.Vector2) {
-        console.log("X:" + coordinates.x + " , Y:" + coordinates.y);
+        //console.log('X:' + coordinates.x + ' , Y:' + coordinates.y);
         this.targetDestination = coordinates;
         var PlayerPos = Phaser.Tilemaps.Components.IsometricWorldToTileXY(this.x, this.y, true, PlayerPos, this.scene.cameras.main, this.mapReference.layer);
         this.pathFinder.findPath(PlayerPos.x - 1, PlayerPos.y, coordinates.x - 1, coordinates.y, (path) => {
@@ -434,13 +456,15 @@ class EngineerEntity extends MovingEntity {
                 this.team == TeamNumbers.Player && GameStatus.ActiveGame ? Math.random() > 0.5 ? AudioEffectsSingleton.getInstance(this.scene).EngineerMoving1.play() : AudioEffectsSingleton.getInstance(this.scene).EngineerMoving2.play() : {};
                 try {
                     this.engineerFSM.go(State.Moving);
-                } catch { }
+                }
+                catch { }
             }
             else {
                 try {
                     this.team == TeamNumbers.Player ? AudioEffectsSingleton.getInstance(this.scene).Blocked.play() : {};
                     this.engineerFSM.go(State.Idle);
-                } catch { }
+                }
+                catch { }
             }
         });
         try {
@@ -456,39 +480,41 @@ class EngineerEntity extends MovingEntity {
             angle = angle - 360;
         }
         if ((angle > 337.5 && angle <= 360) || (angle > 0 && angle <= 22.5)) {
-            this.anims.play(this.currentAnimation + 'engineer' + "-" + this.team + "-N", true);
+            this.anims.play(this.currentAnimation + 'engineer' + '-' + this.team + '-N', true);
         }
         else if (angle > 22.5 && angle <= 67.5) {
-            this.anims.play(this.currentAnimation + 'engineer' + "-" + this.team + "-NE", true);
+            this.anims.play(this.currentAnimation + 'engineer' + '-' + this.team + '-NE', true);
         }
         else if (angle > 67.5 && angle <= 112.5) {
-            this.anims.play(this.currentAnimation + 'engineer' + "-" + this.team + "-E", true);
+            this.anims.play(this.currentAnimation + 'engineer' + '-' + this.team + '-E', true);
         }
         else if (angle > 112.5 && angle <= 157.5) {
-            this.anims.play(this.currentAnimation + 'engineer' + "-" + this.team + "-SE", true);
+            this.anims.play(this.currentAnimation + 'engineer' + '-' + this.team + '-SE', true);
         }
         else if (angle > 157.5 && angle <= 202.5) {
-            this.anims.play(this.currentAnimation + 'engineer' + "-" + this.team + "-S", true);
+            this.anims.play(this.currentAnimation + 'engineer' + '-' + this.team + '-S', true);
         }
         else if (angle > 202.5 && angle <= 247.5) {
-            this.anims.play(this.currentAnimation + 'engineer' + "-" + this.team + "-SW", true);
+            this.anims.play(this.currentAnimation + 'engineer' + '-' + this.team + '-SW', true);
         }
         else if (angle > 247.5 && angle <= 292.5) {
-            this.anims.play(this.currentAnimation + 'engineer' + "-" + this.team + "-W", true);
+            this.anims.play(this.currentAnimation + 'engineer' + '-' + this.team + '-W', true);
         }
         else if (angle > 292.5 && angle <= 337.5) {
-            this.anims.play(this.currentAnimation + 'engineer' + "-" + this.team + "-NW", true);
+            this.anims.play(this.currentAnimation + 'engineer' + '-' + this.team + '-NW', true);
         }
     }
 
     Move() {
 
-        let awaitTime: number = 500;
+        const awaitTime = 500;
         if (this.engineerFSM.is(State.Moving) && this.path != null && this.path.length > 0 && this.health > 0) {
             this.AddTween({
                 targets: this,
                 NOTHING: { value: 0, duration: awaitTime },
-                onComplete: () => { this.Move() }
+                onComplete: () => {
+                    this.Move(); 
+                }
             });
 
         }
@@ -496,7 +522,8 @@ class EngineerEntity extends MovingEntity {
             try{
                 this.engineerFSM.go(State.Idle);
 
-            }catch{}
+            }
+            catch{}
         }
 
     }
@@ -506,8 +533,9 @@ class EngineerEntity extends MovingEntity {
 
     cancelMove() {
         try{
-        this.engineerFSM.go(State.Idle);
-        }catch{}
+            this.engineerFSM.go(State.Idle);
+        }
+        catch{}
     }
 
     getStatus() {

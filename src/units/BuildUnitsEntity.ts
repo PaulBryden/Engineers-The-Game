@@ -1,7 +1,7 @@
-import { Entity } from './Entity'
+import { Entity } from './Entity';
 import { typestate } from 'typestate';
-import { EventConstants } from '../logic/GameConstants'
-import { BuildingEntity } from './BuildingEntity'
+import { EventConstants } from '../logic/GameConstants';
+import { BuildingEntity } from './BuildingEntity';
 
 class BuildUnitsEntity extends BuildingEntity {
     buildingFSM: typestate.FiniteStateMachine<EventConstants.BuildingStates>;
@@ -21,17 +21,17 @@ class BuildUnitsEntity extends BuildingEntity {
     }
 
     createFSM(): typestate.FiniteStateMachine<EventConstants.BuildingStates> {
-        let fsm: typestate.FiniteStateMachine<EventConstants.BuildingStates> = new typestate.FiniteStateMachine<EventConstants.BuildingStates>(EventConstants.BuildingStates.Idle);
+        const fsm: typestate.FiniteStateMachine<EventConstants.BuildingStates> = new typestate.FiniteStateMachine<EventConstants.BuildingStates>(EventConstants.BuildingStates.Idle);
         fsm.from(EventConstants.BuildingStates.Idle).to(EventConstants.BuildingStates.Building);
         fsm.from(EventConstants.BuildingStates.Building).to(EventConstants.BuildingStates.Idle);
         fsm.on(EventConstants.BuildingStates.Building,  (from: EventConstants.BuildingStates) => {
-            for (let subs of this.subscribers) {
+            for (const subs of this.subscribers) {
                 subs.notify(EventConstants.BuildingStates.Building);
             }
-           this.Build();
+            this.Build();
         });
         fsm.on(EventConstants.BuildingStates.Idle, (from: EventConstants.BuildingStates) => {
-            for (let subs of this.subscribers) {
+            for (const subs of this.subscribers) {
                 subs.notify(EventConstants.BuildingStates.Idle);
             }
         });
@@ -39,12 +39,10 @@ class BuildUnitsEntity extends BuildingEntity {
     }
 
     requestBuild() {
-        try
-        {
-        this.buildingFSM.go(EventConstants.BuildingStates.Building);
+        try {
+            this.buildingFSM.go(EventConstants.BuildingStates.Building);
         }
-        catch
-        {
+        catch {
 
         }
 
@@ -52,12 +50,11 @@ class BuildUnitsEntity extends BuildingEntity {
     requestCancel() {
         this.buildCounter = 0;
         try{
-        this.buildingFSM.go(EventConstants.BuildingStates.Idle);
-    }
-    catch
-    {
+            this.buildingFSM.go(EventConstants.BuildingStates.Idle);
+        }
+        catch {
 
-    }
+        }
 
     }
 
@@ -65,7 +62,7 @@ class BuildUnitsEntity extends BuildingEntity {
         return this.buildingFSM.currentState.toString();
     }
 
-     Build() {
+    Build() {
 
         this.AddTween({
             targets: {},
@@ -74,15 +71,15 @@ class BuildUnitsEntity extends BuildingEntity {
                 if (this.buildingFSM.is(EventConstants.BuildingStates.Building) && this.health>0) {
                     this.buildCounter++;
                     if (this.buildCounter != 10) {
-                       this.Build();
+                        this.Build();
                     }
                     else {
-                        this.buildCounter = 0;try
-                        {
-                        this.eventEmitter.emit(this.createEntityEvent, Phaser.Tilemaps.Components.IsometricWorldToTileXY(this.x - 32, this.y - 32, true, new Phaser.Math.Vector2(), this.scene.cameras.main, this.mapReference.layer), this.team);
+                        this.buildCounter = 0;try {
+                            this.eventEmitter.emit(this.createEntityEvent, Phaser.Tilemaps.Components.IsometricWorldToTileXY(this.x - 32, this.y - 32, true, new Phaser.Math.Vector2(), this.scene.cameras.main, this.mapReference.layer), this.team);
                         
-                        this.buildingFSM.go(EventConstants.BuildingStates.Idle);
-                        }catch{}
+                            this.buildingFSM.go(EventConstants.BuildingStates.Idle);
+                        }
+                        catch{}
         
                     }
                 }
@@ -95,8 +92,7 @@ class BuildUnitsEntity extends BuildingEntity {
         return new Promise(resolve => setTimeout(resolve, ms));
     }
 
-    destroy()
-    {
+    destroy() {
         this.requestCancel();
         this.health=-1;
         

@@ -1,7 +1,7 @@
-import { Entity } from "./Entity";
-import EasyStar from 'easystarjs'
-import { Path } from "../logic/EasyStarSingleton";
-import { EventConstants } from "../logic/GameConstants";
+import { Entity } from './Entity';
+import EasyStar from 'easystarjs';
+import { Path } from '../logic/EasyStarSingleton';
+import { EventConstants } from '../logic/GameConstants';
 class MovingEntity extends Entity {
 
     path: Path;
@@ -18,26 +18,27 @@ class MovingEntity extends Entity {
     requestMove(coordinates: Phaser.Math.Vector2) {
     }
     
-    updateAngle(angle: number) {}; //stub
+    updateAngle(angle: number) {} //stub
 
     update(delta) {
         super.update(delta);
-        var justShifted = false;
+        let justShifted = false;
         let distanceToTravelThisTick: number = this.speed * delta * 0.001;
         while (this.path.length > 0) {
-            var ex = this.path[0].x;
-            var ey = this.path[0].y;
+            const ex = this.path[0].x;
+            const ey = this.path[0].y;
             var testCoords;
-            let xyPos: Phaser.Math.Vector2 = Phaser.Tilemaps.Components.IsometricTileToWorldXY(ex, ey, testCoords, this.scene.cameras.main, this.mapReference.layer);
+            const xyPos: Phaser.Math.Vector2 = Phaser.Tilemaps.Components.IsometricTileToWorldXY(ex, ey, testCoords, this.scene.cameras.main, this.mapReference.layer);
             xyPos.x += this.mapReference.layer.tileWidth / 2;
             xyPos.y += (this.mapReference.layer.tileWidth / 2) - this.centerToTileOffset;
-            let currentPosition: Phaser.Math.Vector2 = new Phaser.Math.Vector2(this.x, this.y);
+            const currentPosition: Phaser.Math.Vector2 = new Phaser.Math.Vector2(this.x, this.y);
             //v*t = d;
             if (xyPos.distance(currentPosition) < distanceToTravelThisTick && this.path.length > 1) {
                 this.path.shift();
                 justShifted = true;
                 distanceToTravelThisTick = distanceToTravelThisTick - xyPos.distance(currentPosition);
-            } else if (xyPos.distance(currentPosition) < distanceToTravelThisTick && this.path.length == 1) {
+            }
+            else if (xyPos.distance(currentPosition) < distanceToTravelThisTick && this.path.length == 1) {
                 this.path.shift();
                 this.updateAngle(Phaser.Math.Angle.Between(this.x, this.y, xyPos.x, xyPos.y));
                 this.x = (xyPos.x);
@@ -47,7 +48,7 @@ class MovingEntity extends Entity {
             }
             else {
                 this.updateAngle(Phaser.Math.Angle.Between(this.x, this.y, xyPos.x, xyPos.y));
-                let scaleRatio: number = distanceToTravelThisTick / xyPos.distance(currentPosition);
+                const scaleRatio: number = distanceToTravelThisTick / xyPos.distance(currentPosition);
                 this.x += (xyPos.x - this.x) * scaleRatio;
                 this.y += (xyPos.y - this.y) * scaleRatio;
                 break;
@@ -56,4 +57,4 @@ class MovingEntity extends Entity {
 
     }
 }
-export { MovingEntity }
+export { MovingEntity };

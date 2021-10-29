@@ -1,5 +1,5 @@
-import 'phaser'
-import {SoundConstants} from '../logic/GameConstants'
+import 'phaser';
+import {SoundConstants} from '../logic/GameConstants';
 class AudioEffectsSingleton extends Phaser.Events.EventEmitter {
     private static instance: AudioEffectsSingleton;
     public IdleEngineerSelected1:Phaser.Sound.BaseSound;
@@ -13,8 +13,7 @@ class AudioEffectsSingleton extends Phaser.Events.EventEmitter {
     public Blocked:Phaser.Sound.BaseSound;
     public AddResource:Phaser.Sound.BaseSound;
     private scene:Phaser.Scene;
-    private constructor(scene:Phaser.Scene)
-    {
+    private constructor(scene:Phaser.Scene) {
         super();
         this.scene=scene;
         this.EngineerMining =  scene.sound.add('Engineer_Mining', SoundConstants.soundEffectConfig);
@@ -32,8 +31,8 @@ class AudioEffectsSingleton extends Phaser.Events.EventEmitter {
     static getInstance(scene:Phaser.Scene): AudioEffectsSingleton {
         if (!this.instance) {
             this.instance = new this(scene);
-            }
-            return this.instance;
+        }
+        return this.instance;
     }
 
 }
