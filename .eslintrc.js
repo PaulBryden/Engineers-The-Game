@@ -10,10 +10,10 @@ module.exports = {
     ],
     rules: {
         'semi': ['error', 'always'],
-        'no-console': 2,
+        'no-console': 1,
         'quotes': ['error', 'single'],
         'curly': 0,
-        'brace-style': ['error', 'stroustrup'],
+        'brace-style': ['error', 'allman'],
         'indent': ['error', 4],
         'eol-last': ['error', 'never'],
         '@typescript-eslint/no-namespace': 1,
