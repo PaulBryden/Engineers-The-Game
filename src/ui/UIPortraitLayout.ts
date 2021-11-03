@@ -1,10 +1,12 @@
 import 'phaser';
 import {Entity} from '../units/Entity';
 import { IStatePublisher, IStateSubscriber } from '../logic/IStatePublisher';
-class UIPortraitLayout extends Phaser.GameObjects.Container implements IStateSubscriber {
+class UIPortraitLayout extends Phaser.GameObjects.Container implements IStateSubscriber 
+{
     EntityStatus: Phaser.GameObjects.Text;
     publisher: IStatePublisher;
-    constructor(scene:Phaser.Scene, entity:Entity, x:number, y:number) {
+    constructor(scene:Phaser.Scene, entity:Entity, x:number, y:number) 
+    {
         const portrait:Phaser.GameObjects.Image = new Phaser.GameObjects.Image(scene, -6, 0, entity.getIconString());
         const widthHeightRatio:number = portrait.height/portrait.width;
         portrait.displayWidth=150;
@@ -19,10 +21,12 @@ class UIPortraitLayout extends Phaser.GameObjects.Container implements IStateSub
         this.setDepth(251);
         this.setScrollFactor(0);
     }
-    notify(state: string): void {
+    notify(state: string): void 
+    {
         this.EntityStatus.setText('Status: '+state);
     }
-    destroy() {
+    destroy() 
+    {
         this.publisher.unsubscribe(this);
         super.destroy();
     }

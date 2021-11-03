@@ -1,11 +1,13 @@
 import 'phaser';
 import {EventEmitterSingleton} from '../logic/EventEmitterSingleton';
 import {EventConstants, StartOfGame, TeamNumbers} from '../logic/GameConstants';
-class UIResources extends Phaser.GameObjects.Container {
+class UIResources extends Phaser.GameObjects.Container 
+{
     resourceCount:Phaser.GameObjects.Text;
     eventEmitter: EventEmitterSingleton;
     resourceCountString: string;
-    constructor(scene:Phaser.Scene) {
+    constructor(scene:Phaser.Scene) 
+    {
         super(scene,1360,35,[]);
         this.resourceCountString='';
         this.resourceCount = new Phaser.GameObjects.Text(scene, 50, -19, this.resourceCountString,{ fontFamily: 'monogram', fontSize: '42px', color: '#ffffff' } );
@@ -14,13 +16,15 @@ class UIResources extends Phaser.GameObjects.Container {
         this.setDepth(251);
         this.setScrollFactor(0,0,true);
         this.eventEmitter = EventEmitterSingleton.getInstance();
-        this.eventEmitter.on(EventConstants.Game.UpdateResourceCount,(count:number, teamNumber:number)=>{
+        this.eventEmitter.on(EventConstants.Game.UpdateResourceCount,(count:number, teamNumber:number)=>
+        {
             teamNumber==TeamNumbers.Player?this.resourceCount.setText(count.toString()):{};
         });
         scene.add.existing(this);
         
     }
-    destroy() {
+    destroy() 
+    {
         this.eventEmitter.removeListener(EventConstants.Game.UpdateResourceCount);
         super.destroy();
     }

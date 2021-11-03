@@ -11,7 +11,8 @@ import { BuildingEntityID, EventConstants, GameStatus, StartOfGame, TeamNumbers,
 import { EventEmitterSingleton } from '../logic/EventEmitterSingleton';
 import { AIPlayer } from '../logic/AIPlayer';
 import { TurretEntity } from '../units/TurretEntity';
-export default class GameScene extends Phaser.Scene {
+export default class GameScene extends Phaser.Scene 
+{
     finder: EasyStarGroundLevelSingleton;
     map: Phaser.Tilemaps.Tilemap;
     player: EngineerEntity;
@@ -27,12 +28,14 @@ export default class GameScene extends Phaser.Scene {
     AIPlayer2: AIPlayer;
     ClickableOverlay: Phaser.GameObjects.Rectangle;
     music: Phaser.Sound.BaseSound;
-    constructor() {
+    constructor() 
+    {
         super('GameScene');
 
     }
 
-    preload() {
+    preload() 
+    {
         this.load.image('tileset', 'assets/tileset.png');
         this.load.spritesheet('tileset_spritesheet', 'assets/tileset.png', { frameWidth: 64, frameHeight: 64 });
         this.load.image('home_base-1', 'assets/home_base.png');
@@ -91,44 +94,54 @@ export default class GameScene extends Phaser.Scene {
         });
     }
 
-    resetGame() {
+    resetGame() 
+    {
         EventEmitterSingleton.getInstance().removeAllListeners(); //Cleanup Event Listeners
-        this.tweens.getAllTweens().forEach(element => {
+        this.tweens.getAllTweens().forEach(element => 
+        {
             element.stop();
         }); //Cleanup Tweens
-        this.children.getAll().forEach(element=>{
-            if(element instanceof Phaser.GameObjects.PointLight){
+        this.children.getAll().forEach(element=>
+        {
+            if(element instanceof Phaser.GameObjects.PointLight)
+            {
                 element.destroy();
             }
         }); //Cleanup bullets
         
         this.music.stop();
         this.music.play();
-        if(this.entityManager) {
+        if(this.entityManager) 
+        {
             this.entityManager.deleteAllEntities();
             delete this.entityManager;
         }
         
         
-        if(this.AIPlayer) {
+        if(this.AIPlayer) 
+        {
             this.AIPlayer.running=false;
             this.AIPlayer=null;
         }
-        if(this.AIPlayer2) {
+        if(this.AIPlayer2) 
+        {
             this.AIPlayer2.running=false;
             this.AIPlayer2=null;
         }
        
     }
 
-    setup(isGame: boolean) { 
+    setup(isGame: boolean) 
+    { 
         this.resetGame();
         Zoom.ZoomLevel=1.2;        
-        if(!this.eventEmitterSingleton) {
+        if(!this.eventEmitterSingleton) 
+        {
             this.eventEmitterSingleton = EventEmitterSingleton.getInstance();
         }
         
-        if(!this.map) {
+        if(!this.map) 
+        {
             this.map = this.add.tilemap('map');
             const tileset = this.map.addTilesetImage('tileset', 'tileset');
             this.layer1 = this.map.createLayer('Tile Layer 1', [tileset]);
@@ -136,7 +149,8 @@ export default class GameScene extends Phaser.Scene {
 
         }
         
-        if(!this.fogOfWar) {
+        if(!this.fogOfWar) 
+        {
             this.fogOfWar = this.make.renderTexture({
                 width:3900,
                 height: 1900,
@@ -157,7 +171,8 @@ export default class GameScene extends Phaser.Scene {
         }
 
         GameStatus.ActiveGame=isGame;
-        if(!this.entityManager) {
+        if(!this.entityManager) 
+        {
             this.entityManager = new EntityManager(this, this.map, this.fogOfWar);
         }
 
@@ -177,12 +192,14 @@ export default class GameScene extends Phaser.Scene {
         this.entityManager.createTurretEntity(40, 40,2);
         //let uiPortraitParentLayout:UIParentLayout = new UIParentLayout(this,portraitLayout,uiLayout,110,400)
   
-        if(!this.finder) {
+        if(!this.finder) 
+        {
             this.finder = EasyStarGroundLevelSingleton.getInstance(); //new EasyStarWrapper();
               
             this.setupPathFinder(this.finder,this.layer1);
             this.setupPathFinder(EasyStarFlightLevelSingleton.getInstance(),this.layer2);
-            for (let i = 0; i <= 16; i++) {
+            for (let i = 0; i <= 16; i++) 
+            {
                 this.SetupLargeTiles(i);
             }
 
@@ -191,15 +208,19 @@ export default class GameScene extends Phaser.Scene {
     
         //this.addDepthsToTiles(sprites);
         this.AIPlayer = new AIPlayer(this.entityManager,TeamNumbers.Enemy, TeamNumbers.Player);
-        !isGame?this.AIPlayer2 = new AIPlayer(this.entityManager,TeamNumbers.Player, TeamNumbers.Enemy):()=>{};
+        !isGame?this.AIPlayer2 = new AIPlayer(this.entityManager,TeamNumbers.Player, TeamNumbers.Enemy):()=>
+        {};
 
-        if(this.ClickableOverlay!=null) {
+        if(this.ClickableOverlay!=null) 
+        {
             this.ClickableOverlay.removeInteractive();
             this.ClickableOverlay.destroy();
         }
-        this.ClickableOverlay=this.add.rectangle(1400,15,2100,1800,0xffffff,0x0).setInteractive().setScrollFactor(0).setDepth(1).on('pointerup', (pointer, gameObject)=>{ 
+        this.ClickableOverlay=this.add.rectangle(1400,15,2100,1800,0xffffff,0x0).setInteractive().setScrollFactor(0).setDepth(1).on('pointerup', (pointer, gameObject)=>
+        { 
                     
-            try{
+            try
+            {
                 let x = this.cameras.main.scrollX + pointer.x;
                 let y = this.cameras.main.scrollY + pointer.y;
                 const camCenterX = this.cameras.main.worldView.centerX;
@@ -213,16 +234,20 @@ export default class GameScene extends Phaser.Scene {
                 y+=extraY;
                 this.eventEmitterSingleton.emit(EventConstants.EntityActions.Move,new Phaser.Math.Vector2(this.getTileLocation(x,y)));
             }
-            finally{}
+            finally
+            {}
         });
                     
-        isGame? this.scene.launch('UI'):()=>{};
+        isGame? this.scene.launch('UI'):()=>
+        {};
         isGame?this.scene.moveUp('UI'):{};
-        isGame?(this.scene.get('UI')).events.on('create', ()=>{
+        isGame?(this.scene.get('UI')).events.on('create', ()=>
+        {
             this.tweens.add({
                 targets: this,
                 NOTHING: { value: 0, duration: 10 },
-                onComplete: () => {
+                onComplete: () => 
+                {
                     EventEmitterSingleton.getInstance().emit(EventConstants.Game.UpdateResourceCount, this.entityManager.resources.get(TeamNumbers.Player), TeamNumbers.Player);
                     EventEmitterSingleton.getInstance().emit(EventConstants.Game.UpdateResourceCount, this.entityManager.resources.get(TeamNumbers.Enemy), TeamNumbers.Enemy);
                 }
@@ -230,7 +255,8 @@ export default class GameScene extends Phaser.Scene {
         }):{};
     }
 
-    create() {
+    create() 
+    {
       
         this.input.setGlobalTopOnly(true);
         this.input.setTopOnly(true);
@@ -712,11 +738,14 @@ export default class GameScene extends Phaser.Scene {
 
     }
 
-    setupPathFinder(pathFinder:EasyStar.js,layer:Phaser.Tilemaps.TilemapLayer ) {
+    setupPathFinder(pathFinder:EasyStar.js,layer:Phaser.Tilemaps.TilemapLayer ) 
+    {
         const grid = [];
-        for (let y = 0; y < this.map.height; y++) {
+        for (let y = 0; y < this.map.height; y++) 
+        {
             const col = [];
-            for (let x = 0; x < this.map.width; x++) {
+            for (let x = 0; x < this.map.width; x++) 
+            {
                 // In each cell we store the ID of the tile, which corresponds
                 // to its index in the tileset of the map ("ID" field in Tiled)
 
@@ -730,8 +759,10 @@ export default class GameScene extends Phaser.Scene {
         const properties = tileset.tileProperties;
         const acceptableTiles = [];
 
-        for (let i = tileset.firstgid - 1; i < tileset.total; i++) { // firstgid and total are fields from Tiled that indicate the range of IDs that the tiles can take in that tileset
-            if (!properties.hasOwnProperty(i)) {
+        for (let i = tileset.firstgid - 1; i < tileset.total; i++) 
+        { // firstgid and total are fields from Tiled that indicate the range of IDs that the tiles can take in that tileset
+            if (!properties.hasOwnProperty(i)) 
+            {
                 // If there is no property indicated at all, it means it's a walkable tile
                 acceptableTiles.push(i + 1);
                 continue;
@@ -743,17 +774,21 @@ export default class GameScene extends Phaser.Scene {
         pathFinder.enableDiagonals();
     }
 
-    update(time, delta) {
+    update(time, delta) 
+    {
         this.entityManager.update(delta);
     }
 
-    SetupLargeTiles(tileID) {
+    SetupLargeTiles(tileID) 
+    {
         const sprites = this.layer1.createFromTiles(tileID, 18, { key: 'tileset_spritesheet', frame: tileID - 1 }, this, this.cameras.main);
         this.addDepthsToTiles(sprites);
     }
 
-    addDepthsToTiles(sprites: Phaser.GameObjects.Sprite[]) {
-        for (const entry of sprites) {
+    addDepthsToTiles(sprites: Phaser.GameObjects.Sprite[]) 
+    {
+        for (const entry of sprites) 
+        {
             const tilePos = this.layer1.worldToTileXY(entry.x, entry.y);
             entry.setDepth(tilePos.x + tilePos.y);
             entry.setPosition(entry.x + 32, entry.y + 32);
@@ -761,7 +796,8 @@ export default class GameScene extends Phaser.Scene {
         }
     }
 
-    getTileLocation(x:number,y:number) : Phaser.Math.Vector2 {
+    getTileLocation(x:number,y:number) : Phaser.Math.Vector2 
+    {
         return Phaser.Tilemaps.Components.IsometricWorldToTileXY(x, y-16, true, new Phaser.Math.Vector2, this.cameras.main, this.map.getLayer(0));
 
     }

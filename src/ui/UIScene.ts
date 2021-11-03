@@ -13,15 +13,18 @@ import { MineEntity } from '../units/MineEntity';
 import  EasyStar from 'easystarjs';
 import GameScene from '../scenes/GameScene';
 
-export default class UI extends Phaser.Scene {
+export default class UI extends Phaser.Scene 
+{
     uiManager: UIManager;
     gameScene: GameScene;
     minimap: Phaser.Cameras.Scene2D.Camera;
-    constructor() {
+    constructor() 
+    {
         super('UI');
     }
 
-    preload() {
+    preload() 
+    {
        
         this.load.image('ui_overlay', 'assets/ui_overlay_2.png');
         this.load.image('ui_button', 'assets/ui_button.png');
@@ -48,7 +51,8 @@ export default class UI extends Phaser.Scene {
 
     }
 
-    create() {
+    create() 
+    {
 
 
         this.input.setGlobalTopOnly(true);
@@ -65,7 +69,8 @@ export default class UI extends Phaser.Scene {
     }
 
 
-    update(time, delta) {
+    update(time, delta) 
+    {
         this.uiManager.update(delta);
 
     }

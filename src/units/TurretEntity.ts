@@ -5,11 +5,13 @@ import { EasyStarGroundLevelSingleton, Path } from '../logic/EasyStarSingleton';
 import { BuildingEntity } from './BuildingEntity';
 import { AudioEffectsSingleton } from '../audio/AudioEffectsSingleton';
 
-class TurretEntity extends BuildingEntity {
+class TurretEntity extends BuildingEntity 
+{
     targetEntity: Entity;
     entitiesToBeDamaged: Entity[];
     bulletTween: Phaser.Tweens.Tween;
-    constructor(map: Phaser.Tilemaps.Tilemap, scene: Phaser.Scene, x: number, y: number, team: number) {
+    constructor(map: Phaser.Tilemaps.Tilemap, scene: Phaser.Scene, x: number, y: number, team: number) 
+    {
         super(map, 'turret' + '-' + team, 'Turret', scene, x, y, 'turret' + '-' + team, team);
         this.y += this.mapReference.layer.tileWidth / 4;
         this.blockedTiles.push(new Phaser.Math.Vector2(x - 1, y));
@@ -24,20 +26,24 @@ class TurretEntity extends BuildingEntity {
     }
 
 
-    destroyBullet(bullet: Phaser.GameObjects.PointLight, enemy: Entity) {
+    destroyBullet(bullet: Phaser.GameObjects.PointLight, enemy: Entity) 
+    {
         this.entitiesToBeDamaged.push(enemy);
         bullet.destroy();
     }
 
-    CreateBullet(targetEntity: Entity) {
-        if (this.scene.children.exists(this.targetEntity) ) {
+    CreateBullet(targetEntity: Entity) 
+    {
+        if (this.scene.children.exists(this.targetEntity) ) 
+        {
             const bullet: Phaser.GameObjects.PointLight = new Phaser.GameObjects.PointLight(this.scene, this.x, this.y, 0x0000f0, 7, 0.5, 0.3);
             bullet.setDepth(targetEntity.GetTileLocation().x + targetEntity.GetTileLocation().y);
             this.addBulletTween({
                 targets: bullet,
                 x: { value: targetEntity.x, duration: 200 },
                 y: { value: targetEntity.y, duration: 200 },
-                onComplete: () => {
+                onComplete: () => 
+                {
                     this.destroyBullet(bullet, targetEntity); 
                 }
             });
@@ -48,14 +54,18 @@ class TurretEntity extends BuildingEntity {
 
     }
 
-    AttackRoutine() {
-        if (this.targetEntity != undefined && this.scene.children.exists(this.targetEntity)  && this.getHealth() > 0) {
+    AttackRoutine() 
+    {
+        if (this.targetEntity != undefined && this.scene.children.exists(this.targetEntity)  && this.getHealth() > 0) 
+        {
             this.CreateBullet(this.targetEntity);
         }
-        else if (this.getHealth() <= 0) {
+        else if (this.getHealth() <= 0) 
+        {
             return;
         }
-        else {
+        else 
+        {
             this.targetEntity = undefined;
         }
         const tweens = [];
@@ -63,7 +73,8 @@ class TurretEntity extends BuildingEntity {
         this.AddTween({
             targets: {},
             NOTHING: { value: 0, duration: 800 },
-            onComplete: () => {
+            onComplete: () => 
+            {
                 this.AttackRoutine();
             }
         });
@@ -73,14 +84,18 @@ class TurretEntity extends BuildingEntity {
         });
     }
 
-    delay(ms: number) {
+    delay(ms: number) 
+    {
         return new Promise(resolve => setTimeout(resolve, ms));
     }
 
-    update(delta) {
+    update(delta) 
+    {
 
-        if (this.entitiesToBeDamaged.length > 0) {
-            this.entitiesToBeDamaged.forEach(entity => {
+        if (this.entitiesToBeDamaged.length > 0) 
+        {
+            this.entitiesToBeDamaged.forEach(entity => 
+            {
                 entity.damage(5); 
             });
             this.entitiesToBeDamaged = [];
@@ -88,9 +103,12 @@ class TurretEntity extends BuildingEntity {
         super.update(delta);
     }
 
-    addBulletTween(config: Record<string, unknown>) {
-        if (this.scene) {
-            if (this.bulletTween) {
+    addBulletTween(config: Record<string, unknown>) 
+    {
+        if (this.scene) 
+        {
+            if (this.bulletTween) 
+            {
                 this.RemoveTween(this.bulletTween);
             }
             this.bulletTween=this.scene.tweens.create(config);

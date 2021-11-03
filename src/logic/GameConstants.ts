@@ -1,5 +1,6 @@
 import 'phaser';
-class SoundConstants {
+class SoundConstants 
+{
   public static readonly soundEffectConfig: Phaser.Types.Sound.SoundConfig = {
       mute: false,
       volume: 1,
@@ -11,16 +12,19 @@ class SoundConstants {
   };
 
 }
-class EntityNames {
+class EntityNames 
+{
   public static readonly Engineer: string = 'Engineer';
   public static readonly Base: string = 'Base';
 }
 
-class StartOfGame {
+class StartOfGame 
+{
   public static readonly resourceCount: number = 300;
 }
 
-class CompassDirections {
+class CompassDirections 
+{
   public static readonly North: string = 'N';
   public static readonly NorthEas: string = 'NE';
   public static readonly East: string = 'E';
@@ -32,18 +36,21 @@ class CompassDirections {
 }
 
 
-export class TeamNumbers {
+export class TeamNumbers 
+{
   public static readonly Neutral: number = 0;
   public static readonly Player: number = 1;
   public static readonly Enemy: number = 2;
 }
 
-export class EntityID {
+export class EntityID 
+{
   public static readonly Engineer: string = 'Engineer';
   public static readonly Glider: string = 'Glider';
 }
 
-export class BuildingEntityID {
+export class BuildingEntityID 
+{
   public static readonly Base: string = 'Base';
   public static readonly Factory: string = 'Factory';
   public static readonly Turret: string = 'Turret';
@@ -51,24 +58,29 @@ export class BuildingEntityID {
   public static readonly Scaffold: string = 'Scaffold';
 }
 
-export class Zoom {
+export class Zoom 
+{
   public static ZoomLevel: number;
 }
-export class GameStatus {
+export class GameStatus 
+{
   public static ActiveGame: boolean;
 }
 
 namespace EventConstants {
-  export class EntityActions {
+  export class EntityActions 
+  {
     public static readonly Selected: string = 'Select';
     public static readonly Move: string = 'Move';
     public static readonly Mine: string = 'Mine';
   }
-  export class EntityMovingUpdates {
+  export class EntityMovingUpdates 
+  {
     public static readonly FinishedMoving: string = 'FinishedMoving';
   }
 
-  export class EntityBuild {
+  export class EntityBuild 
+  {
     public static readonly CreateEngineer: string = 'CreateEngineer';
     public static readonly CreateGlider: string = 'CreateGlider';
     public static readonly CreateBase: string = 'CreateBase';
@@ -81,7 +93,8 @@ namespace EventConstants {
     Building = 'Building'
   }
 
-  export class Input {
+  export class Input 
+  {
     public static readonly BuildEngineer: string = 'BuildEngineer';
     public static readonly BuildGlider: string = 'BuildGlider';
     public static readonly RequestBuildEngineer: string = 'RequestBuildEngineer';
@@ -96,7 +109,8 @@ namespace EventConstants {
     public static readonly RequestBuildTurret: string = 'RequestBuildTurret';
     public static readonly Cancel: string = 'Create';
   }
-  export class Game {
+  export class Game 
+  {
     public static readonly UpdateResourceCount: string = 'UpdateResourceCount';
     public static readonly AddResources: string = 'AddResources';
     public static readonly RemoveResources: string = 'RemoveResources';

@@ -3,7 +3,8 @@ import { EventEmitterSingleton } from '../logic/EventEmitterSingleton';
 import { EventConstants } from '../logic/GameConstants';
 import { IStatePublisher, IStateSubscriber } from '../logic/IStatePublisher';
 
-class Entity extends Phaser.GameObjects.Sprite implements IStatePublisher {
+class Entity extends Phaser.GameObjects.Sprite implements IStatePublisher 
+{
     icon: string;
     health: number;
     status: string;
@@ -19,7 +20,8 @@ class Entity extends Phaser.GameObjects.Sprite implements IStatePublisher {
     currentlyRunningTween: Phaser.Tweens.Tween;
     clickableArea: Phaser.Geom.Circle;
 
-    constructor(map: Phaser.Tilemaps.Tilemap, icon: string, name: string, scene: Phaser.Scene, x: number, y: number, texture: string | Phaser.Textures.Texture, team:number, frame?: string | number) {
+    constructor(map: Phaser.Tilemaps.Tilemap, icon: string, name: string, scene: Phaser.Scene, x: number, y: number, texture: string | Phaser.Textures.Texture, team:number, frame?: string | number) 
+    {
         const vector: Phaser.Math.Vector2 = Phaser.Tilemaps.Components.IsometricTileToWorldXY(x, y, new Phaser.Math.Vector2(), scene.cameras.main, map.getLayer('Tile Layer 1'));
         super(scene, vector.x, vector.y, texture, frame);
         this.selectedRectangle = new Phaser.GameObjects.Rectangle(scene, this.x, this.y, this.width, this.height, 0xffffff, 0x0).setStrokeStyle(2, 0xffffff);
@@ -34,7 +36,8 @@ class Entity extends Phaser.GameObjects.Sprite implements IStatePublisher {
         this.subscribers = [];
         this.clickableArea= new Phaser.Geom.Circle(this.width / 2, this.height / 2, this.width / 3);
         this.setInteractive(this.clickableArea, this.handler);
-        this.on('pointerup', (pointer, localX, localY, event)=>{
+        this.on('pointerup', (pointer, localX, localY, event)=>
+        {
             this.emitSelected(pointer,localX,localY,event);
         }, this);
         this.mapReference = map;
@@ -55,68 +58,86 @@ class Entity extends Phaser.GameObjects.Sprite implements IStatePublisher {
         this.fogOfWarMask.scale = 2;
     }
     
-    GetFogOfWarMask() {
+    GetFogOfWarMask() 
+    {
         return this.fogOfWarMask;
     }
-    GetTileLocation() {
+    GetTileLocation() 
+    {
         return Phaser.Tilemaps.Components.IsometricWorldToTileXY(this.x, this.y, true, new Phaser.Math.Vector2, this.scene.cameras.main, this.mapReference.layer);
     }
-    subscribe(sub: IStateSubscriber): void {
+    subscribe(sub: IStateSubscriber): void 
+    {
         this.subscribers.push(sub);
     }
-    unsubscribe(sub: IStateSubscriber): void {
+    unsubscribe(sub: IStateSubscriber): void 
+    {
         const index = this.subscribers.indexOf(sub);
-        if (index > -1) {
+        if (index > -1) 
+        {
             this.subscribers.splice(index, 1);
         }
     }
 
-    handler(shape, x, y, gameObject) {
-        if (shape.radius > 0 && x >= shape.left && x <= shape.right && y >= shape.top && y <= shape.bottom) {
+    handler(shape, x, y, gameObject) 
+    {
+        if (shape.radius > 0 && x >= shape.left && x <= shape.right && y >= shape.top && y <= shape.bottom) 
+        {
             const dx = (shape.x - x) * (shape.x - x);
             const dy = (shape.y - y) * (shape.y - y);
             return (dx + dy) <= (shape.radius * shape.radius);
         }
-        else {
+        else 
+        {
             return false;
         }
     }
 
-    emitSelected(pointer, localX, localY, event) {
-        if (!this.selected) {
+    emitSelected(pointer, localX, localY, event) 
+    {
+        if (!this.selected) 
+        {
             event.stopPropagation();
             this.eventEmitter.emit(EventConstants.EntityActions.Selected, this);
         }
     }
 
-    getIconString() {
+    getIconString() 
+    {
         return this.icon;
     }
 
-    getHealth() {
+    getHealth() 
+    {
         return this.health;
     }
 
-    getStatus() {
+    getStatus() 
+    {
         return this.status;
     }
 
-    getName() {
+    getName() 
+    {
         return this.name;
     }
-    damage(amount:number) {
+    damage(amount:number) 
+    {
         this.health-=amount;
-        if(this.health<=0) {
+        if(this.health<=0) 
+        {
             this.eventEmitter.emit(EventConstants.Game.DestroyEntity,this);
             AudioEffectsSingleton.getInstance(this.scene).Destroyed.play();
         }
-        else {
+        else 
+        {
             this.healthForegroundRectangle.displayWidth=38*(this.health/100);
         }
 
     }
 
-    updateRenderDepth() {
+    updateRenderDepth() 
+    {
         const tilePos = Phaser.Tilemaps.Components.IsometricWorldToTileXY(this.x - 16, this.y - 16, true, new Phaser.Math.Vector2, this.scene.cameras.main, this.mapReference.layer);
         this.selectedRectangle.setX(this.x);
         this.selectedRectangle.setY(this.y);
@@ -135,11 +156,13 @@ class Entity extends Phaser.GameObjects.Sprite implements IStatePublisher {
 
     }
 
-    update(delta) {
+    update(delta) 
+    {
         this.updateRenderDepth();
     }
 
-    destroy() {
+    destroy() 
+    {
         this.RemoveTween(this.currentlyRunningTween);
         this.selectedRectangle.destroy();
         this.healthBackgroundRectangle.destroy();
@@ -148,9 +171,12 @@ class Entity extends Phaser.GameObjects.Sprite implements IStatePublisher {
         super.destroy();
     }
 
-    AddTween(config: Record<string, unknown>) {
-        if(this.scene) {
-            if(this.currentlyRunningTween) {
+    AddTween(config: Record<string, unknown>) 
+    {
+        if(this.scene) 
+        {
+            if(this.currentlyRunningTween) 
+            {
                 this.RemoveTween(this.currentlyRunningTween);
             }
             this.currentlyRunningTween=this.scene.tweens.create(config);
@@ -159,17 +185,22 @@ class Entity extends Phaser.GameObjects.Sprite implements IStatePublisher {
 
     }
 
-    RemoveTween(tween:Phaser.Tweens.Tween) {
-        if(this.scene) {
-            try{
+    RemoveTween(tween:Phaser.Tweens.Tween) 
+    {
+        if(this.scene) 
+        {
+            try
+            {
                 this.scene.tweens.remove(tween);
             }
-            catch{}
+            catch
+            {}
 
         }
     }
 
-    updateSelected(selected: boolean) {
+    updateSelected(selected: boolean) 
+    {
         this.selectedRectangle.setVisible(selected);
         this.selected = selected;
     }

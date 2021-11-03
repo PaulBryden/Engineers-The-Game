@@ -4,8 +4,10 @@ import {EventConstants} from '../logic/GameConstants';
 import { EasyStarGroundLevelSingleton, Path } from '../logic/EasyStarSingleton';
 import { BuildingEntity } from './BuildingEntity';
 
-class MineEntity extends BuildingEntity {
-    constructor(map: Phaser.Tilemaps.Tilemap, scene: Phaser.Scene, x: number, y: number) {
+class MineEntity extends BuildingEntity 
+{
+    constructor(map: Phaser.Tilemaps.Tilemap, scene: Phaser.Scene, x: number, y: number) 
+    {
         super(map,'mine','Mine',scene,x,y,'mine',0);
         this.status='Operating';
         this.removeInteractive();
