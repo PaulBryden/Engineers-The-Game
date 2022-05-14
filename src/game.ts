@@ -22,6 +22,7 @@ const config = {
     backgroundColor: '#002244',
     scene: [Menu,GameScene,UI],
     antialias: true,
+    batchSize: 512,
     plugins: {
 
     }

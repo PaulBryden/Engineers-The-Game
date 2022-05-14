@@ -26,7 +26,7 @@ export default class Menu extends Phaser.Scene
         (this.scene.get('GameScene')).events.on('create', ()=>
         {
             (<GameScene>this.scene.get('GameScene')).setup(false);
-            this.versionNotice = this.add.dom(1550, 30).createFromHTML('<div id=\'copyrightNotice\'>V0.1.5</div>');
+            this.versionNotice = this.add.dom(1550, 30).createFromHTML('<div id=\'copyrightNotice\'>V0.1.6</div>');
             this.copyrightNotice = this.add.dom(250, 880).createFromHTML('<div id=\'copyrightNotice\'>Copyright Paul Bryden 2021</div>');
             this.creditsButton = this.add.dom(1520,850).createFromHTML('<button type=\'button\' id=\'credits\' data-bs-toggle=\'modal\' data-bs-target=\'#creditsModal\' class=\'btn btn-outline-light btn-lg\'>Credits</button>');
             this.element = this.add.dom(400, 450).createFromCache('connectionMenu');
